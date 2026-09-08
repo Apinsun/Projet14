@@ -1,0 +1,1064 @@
+{
+  "frenchmedmcqa": {
+    "name": "frenchmedmcqa",
+    "hf_id": "qanastek/frenchmedmcqa",
+    "language": "fr",
+    "role": "SFT",
+    "splits": {
+      "test": 622,
+      "train": 2171,
+      "validation": 312
+    },
+    "columns": {
+      "id": "str",
+      "question": "str",
+      "answer_a": "str",
+      "answer_b": "str",
+      "answer_c": "str",
+      "answer_d": "str",
+      "answer_e": "str",
+      "correct_answers": "object",
+      "subject_name": "str",
+      "type": "str",
+      "nbr_correct_answers": "int64"
+    },
+    "num_rows_representative_split": 2171,
+    "representative_split": "train",
+    "missing": {
+      "id": 0,
+      "question": 0,
+      "answer_a": 0,
+      "answer_b": 0,
+      "answer_c": 0,
+      "answer_d": 0,
+      "answer_e": 0,
+      "correct_answers": 0,
+      "subject_name": 0,
+      "type": 0,
+      "nbr_correct_answers": 0
+    },
+    "duplicates": {
+      "total_rows": 2171,
+      "unique_values": 2148,
+      "duplicated_rows": 23
+    },
+    "language_distribution": {
+      "fr": {
+        "count": 394,
+        "pct": 98.5
+      },
+      "ca": {
+        "count": 3,
+        "pct": 0.75
+      },
+      "it": {
+        "count": 2,
+        "pct": 0.5
+      },
+      "en": {
+        "count": 1,
+        "pct": 0.25
+      }
+    },
+    "lengths": {
+      "id": {
+        "count": 2171,
+        "mean": 64.0,
+        "median": 64.0,
+        "min": 64,
+        "max": 64
+      },
+      "question": {
+        "count": 2171,
+        "mean": 99.6,
+        "median": 97.0,
+        "min": 7,
+        "max": 491
+      },
+      "answer_a": {
+        "count": 2171,
+        "mean": 40.5,
+        "median": 35.0,
+        "min": 1,
+        "max": 214
+      },
+      "answer_b": {
+        "count": 2171,
+        "mean": 42.4,
+        "median": 37.0,
+        "min": 1,
+        "max": 214
+      },
+      "answer_c": {
+        "count": 2171,
+        "mean": 44.0,
+        "median": 39.0,
+        "min": 1,
+        "max": 262
+      },
+      "answer_d": {
+        "count": 2171,
+        "mean": 44.4,
+        "median": 40.0,
+        "min": 1,
+        "max": 238
+      },
+      "answer_e": {
+        "count": 2171,
+        "mean": 44.6,
+        "median": 39.0,
+        "min": 1,
+        "max": 255
+      },
+      "subject_name": {
+        "count": 2171,
+        "mean": 9.0,
+        "median": 9.0,
+        "min": 9,
+        "max": 9
+      },
+      "type": {
+        "count": 2171,
+        "mean": 7.5,
+        "median": 8.0,
+        "min": 6,
+        "max": 8
+      }
+    },
+    "html_tags": {
+      "id": 0,
+      "question": 0,
+      "answer_a": 0,
+      "answer_b": 0,
+      "answer_c": 0,
+      "answer_d": 0,
+      "answer_e": 0,
+      "subject_name": 0,
+      "type": 0
+    },
+    "specific": {
+      "nbr_correct_answers": {
+        "3": {
+          "count": 718,
+          "pct": 33.07
+        },
+        "1": {
+          "count": 595,
+          "pct": 27.41
+        },
+        "2": {
+          "count": 528,
+          "pct": 24.32
+        },
+        "4": {
+          "count": 296,
+          "pct": 13.63
+        },
+        "5": {
+          "count": 34,
+          "pct": 1.57
+        }
+      },
+      "type": {
+        "multiple": {
+          "count": 1576,
+          "pct": 72.59
+        },
+        "simple": {
+          "count": 595,
+          "pct": 27.41
+        }
+      },
+      "subject_name": {
+        "pharmacie": {
+          "count": 2171,
+          "pct": 100.0
+        }
+      }
+    },
+    "samples": [
+      {
+        "id": "230bac49b0fe863b772410bc8d01a025f63c3c999065480131d6334abd2efeff",
+        "question": "Parmi les affirmations suivantes, une seule est fausse, indiquer laquelle: les particules alpha",
+        "answer_a": "Sont formées de noyaux d'hélium",
+        "answer_b": "Sont peu pénétrantes",
+        "answer_c": "Toute l'énergie qu'elles transportent est cédée au long d'un parcours de quelques centimètres dans l'air",
+        "answer_d": "Sont arrêtées par une feuille de papier",
+        "answer_e": "Sont peu ionisantes",
+        "correct_answers": "['e']",
+        "subject_name": "pharmacie",
+        "type": "simple",
+        "nbr_correct_answers": "1"
+      },
+      {
+        "id": "0ca718ff033bb68503e41c4d30b4f7580cb3f220e000a2e2d8520803ffdb8b06",
+        "question": "Parmi les bactéries suivantes, une seule ne peut généralement pas être responsable d'une méningite aiguë, laquelle?",
+        "answer_a": "Haemophilus influenzae",
+        "answer_b": "Streptococcus pneumoniae",
+        "answer_c": "Neisseria gonorrhoeae",
+        "answer_d": "Neisseria meningitidis",
+        "answer_e": "Mycobacterium tuberculosis",
+        "correct_answers": "['c']",
+        "subject_name": "pharmacie",
+        "type": "simple",
+        "nbr_correct_answers": "1"
+      },
+      {
+        "id": "3e292fc26ab1844f7d3805a5cceba0534261fcd65446dc544b4f2f7e3459de01",
+        "question": "Parmi les propositions suivantes, indiquer celle qui est exacte. Le crack est une forme:",
+        "answer_a": "D'héroine",
+        "answer_b": "De cannabis",
+        "answer_c": "De cocaïne",
+        "answer_d": "D'amphétamines",
+        "answer_e": "De LSD (Amide de l'acide lysergique)",
+        "correct_answers": "['c']",
+        "subject_name": "pharmacie",
+        "type": "simple",
+        "nbr_correct_answers": "1"
+      }
+    ]
+  },
+  "medquad": {
+    "name": "medquad",
+    "hf_id": "lavita/MedQuAD",
+    "language": "en",
+    "role": "SFT",
+    "splits": {
+      "train": 47441
+    },
+    "columns": {
+      "document_id": "str",
+      "document_source": "str",
+      "document_url": "str",
+      "category": "str",
+      "umls_cui": "str",
+      "umls_semantic_types": "str",
+      "umls_semantic_group": "str",
+      "synonyms": "str",
+      "question_id": "str",
+      "question_focus": "str",
+      "question_type": "str",
+      "question": "str",
+      "answer": "str"
+    },
+    "num_rows_representative_split": 47441,
+    "representative_split": "train",
+    "missing": {
+      "document_id": 5,
+      "document_source": 0,
+      "document_url": 0,
+      "category": 15431,
+      "umls_cui": 16024,
+      "umls_semantic_types": 16066,
+      "umls_semantic_group": 16024,
+      "synonyms": 22772,
+      "question_id": 0,
+      "question_focus": 14,
+      "question_type": 0,
+      "question": 0,
+      "answer": 31034
+    },
+    "duplicates": {
+      "total_rows": 47441,
+      "unique_values": 44603,
+      "duplicated_rows": 2838
+    },
+    "language_distribution": {
+      "en": {
+        "count": 388,
+        "pct": 97.0
+      },
+      "it": {
+        "count": 3,
+        "pct": 0.75
+      },
+      "da": {
+        "count": 3,
+        "pct": 0.75
+      },
+      "de": {
+        "count": 3,
+        "pct": 0.75
+      },
+      "af": {
+        "count": 2,
+        "pct": 0.5
+      },
+      "nl": {
+        "count": 1,
+        "pct": 0.25
+      }
+    },
+    "lengths": {
+      "document_id": {
+        "count": 47436,
+        "mean": 7.0,
+        "median": 7.0,
+        "min": 7,
+        "max": 10
+      },
+      "document_source": {
+        "count": 47441,
+        "mean": 6.4,
+        "median": 4.0,
+        "min": 3,
+        "max": 21
+      },
+      "document_url": {
+        "count": 47441,
+        "mean": 63.5,
+        "median": 62.0,
+        "min": 21,
+        "max": 174
+      },
+      "category": {
+        "count": 32010,
+        "mean": 5.6,
+        "median": 7.0,
+        "min": 4,
+        "max": 7
+      },
+      "umls_cui": {
+        "count": 31417,
+        "mean": 11.0,
+        "median": 8.0,
+        "min": 8,
+        "max": 134
+      },
+      "umls_semantic_types": {
+        "count": 31375,
+        "mean": 5.0,
+        "median": 4.0,
+        "min": 4,
+        "max": 34
+      },
+      "umls_semantic_group": {
+        "count": 31417,
+        "mean": 9.0,
+        "median": 9.0,
+        "min": 9,
+        "max": 9
+      },
+      "synonyms": {
+        "count": 24669,
+        "mean": 82.5,
+        "median": 65.0,
+        "min": 2,
+        "max": 824
+      },
+      "question_id": {
+        "count": 47441,
+        "mean": 9.1,
+        "median": 9.0,
+        "min": 9,
+        "max": 12
+      },
+      "question_focus": {
+        "count": 47427,
+        "mean": 21.2,
+        "median": 19.0,
+        "min": 3,
+        "max": 136
+      },
+      "question_type": {
+        "count": 47441,
+        "mean": 12.1,
+        "median": 11.0,
+        "min": 4,
+        "max": 39
+      },
+      "question": {
+        "count": 47441,
+        "mean": 51.5,
+        "median": 51.0,
+        "min": 14,
+        "max": 191
+      },
+      "answer": {
+        "count": 16407,
+        "mean": 1303.5,
+        "median": 890.0,
+        "min": 6,
+        "max": 29046
+      }
+    },
+    "html_tags": {
+      "document_id": 0,
+      "document_source": 0,
+      "document_url": 0,
+      "category": 0,
+      "umls_cui": 0,
+      "umls_semantic_types": 0,
+      "umls_semantic_group": 0,
+      "synonyms": 0,
+      "question_id": 0,
+      "question_focus": 0,
+      "question_type": 0,
+      "question": 0,
+      "answer": 1
+    },
+    "specific": {
+      "question_type": {
+        "information": {
+          "count": 9214,
+          "pct": 19.42
+        },
+        "symptoms": {
+          "count": 4338,
+          "pct": 9.14
+        },
+        "treatment": {
+          "count": 3906,
+          "pct": 8.23
+        },
+        "causes": {
+          "count": 2436,
+          "pct": 5.13
+        },
+        "outlook": {
+          "count": 2232,
+          "pct": 4.7
+        },
+        "exams and tests": {
+          "count": 2058,
+          "pct": 4.34
+        },
+        "when to contact a medical professional": {
+          "count": 1738,
+          "pct": 3.66
+        },
+        "inheritance": {
+          "count": 1446,
+          "pct": 3.05
+        },
+        "precautions": {
+          "count": 1413,
+          "pct": 2.98
+        },
+        "side effects": {
+          "count": 1301,
+          "pct": 2.74
+        },
+        "other information": {
+          "count": 1280,
+          "pct": 2.7
+        },
+        "indication": {
+          "count": 1258,
+          "pct": 2.65
+        },
+        "usage": {
+          "count": 1244,
+          "pct": 2.62
+        },
+        "prevention": {
+          "count": 1239,
+          "pct": 2.61
+        },
+        "brand names": {
+          "count": 1238,
+          "pct": 2.61
+        },
+        "emergency or overdose": {
+          "count": 1140,
+          "pct": 2.4
+        },
+        "frequency": {
+          "count": 1120,
+          "pct": 2.36
+        },
+        "complications": {
+          "count": 1120,
+          "pct": 2.36
+        },
+        "storage and disposal": {
+          "count": 1117,
+          "pct": 2.35
+        },
+        "forget a dose": {
+          "count": 1098,
+          "pct": 2.31
+        }
+      },
+      "document_source": {
+        "ADAM": {
+          "count": 17348,
+          "pct": 36.57
+        },
+        "MPlusDrugs": {
+          "count": 12889,
+          "pct": 27.17
+        },
+        "GHR": {
+          "count": 5430,
+          "pct": 11.45
+        },
+        "GARD": {
+          "count": 5394,
+          "pct": 11.37
+        },
+        "NIDDK": {
+          "count": 1192,
+          "pct": 2.51
+        },
+        "NINDS": {
+          "count": 1088,
+          "pct": 2.29
+        },
+        "MPlusHealthTopics": {
+          "count": 981,
+          "pct": 2.07
+        },
+        "MPlusHerbsSupplements": {
+          "count": 792,
+          "pct": 1.67
+        },
+        "NIHSeniorHealth": {
+          "count": 769,
+          "pct": 1.62
+        },
+        "CancerGov": {
+          "count": 729,
+          "pct": 1.54
+        },
+        "NHLBI": {
+          "count": 559,
+          "pct": 1.18
+        },
+        "CDC": {
+          "count": 270,
+          "pct": 0.57
+        }
+      },
+      "question_focus_top": {
+        "Breast Cancer": {
+          "count": 53,
+          "pct": 0.11
+        },
+        "Stroke": {
+          "count": 44,
+          "pct": 0.09
+        },
+        "Prostate Cancer": {
+          "count": 43,
+          "pct": 0.09
+        },
+        "Skin Cancer": {
+          "count": 34,
+          "pct": 0.07
+        },
+        "Shingles": {
+          "count": 30,
+          "pct": 0.06
+        },
+        "Alzheimer's Disease": {
+          "count": 30,
+          "pct": 0.06
+        },
+        "Hemochromatosis": {
+          "count": 29,
+          "pct": 0.06
+        },
+        "Lung Cancer": {
+          "count": 29,
+          "pct": 0.06
+        },
+        "Colorectal Cancer": {
+          "count": 29,
+          "pct": 0.06
+        },
+        "Diabetes": {
+          "count": 29,
+          "pct": 0.06
+        }
+      }
+    },
+    "samples": [
+      {
+        "document_id": "0000559",
+        "document_source": "GHR",
+        "document_url": "https://ghr.nlm.nih.gov/condition/keratoderma-with-woolly-hair",
+        "category": "nan",
+        "umls_cui": "C0343073",
+        "umls_semantic_types": "T047",
+        "umls_semantic_group": "Disorders",
+        "synonyms": "KWWH",
+        "question_id": "0000559-1",
+        "question_focus": "keratoderma with woolly hair",
+        "question_type": "information",
+        "question": "What is (are) keratoderma with woolly hair ?",
+        "answer": "Keratoderma with woolly hair is a group of related conditions that affect the skin and hair and in many cases increase the risk of potentially life-threatening heart problems. People with these conditions have hair that is unusually coarse, dry, fine, and tightly curled. In some cases, the hair is a…"
+      },
+      {
+        "document_id": "0000559",
+        "document_source": "GHR",
+        "document_url": "https://ghr.nlm.nih.gov/condition/keratoderma-with-woolly-hair",
+        "category": "nan",
+        "umls_cui": "C0343073",
+        "umls_semantic_types": "T047",
+        "umls_semantic_group": "Disorders",
+        "synonyms": "KWWH",
+        "question_id": "0000559-2",
+        "question_focus": "keratoderma with woolly hair",
+        "question_type": "frequency",
+        "question": "How many people are affected by keratoderma with woolly hair ?",
+        "answer": "Keratoderma with woolly hair is rare; its prevalence worldwide is unknown.  Type I (Naxos disease) was first described in families from the Greek island of Naxos. Since then, affected families have been found in other Greek islands, Turkey, and the Middle East. This form of the condition may affect …"
+      },
+      {
+        "document_id": "0000559",
+        "document_source": "GHR",
+        "document_url": "https://ghr.nlm.nih.gov/condition/keratoderma-with-woolly-hair",
+        "category": "nan",
+        "umls_cui": "C0343073",
+        "umls_semantic_types": "T047",
+        "umls_semantic_group": "Disorders",
+        "synonyms": "KWWH",
+        "question_id": "0000559-3",
+        "question_focus": "keratoderma with woolly hair",
+        "question_type": "genetic changes",
+        "question": "What are the genetic changes related to keratoderma with woolly hair ?",
+        "answer": "Mutations in the JUP, DSP, DSC2, and KANK2 genes cause keratoderma with woolly hair types I through IV, respectively. The JUP, DSP, and DSC2 genes provide instructions for making components of specialized cell structures called desmosomes. Desmosomes are located in the membrane surrounding certain c…"
+      }
+    ]
+  },
+  "mediqa": {
+    "name": "mediqa",
+    "hf_id": "bigbio/mediqa_qa",
+    "language": "en",
+    "role": "SFT",
+    "splits": {
+      "test": 150,
+      "train_alexa": 104,
+      "train_live_qa_med": 104,
+      "validation": 25
+    },
+    "columns": {
+      "id": "str",
+      "question_id": "str",
+      "document_id": "str",
+      "question": "str",
+      "type": "str",
+      "choices": "object",
+      "context": "str",
+      "answer": "object"
+    },
+    "num_rows_representative_split": 150,
+    "representative_split": "test",
+    "missing": {
+      "id": 0,
+      "question_id": 0,
+      "document_id": 0,
+      "question": 0,
+      "type": 0,
+      "choices": 0,
+      "context": 0,
+      "answer": 0
+    },
+    "duplicates": {
+      "total_rows": 150,
+      "unique_values": 148,
+      "duplicated_rows": 2
+    },
+    "language_distribution": {
+      "en": {
+        "count": 142,
+        "pct": 94.67
+      },
+      "af": {
+        "count": 2,
+        "pct": 1.33
+      },
+      "cy": {
+        "count": 2,
+        "pct": 1.33
+      },
+      "nl": {
+        "count": 1,
+        "pct": 0.67
+      },
+      "tl": {
+        "count": 1,
+        "pct": 0.67
+      },
+      "pt": {
+        "count": 1,
+        "pct": 0.67
+      },
+      "fr": {
+        "count": 1,
+        "pct": 0.67
+      }
+    },
+    "lengths": {
+      "id": {
+        "count": 150,
+        "mean": 2.5,
+        "median": 3.0,
+        "min": 1,
+        "max": 3
+      },
+      "question_id": {
+        "count": 150,
+        "mean": 2.5,
+        "median": 3.0,
+        "min": 1,
+        "max": 3
+      },
+      "document_id": {
+        "count": 150,
+        "mean": 2.5,
+        "median": 3.0,
+        "min": 1,
+        "max": 3
+      },
+      "question": {
+        "count": 150,
+        "mean": 119.0,
+        "median": 49.5,
+        "min": 12,
+        "max": 931
+      },
+      "type": {
+        "count": 150,
+        "mean": 7.0,
+        "median": 7.0,
+        "min": 7,
+        "max": 7
+      },
+      "context": {
+        "count": 150,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "html_tags": {
+      "id": 0,
+      "question_id": 0,
+      "document_id": 0,
+      "question": 0,
+      "type": 0,
+      "context": 0
+    },
+    "specific": {
+      "type": {
+        "factoid": {
+          "count": 150,
+          "pct": 100.0
+        }
+      },
+      "n_answers": {
+        "9": {
+          "count": 34,
+          "pct": 22.67
+        },
+        "7": {
+          "count": 29,
+          "pct": 19.33
+        },
+        "10": {
+          "count": 21,
+          "pct": 14.0
+        },
+        "5": {
+          "count": 16,
+          "pct": 10.67
+        },
+        "8": {
+          "count": 14,
+          "pct": 9.33
+        },
+        "4": {
+          "count": 13,
+          "pct": 8.67
+        },
+        "6": {
+          "count": 10,
+          "pct": 6.67
+        },
+        "11": {
+          "count": 6,
+          "pct": 4.0
+        },
+        "3": {
+          "count": 4,
+          "pct": 2.67
+        },
+        "2": {
+          "count": 3,
+          "pct": 2.0
+        }
+      },
+      "empty_context": 150,
+      "empty_choices": 0,
+      "answer_len": {
+        "count": 150,
+        "mean": 4.7,
+        "median": 5.0,
+        "min": 4,
+        "max": 5
+      }
+    },
+    "samples": [
+      {
+        "id": "1",
+        "question_id": "1",
+        "document_id": "1",
+        "question": "abetalipoproteimemia hi, I would like to know if there is any support for those suffering with abetalipoproteinemia? I am not diagnosed but have had many test that indicate I am suffering with this, keen to learn how to get it diagnosed and how to manage, many thanks",
+        "type": "factoid",
+        "choices": "[]",
+        "context": "",
+        "answer": "[\"abetalipoproteinemia: Abetalipoproteinemia is an inherited disorder that affects the absorption of dietary fats, cholesterol, and fat-soluble vitamins. People affected by this disorder are not able to make certain lipoproteins, which are particles that carry fats and fat-like substances (such as c…"
+      },
+      {
+        "id": "2",
+        "question_id": "2",
+        "document_id": "2",
+        "question": "about thalassemia treatment sir,my friend is suffering from thalassemia ,in that majorly red blood anemia,white blood anemia and the blood is comming out from mouth when she got cough .her condition is very severe .in her body the red ,white blood cells are abscent .so that blood transfusion is doin…",
+        "type": "factoid",
+        "choices": "[]",
+        "context": "",
+        "answer": "['Thalassemia (Treatment): Treatment for thalassemia depends on which type you have and how severe it is. Treatments for mild thalassemia Signs and symptoms are usually mild with thalassemia minor and little, if any, treatment is needed. Occasionally, you may need a blood transfusion, particularly a…"
+      },
+      {
+        "id": "3",
+        "question_id": "3",
+        "document_id": "3",
+        "question": "Absence seizures Does any damage occurre from these spells. Mental or physical",
+        "type": "factoid",
+        "choices": "[]",
+        "context": "",
+        "answer": "['What is Absence seizure?: An absence seizure is the term given to a type of seizure involving staring spells. This type of seizure is a brief (usually less than 15 seconds) disturbance of brain function due to abnormal electrical activity in the brain.'\n 'Absence seizure: An absence seizure is the…"
+      }
+    ]
+  },
+  "ultramedical_preference": {
+    "name": "ultramedical_preference",
+    "hf_id": "TsinghuaC3I/UltraMedical-Preference",
+    "language": "en",
+    "role": "DPO",
+    "splits": {
+      "test": 777,
+      "train": 109353,
+      "validation": 2232
+    },
+    "columns": {
+      "prompt_id": "str",
+      "label_type": "str",
+      "prompt": "str",
+      "chosen": "object",
+      "rejected": "object",
+      "metadata": "object",
+      "feedback": "str"
+    },
+    "num_rows_representative_split": 109353,
+    "representative_split": "train",
+    "missing": {
+      "prompt_id": 0,
+      "label_type": 0,
+      "prompt": 0,
+      "chosen": 0,
+      "rejected": 0,
+      "metadata": 0,
+      "feedback": 0
+    },
+    "duplicates": {
+      "total_rows": 109353,
+      "unique_values": 76524,
+      "duplicated_rows": 32829
+    },
+    "language_distribution": {
+      "en": {
+        "count": 399,
+        "pct": 99.75
+      },
+      "fr": {
+        "count": 1,
+        "pct": 0.25
+      }
+    },
+    "lengths": {
+      "prompt_id": {
+        "count": 109353,
+        "mean": 19.2,
+        "median": 17.0,
+        "min": 7,
+        "max": 39
+      },
+      "label_type": {
+        "count": 109353,
+        "mean": 4.8,
+        "median": 4.0,
+        "min": 4,
+        "max": 6
+      },
+      "prompt": {
+        "count": 109353,
+        "mean": 490.6,
+        "median": 402.0,
+        "min": 24,
+        "max": 5509
+      },
+      "feedback": {
+        "count": 109353,
+        "mean": 1743.2,
+        "median": 1698.0,
+        "min": 381,
+        "max": 3461
+      }
+    },
+    "html_tags": {
+      "prompt_id": 0,
+      "label_type": 0,
+      "prompt": 291,
+      "feedback": 7
+    },
+    "specific": {
+      "label_type": {
+        "hard": {
+          "count": 45765,
+          "pct": 41.85
+        },
+        "length": {
+          "count": 41130,
+          "pct": 37.61
+        },
+        "easy": {
+          "count": 22458,
+          "pct": 20.54
+        }
+      },
+      "chosen_role": {
+        "assistant": {
+          "count": 109353,
+          "pct": 100.0
+        }
+      },
+      "rejected_role": {
+        "assistant": {
+          "count": 109353,
+          "pct": 100.0
+        }
+      },
+      "chosen_model": {
+        "gpt-4-1106-preview": {
+          "count": 59055,
+          "pct": 54.0
+        },
+        "Meta-Llama-3-70B-Instruct": {
+          "count": 35090,
+          "pct": 32.09
+        },
+        "Llama-3-8B-UltraMedical": {
+          "count": 8833,
+          "pct": 8.08
+        },
+        "Meta-Llama-3-8B-Instruct": {
+          "count": 3105,
+          "pct": 2.84
+        },
+        "gpt-3.5-turbo-1106": {
+          "count": 1745,
+          "pct": 1.6
+        },
+        "Mixtral-8x7B-Instruct": {
+          "count": 830,
+          "pct": 0.76
+        },
+        "Qwen1.5-72B-Chat": {
+          "count": 391,
+          "pct": 0.36
+        },
+        "Mixtral-8x22B-Instruct": {
+          "count": 304,
+          "pct": 0.28
+        }
+      },
+      "rejected_model": {
+        "Meta-Llama-3-8B-Instruct": {
+          "count": 33803,
+          "pct": 30.91
+        },
+        "Meta-Llama-3-70B-Instruct": {
+          "count": 26902,
+          "pct": 24.6
+        },
+        "gpt-4-1106-preview": {
+          "count": 15239,
+          "pct": 13.94
+        },
+        "Llama-3-8B-UltraMedical": {
+          "count": 12858,
+          "pct": 11.76
+        },
+        "gpt-3.5-turbo-1106": {
+          "count": 6642,
+          "pct": 6.07
+        },
+        "Mixtral-8x7B-Instruct": {
+          "count": 5156,
+          "pct": 4.72
+        },
+        "Mixtral-8x22B-Instruct": {
+          "count": 4859,
+          "pct": 4.44
+        },
+        "Qwen1.5-72B-Chat": {
+          "count": 3894,
+          "pct": 3.56
+        }
+      },
+      "chosen_content_len": {
+        "count": 109353,
+        "mean": 2272.6,
+        "median": 1937.0,
+        "min": 15,
+        "max": 13054
+      },
+      "rejected_content_len": {
+        "count": 109353,
+        "mean": 1999.7,
+        "median": 1570.0,
+        "min": 2,
+        "max": 15940
+      },
+      "feedback_mean_len": {
+        "count": 109353,
+        "mean": 1743.2,
+        "median": 1698.0,
+        "min": 381,
+        "max": 3461
+      }
+    },
+    "samples": [
+      {
+        "prompt_id": "WikiInstruct,8304",
+        "label_type": "length",
+        "prompt": "Investigate the intricacies of immunometabolism, a distinct subfield of immunology that examines the interconnection between cellular metabolic processes and the functional attributes of immune cells. Clarify the mechanisms by which this symbiosis modulates the comprehensive immune response, and ana…",
+        "chosen": "[{'content': 'Investigate the intricacies of immunometabolism, a distinct subfield of immunology that examines the interconnection between cellular metabolic processes and the functional attributes of immune cells. Clarify the mechanisms by which this symbiosis modulates the comprehensive immune res…",
+        "rejected": "[{'content': 'Investigate the intricacies of immunometabolism, a distinct subfield of immunology that examines the interconnection between cellular metabolic processes and the functional attributes of immune cells. Clarify the mechanisms by which this symbiosis modulates the comprehensive immune res…",
+        "metadata": "{'golden_answer': None, 'chosen': {'model': 'Mixtral-8x7B-Instruct', 'score': 5.0, 'rank': 1, 'evaluation': 'This response is exceptionally detailed and well-structured, providing an in-depth exploration of the mechanisms of immunometabolism and its implications. It effectively integrates immunometa…",
+        "feedback": "Assistant A provides a detailed and comprehensive response that thoroughly explains the concept of immunometabolism, the mechanisms involved, and its implications in various diseases, particularly metabolic disorders. The answer includes specific examples of how different immune cells undergo metabo…"
+      },
+      {
+        "prompt_id": "WikiInstruct,8846",
+        "label_type": "length",
+        "prompt": "Examine the differential immunotoxic effects exerted by distinct microplastic polymer varieties on the innate and adaptive immune mechanisms across a range of marine organisms, emphasizing the plausible perturbations within their intracellular communication networks, and delineate the consequent alt…",
+        "chosen": "[{'content': 'Examine the differential immunotoxic effects exerted by distinct microplastic polymer varieties on the innate and adaptive immune mechanisms across a range of marine organisms, emphasizing the plausible perturbations within their intracellular communication networks, and delineate the …",
+        "rejected": "[{'content': 'Examine the differential immunotoxic effects exerted by distinct microplastic polymer varieties on the innate and adaptive immune mechanisms across a range of marine organisms, emphasizing the plausible perturbations within their intracellular communication networks, and delineate the …",
+        "metadata": "{'golden_answer': None, 'chosen': {'model': 'Mixtral-8x7B-Instruct', 'score': 5.0, 'rank': 2, 'evaluation': \"This response effectively addresses the inquiry, providing a detailed review of how different microplastic polymers affect marine organisms' immune systems. It includes specific examples and …",
+        "feedback": "Assistant A's response is well-structured, providing a detailed and comprehensive analysis of the immunotoxic effects of microplastics on marine organisms' immune systems. The answer is segmented into clear sections that address different aspects of the immune response (innate and adaptive), as well…"
+      },
+      {
+        "prompt_id": "MedMCQA,11404",
+        "label_type": "length",
+        "prompt": "A lady comes with melanotic pigmentation of lip, presence of multiple polyps in the intestine, and a positive family history. What is the most probable diagnosis?\n\nA. Peutz-Jegher's Syndrome\nB. Gardner's syndrome\nC. Turcot's syndrome\nD. Lynch syndrome",
+        "chosen": "[{'content': \"A lady comes with melanotic pigmentation of lip, presence of multiple polyps in the intestine, and a positive family history. What is the most probable diagnosis?\\n\\nA. Peutz-Jegher's Syndrome\\nB. Gardner's syndrome\\nC. Turcot's syndrome\\nD. Lynch syndrome\", 'role': 'user'}\n {'content'…",
+        "rejected": "[{'content': \"A lady comes with melanotic pigmentation of lip, presence of multiple polyps in the intestine, and a positive family history. What is the most probable diagnosis?\\n\\nA. Peutz-Jegher's Syndrome\\nB. Gardner's syndrome\\nC. Turcot's syndrome\\nD. Lynch syndrome\", 'role': 'user'}\n {'content'…",
+        "metadata": "{'golden_answer': 'A', 'chosen': {'model': 'Meta-Llama-3-70B-Instruct', 'score': 5.0, 'rank': 2, 'evaluation': \"The response is detailed and methodically explains why Peutz-Jegher's Syndrome is the most probable diagnosis. It provides a clear explanation of the characteristics of each syndrome, help…",
+        "feedback": "Both Assistant A and Assistant B provided answers that correctly identified Peutz-Jeghers Syndrome as the most probable diagnosis based on the symptoms described in the question. Here's a breakdown of the evaluation based on the criteria:\n\n1. **Helpfulness and Relevance**: Both assistants were helpf…"
+      }
+    ]
+  }
+}
