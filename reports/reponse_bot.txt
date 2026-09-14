@@ -1,0 +1,33 @@
+Bonjour,
+
+Je suis Cobbai, l'assistant IA pour le Support d'OpenClassrooms. J'ai analysé votre demande afin de vous apporter une réponse rapidement et vous éviter toute attente.
+
+Aperçu de votre demande :
+Vous travaillez sur le projet Fine-tunez votre propre LLM du parcours Ingénieur intelligence artificielle (AI Engineer), et vous souhaitez savoir si la création d'un jeu de données annoté pour le triage médical fait partie des attendus, étant donné que les corpus proposés ne contiennent pas d'annotations de gravité ou de triage.
+
+Réponse :
+Après analyse des ressources mentionnées (MediQA, FrenchMedMCQA, MedQuAD, UltraMedical-Preference), il est exact qu’aucune ne propose directement des annotations de gravité ou de triage médical. Dans le cadre de ce projet, il est effectivement attendu que l’élève :
+
+Construise lui-même un corpus de vignettes cliniques synthétiques annotées selon un protocole de triage reconnu (par exemple, l’échelle FRENCH ou CIMU), en documentant précisément la méthodologie employée.
+L’utilisation de jeux de données réels comme MIMIC-IV-ED est possible, mais non obligatoire, et il est bien compris que l’accès à ces données peut être contraignant en termes de délais et d’accréditation.
+Aucun dataset de triage annoté n’est fourni dans les ressources du parcours à ce jour. La démarche de création, d’annotation et de documentation du dataset fait donc partie intégrante de l’évaluation du projet.
+Pour la partie questionnaire intelligent adaptatif, il est également attendu que vous construisiez un jeu de données adapté, en vous inspirant de protocoles existants ou en générant des dialogues synthétiques, puisque les corpus cités ne couvrent pas ce besoin.
+Votre démarche de clarification est tout à fait pertinente et conforme aux attendus pédagogiques du projet.
+
+J'espère avoir répondu à votre demande. Si cette réponse ne correspond pas à vos attentes, il vous suffit de répondre à cet email, et un membre de notre équipe prendra le relais.
+
+Cordialement,
+
+
+
+Beaucoup plus accessibles, mais minuscules — quelques dizaines à quelques centaines de cas. Ce sont des jeux d'évaluation, pas d'entraînement :
+
+Le jeu de Levine et al. : 48 cas synthétiques de moins de 50 mots, rédigés à un niveau de lecture accessible, répartis sur quatre catégories d'urgence (urgence immédiate, sous 24 h, sous une semaine, auto-soins), 12 cas par catégorie. C'est exactement ton découpage, en 4 niveaux au lieu de 3.
+PubMed Central
+Ramaswamy et al. : 60 vignettes conversationnelles, chacune déclinée en 16 variations (origine, genre, formulations d'ancrage), soit 960 combinaisons, avec le niveau de triage A-D établi par des cliniciens comme référence. L'accès est réservé aux personnes ayant accès à l'article.
+medrxiv
+medrxiv
+IyàwóBench : 200 vignettes synthétiques sur huit catégories de fièvre indifférenciée, dont les distributions statistiques sont dérivées de 1 200 consultations réelles au Nigeria.
+arXiv
+Un benchmark de triage psychiatrique : 112 vignettes, chacune associée à un label de triage pré-spécifié sur quatre niveaux, construites via un pipeline LLM validé par des cliniciens.
+arxiv
