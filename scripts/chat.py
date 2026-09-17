@@ -46,7 +46,7 @@ def main() -> None:
     messages = [{"role": "system", "content": SYSTEM_PROMPT}]
     print("=" * 60)
     print("  Agent de triage médical — Qwen3-1.7B fine-tuné")
-    print("  Tapez le message du patient (Ctrl+D pour quitter)")
+    print("  Commandes : /new (nouveau chat) · /quit (quitter)")
     print("=" * 60)
     print()
     while True:
@@ -57,6 +57,14 @@ def main() -> None:
             break
         if not user.strip():
             continue
+        cmd = user.strip().lower()
+        if cmd in ("/new", "/nouveau"):
+            messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+            print("\n✨ Nouvelle conversation démarrée.\n")
+            continue
+        if cmd in ("/quit", "/exit"):
+            print("\nFin de la conversation.")
+            break
         messages.append({"role": "user", "content": user})
         try:
             resp = chat(messages)
