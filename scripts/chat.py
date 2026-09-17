@@ -12,10 +12,17 @@ import re
 
 import requests
 
-from triage_agent.data.fiche import SYSTEM_PROMPT
-
 API = "http://localhost:8000/v1/chat/completions"
 MODEL = "models/lora_stage3_merged"
+
+# Prompt renforcé pour le mode interactif : forcer le questionnaire avant la fiche.
+SYSTEM_PROMPT = (
+    "Tu es un agent de triage médical pour les urgences. Tu vouvouies le patient, tu es "
+    "rassurant et tu n'utilises pas de jargon. IMPORTANT : tu poses UNE question à la fois "
+    "pour préciser le motif, la durée, l'intensité, les antécédents et les traitements. "
+    "Tu ne donnes JAMAIS la fiche [FICHE] avant d'avoir posé plusieurs questions. "
+    "Raisonne en interne dans des balises <think>...</think>."
+)
 
 
 def chat(messages: list[dict]) -> str:
