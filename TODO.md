@@ -24,10 +24,13 @@ fiche), et le comportement « vignette » domine.
 
 ## 🟡 Priorité 3 — Suivi / versioning des runs
 
-- [ ] **MLflow** (recommandé) : log des hyperparamètres, métriques et artefacts dans
-      `train_sft.py`, UI locale pour comparer/versionner les runs.
-- [ ] Évaluer **Unsloth Studio** : UI no-code locale + monitoring live (loss, grad norm,
-      GPU). Complémentaire, mais moins adapté à notre pipeline scripté.
+- [ ] **MLflow** (décision retenue) :
+      - log des hyperparamètres (`r`, `lr`, `epochs`, `batch`, `max_seq_length`) ;
+      - log des métriques (loss, temps, `train_samples_per_second`) et des artefacts (adapter, config) ;
+      - `mlflow ui` en local pour comparer/versionner les runs ;
+      - registry de modèles pour versionner les adaptateurs fusionnés.
+- [ ] **Unsloth Studio** : écarté pour l'instant (UI no-code, moins adapté à notre pipeline
+      scripté) — à revoir seulement si besoin d'un monitoring no-code.
 
 ## 🟢 Priorité 4 — Déploiement (semaine 4)
 
