@@ -39,13 +39,18 @@ _QUESTION = {
 
 
 def is_third_person_symptom(symptom: str) -> bool:
-    """Vrai si le symptôme est rapporté à la 3e personne (patient inconscient / tiers).
-
-    Ces scénarios (arrêt cardiorespiratoire, coma…) ne conviennent pas à un dialogue
-    patient en première personne : on les exclut du dataset multi-tours.
-    """
+    """Vrai si le symptôme est rapporté à la 3e personne (patient inconscient / tiers)."""
     s = (symptom or "").strip().lower()
     return s.startswith(("il ", "elle ", "le patient ", "la patiente ", "il s'", "elle s'"))
+
+
+_INCONSCIENT_KEYWORDS = ("respire plus", "réveille", "répond plus", "conscient", "endormi")
+
+
+def is_inconscient_symptom(symptom: str) -> bool:
+    """Vrai si le patient décrit est inconscient / incapable de s'exprimer (→ locuteur tiers)."""
+    s = (symptom or "").strip().lower()
+    return is_third_person_symptom(s) and any(k in s for k in _INCONSCIENT_KEYWORDS)
 
 LLM_SYSTEM = (
     "Tu écris des dialogues réalistes entre un patient et un agent de triage médical aux "
@@ -81,24 +86,33 @@ def _join(items: list[str]) -> str:
     return ", ".join(items[:-1]) + " et " + items[-1]
 
 
-def build_reveal_schedule(cr: dict, rng: random.Random) -> list[tuple[str, str]]:
-    """Construit la liste ordonnée (champ, info) des faits à révéler après le symptôme."""
+def build_reveal_schedule(cr: dict, rng: random.Random, third_party: bool = False) -> list[tuple[str, str]]:
+    """Construit la liste ordonnée (champ, info) des faits à révéler après le symptôme.
+
+    ``third_party=True`` : un proche parle, les infos patient sont au « il ».
+    """
     items: list[tuple[str, str]] = []
     if cr.get("duration"):
         items.append(("durée", f"Depuis {cr['duration']}."))
     if cr.get("pain_scale") is not None:
         items.append(("intensité", f"La douleur est à {cr['pain_scale']} sur 10."))
     if cr.get("self_measured", {}).get("temperature"):
-        items.append(("température", f"J'ai pris ma température : {cr['self_measured']['temperature']} °C."))
+        t = cr["self_measured"]["temperature"]
+        info = f"Il a {t} °C." if third_party else f"J'ai pris ma température : {t} °C."
+        items.append(("température", info))
     if cr.get("history"):
-        items.append(("antécédents", f"J'ai {_join(cr['history'])}."))
+        info = f"Il a {_join(cr['history'])}." if third_party else f"J'ai {_join(cr['history'])}."
+        items.append(("antécédents", info))
     if cr.get("treatments"):
-        items.append(("traitements", f"Je prends {_join(cr['treatments'])}."))
+        info = f"Il prend {_join(cr['treatments'])}." if third_party else f"Je prends {_join(cr['treatments'])}."
+        items.append(("traitements", info))
     rng.shuffle(items)
     return items
 
 
-def build_llm_user_prompt(fact: dict, rule: dict, levels: dict, schedule: list[tuple[str, str]]) -> str:
+def build_llm_user_prompt(
+    fact: dict, rule: dict, levels: dict, schedule: list[tuple[str, str]], third_party: bool = False
+) -> str:
     """Construit le prompt décrivant le profil du patient + les faits de triage."""
     level = int(rule["level"][0])
     unit = fact.get("age_unit", "ans")
@@ -106,6 +120,14 @@ def build_llm_user_prompt(fact: dict, rule: dict, levels: dict, schedule: list[t
         "Profil du patient :",
         f"- sexe : {fact['sex']}, âge : {fact['age']} {unit}",
         f"- Symptôme principal (à révéler dès l'ouverture) : « {rule['symptom']} »",
+    ]
+    if third_party:
+        lines += [
+            "- LOCUTEUR : un proche du patient (conjoint, parent, enfant). Le patient ne peut "
+            "pas s'exprimer : le proche parle à la 1re personne pour lui-même et à la 3e personne "
+            "(« il »/« elle ») pour le patient.",
+        ]
+    lines += [
         "",
         "Informations à révéler progressivement, DANS CET ORDRE :",
     ]
@@ -237,13 +259,16 @@ def generate_dialogue_llm(
     motif_label: str,
     model: str = MODEL,
     schedule: list[tuple[str, str]] | None = None,
+    third_party: bool = False,
 ) -> tuple[list[dict], dict]:
     """Génère le dialogue via le LLM ; replie sur le scripté en cas d'échec."""
     if schedule is None:
-        schedule = build_reveal_schedule(fact["patient_observable"]["can_report"], random.Random())
+        schedule = build_reveal_schedule(
+            fact["patient_observable"]["can_report"], random.Random(), third_party
+        )
 
     try:
-        user = build_llm_user_prompt(fact, rule, levels, schedule)
+        user = build_llm_user_prompt(fact, rule, levels, schedule, third_party)
         raw = ollama_chat(
             model, LLM_SYSTEM, user, temperature=0.7, timeout=600,
             think=False, stop=_NO_THINK_STOP,

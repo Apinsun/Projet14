@@ -4,12 +4,32 @@
   "source_url": "https://www.sfmu.org/upload/referentielsSFMU/FRENCH_A4_v181003.pdf",
   "note": "16 catégories encodées. Schéma de règle : condition (référence FRENCH), symptom (vécu patient), objective (mesuré), vitals (plages), proxy (question à poser), red_flag.",
   "levels": {
-    "1": {"label": "Détresse vitale majeure", "delai_medecin": "immédiat", "delai_ide": "immédiat"},
-    "2": {"label": "Atteinte patente d'un organe / lésion traumatique sévère", "delai_medecin": "< 20 min", "delai_ide": "< 10 min"},
-    "3a": {"label": "Atteinte potentielle d'un organe / comorbidités lourdes / patient adressé", "delai_medecin": "< 60 min"},
-    "3b": {"label": "Atteinte fonctionnelle ou lésionnelle stable", "delai_medecin": "< 90 min"},
-    "4": {"label": "Atteinte fonctionnelle/lésionnelle stable, acte limité", "delai_medecin": "< 120 min"},
-    "5": {"label": "Pas d'atteinte fonctionnelle ou lésionnelle évidente", "delai_medecin": "< 240 min"}
+    "1": {
+      "label": "Détresse vitale majeure",
+      "delai_medecin": "immédiat",
+      "delai_ide": "immédiat"
+    },
+    "2": {
+      "label": "Atteinte patente d'un organe / lésion traumatique sévère",
+      "delai_medecin": "< 20 min",
+      "delai_ide": "< 10 min"
+    },
+    "3a": {
+      "label": "Atteinte potentielle d'un organe / comorbidités lourdes / patient adressé",
+      "delai_medecin": "< 60 min"
+    },
+    "3b": {
+      "label": "Atteinte fonctionnelle ou lésionnelle stable",
+      "delai_medecin": "< 90 min"
+    },
+    "4": {
+      "label": "Atteinte fonctionnelle/lésionnelle stable, acte limité",
+      "delai_medecin": "< 120 min"
+    },
+    "5": {
+      "label": "Pas d'atteinte fonctionnelle ou lésionnelle évidente",
+      "delai_medecin": "< 240 min"
+    }
   },
   "categories": {
     "cardio": {
@@ -18,97 +38,502 @@
         "arret_cardiorespiratoire": {
           "label": "Arrêt cardiorespiratoire",
           "rules": [
-            {"level": "1", "condition": "arrêt cardiorespiratoire", "symptom": "il ne respire plus, il est inconscient", "objective": ["arrêt cardiorespiratoire"], "proxy": "Est-ce qu'il respire ? Répond-il ?", "red_flag": true, "vitals": null}
+            {
+              "level": "1",
+              "condition": "arrêt cardiorespiratoire",
+              "symptom": "il ne respire plus, il est inconscient",
+              "objective": [
+                "arrêt cardiorespiratoire"
+              ],
+              "proxy": "Est-ce qu'il respire ? Répond-il ?",
+              "red_flag": true,
+              "vitals": null
+            }
           ]
         },
         "hypotension_collapsus": {
           "label": "Hypotension / collapsus",
           "rules": [
-            {"level": "1", "condition": "PAS ≤ 70 mmHg", "symptom": "je me sens très mal, je vais tomber, je transpire froid", "objective": ["PAS ≤ 70 mmHg"], "proxy": "Vous sentez-vous sur le point de tomber ?", "red_flag": true, "vitals": {"PAS": [[50, 70]]}},
-            {"level": "2", "condition": "PAS ≤ 90 mmHg, ou ≤ 100 avec FC > 100/min", "symptom": "je me sens mal quand je me lève, j'ai des vertiges", "objective": ["PAS ≤ 90 mmHg"], "proxy": "Avez-vous des vertiges en vous levant ?", "red_flag": true, "vitals": {"PAS": [[70, 90]]}}
+            {
+              "level": "1",
+              "condition": "PAS ≤ 70 mmHg",
+              "symptom": "je me sens très mal, je vais tomber, je transpire froid",
+              "objective": [
+                "PAS ≤ 70 mmHg"
+              ],
+              "proxy": "Vous sentez-vous sur le point de tomber ?",
+              "red_flag": true,
+              "vitals": {
+                "PAS": [
+                  [
+                    50,
+                    70
+                  ]
+                ]
+              }
+            },
+            {
+              "level": "2",
+              "condition": "PAS ≤ 90 mmHg, ou ≤ 100 avec FC > 100/min",
+              "symptom": "je me sens mal quand je me lève, j'ai des vertiges",
+              "objective": [
+                "PAS ≤ 90 mmHg"
+              ],
+              "proxy": "Avez-vous des vertiges en vous levant ?",
+              "red_flag": true,
+              "vitals": {
+                "PAS": [
+                  [
+                    70,
+                    90
+                  ]
+                ]
+              }
+            }
           ]
         },
         "ischemie_membre": {
           "label": "Membre douloureux / froid ou pâle / ischémie",
           "rules": [
-            {"level": "2", "condition": "durée ≤ 24 h et/ou cyanose/déficit moteur", "symptom": "ma jambe est froide, pâle et très douloureuse depuis quelques heures", "objective": ["cyanose", "déficit moteur"], "proxy": "Votre membre est-il froid, pâle ou engourdi ?", "red_flag": true, "vitals": null},
-            {"level": "4", "condition": "durée ≥ 24 h", "symptom": "ma jambe est froide et pâle depuis plus d'une journée", "objective": [], "proxy": "Depuis combien de temps ?", "red_flag": false, "vitals": null}
+            {
+              "level": "2",
+              "condition": "durée ≤ 24 h et/ou cyanose/déficit moteur",
+              "symptom": "ma jambe est froide, pâle et très douloureuse depuis quelques heures",
+              "objective": [
+                "cyanose",
+                "déficit moteur"
+              ],
+              "proxy": "Votre membre est-il froid, pâle ou engourdi ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "durée ≥ 24 h",
+              "symptom": "ma jambe est froide et pâle depuis plus d'une journée",
+              "objective": [],
+              "proxy": "Depuis combien de temps ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "douleur_thoracique": {
           "label": "Douleur thoracique / syndrome coronaire",
           "rules": [
-            {"level": "2", "condition": "ECG typique de SCA", "symptom": "douleur dans la poitrine qui serre fort et qui descend dans le bras", "objective": ["ECG typique de SCA"], "proxy": "La douleur serre-t-elle et descend-elle dans le bras ou la mâchoire ?", "red_flag": true, "vitals": null},
-            {"level": "2", "condition": "douleur thoracique intense et persistante", "symptom": "mal à la poitrine, très fort, ça ne passe pas", "objective": [], "proxy": "La douleur est-elle forte et continue ?", "red_flag": true, "vitals": null},
-            {"level": "3a", "condition": "ECG anormal non typique de SCA", "symptom": "mal à la poitrine", "objective": ["ECG anormal non typique"], "proxy": "Où se situe la douleur ?", "red_flag": false, "vitals": null},
-            {"level": "3b", "condition": "ECG normal mais coronarien ou ≥ 3 facteurs de risque", "symptom": "mal à la poitrine", "objective": ["ECG normal", "≥ 3 facteurs de risque cardiovasculaire"], "proxy": "Avez-vous des antécédents cardiaques ?", "red_flag": false, "vitals": null},
-            {"level": "4", "condition": "ECG normal et douleur typique de SCA", "symptom": "douleur dans la poitrine qui serre, avec des sueurs", "objective": ["ECG normal"], "proxy": "La douleur est-elle serrante, avec des sueurs ?", "red_flag": false, "vitals": null},
-            {"level": "5", "condition": "ECG normal et douleur atypique", "symptom": "douleur dans la poitrine qui va et vient, qui change selon la position", "objective": ["ECG normal"], "proxy": "La douleur change-t-elle selon la position ?", "red_flag": false, "vitals": null}
+            {
+              "level": "2",
+              "condition": "ECG typique de SCA",
+              "symptom": "douleur dans la poitrine qui serre fort et qui descend dans le bras",
+              "objective": [
+                "ECG typique de SCA"
+              ],
+              "proxy": "La douleur serre-t-elle et descend-elle dans le bras ou la mâchoire ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "2",
+              "condition": "douleur thoracique intense et persistante",
+              "symptom": "mal à la poitrine, très fort, ça ne passe pas",
+              "objective": [],
+              "proxy": "La douleur est-elle forte et continue ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "3a",
+              "condition": "ECG anormal non typique de SCA",
+              "symptom": "mal à la poitrine",
+              "objective": [
+                "ECG anormal non typique"
+              ],
+              "proxy": "Où se situe la douleur ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "ECG normal mais coronarien ou ≥ 3 facteurs de risque",
+              "symptom": "mal à la poitrine",
+              "objective": [
+                "ECG normal",
+                "≥ 3 facteurs de risque cardiovasculaire"
+              ],
+              "proxy": "Avez-vous des antécédents cardiaques ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "ECG normal et douleur typique de SCA",
+              "symptom": "douleur dans la poitrine qui serre, avec des sueurs",
+              "objective": [
+                "ECG normal"
+              ],
+              "proxy": "La douleur est-elle serrante, avec des sueurs ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "5",
+              "condition": "ECG normal et douleur atypique",
+              "symptom": "douleur dans la poitrine qui va et vient, qui change selon la position",
+              "objective": [
+                "ECG normal"
+              ],
+              "proxy": "La douleur change-t-elle selon la position ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "malaise": {
           "label": "Malaise",
           "rules": [
-            {"level": "3a", "condition": "malaise avec prodromes / contexte cardiaque", "symptom": "j'ai failli tomber, j'avais des sueurs et j'étais pâle", "objective": [], "proxy": "Le malaise a-t-il été précédé de sueurs ou de pâleur ?", "red_flag": false, "vitals": null},
-            {"level": "3b", "condition": "malaise isolé", "symptom": "j'ai fait un petit malaise, ça a duré quelques secondes", "objective": [], "proxy": "Combien de temps a duré le malaise ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "malaise avec prodromes / contexte cardiaque",
+              "symptom": "j'ai failli tomber, j'avais des sueurs et j'étais pâle",
+              "objective": [],
+              "proxy": "Le malaise a-t-il été précédé de sueurs ou de pâleur ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "malaise isolé",
+              "symptom": "j'ai fait un petit malaise, ça a duré quelques secondes",
+              "objective": [],
+              "proxy": "Combien de temps a duré le malaise ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "tachycardie": {
           "label": "Tachycardie / tachyarythmie",
           "rules": [
-            {"level": "2", "condition": "FC ≥ 180/min", "symptom": "mon cœur bat très très vite, je me sens mal", "objective": ["FC ≥ 180/min"], "proxy": "Votre cœur bat-il très vite ?", "red_flag": true, "vitals": {"FC": [[180, 210]]}},
-            {"level": "3a", "condition": "FC ≥ 130/min, ou ≥ 110 avec TAS < 110", "symptom": "j'ai des palpitations, mon cœur bat vite", "objective": ["FC ≥ 130/min"], "proxy": "Sentez-vous votre cœur battre vite ?", "red_flag": false, "vitals": {"FC": [[130, 180]]}},
-            {"level": "3b", "condition": "FC ≥ 110/min avec TAS ≥ 110", "symptom": "j'ai des palpitations", "objective": ["FC ≥ 110/min"], "proxy": "Avez-vous des palpitations ?", "red_flag": false, "vitals": {"FC": [[110, 129]]}}
+            {
+              "level": "2",
+              "condition": "FC ≥ 180/min",
+              "symptom": "mon cœur bat très très vite, je me sens mal",
+              "objective": [
+                "FC ≥ 180/min"
+              ],
+              "proxy": "Votre cœur bat-il très vite ?",
+              "red_flag": true,
+              "vitals": {
+                "FC": [
+                  [
+                    180,
+                    210
+                  ]
+                ]
+              }
+            },
+            {
+              "level": "3a",
+              "condition": "FC ≥ 130/min, ou ≥ 110 avec TAS < 110",
+              "symptom": "j'ai des palpitations, mon cœur bat vite",
+              "objective": [
+                "FC ≥ 130/min"
+              ],
+              "proxy": "Sentez-vous votre cœur battre vite ?",
+              "red_flag": false,
+              "vitals": {
+                "FC": [
+                  [
+                    130,
+                    180
+                  ]
+                ]
+              }
+            },
+            {
+              "level": "3b",
+              "condition": "FC ≥ 110/min avec TAS ≥ 110",
+              "symptom": "j'ai des palpitations",
+              "objective": [
+                "FC ≥ 110/min"
+              ],
+              "proxy": "Avez-vous des palpitations ?",
+              "red_flag": false,
+              "vitals": {
+                "FC": [
+                  [
+                    110,
+                    129
+                  ]
+                ]
+              }
+            }
           ]
         },
         "bradycardie": {
           "label": "Bradycardie / bradyarythmie",
           "rules": [
-            {"level": "2", "condition": "FC ≤ 40/min", "symptom": "je me sens faible et étourdi", "objective": ["FC ≤ 40/min"], "proxy": "Vous sentez-vous faible ou étourdi ?", "red_flag": true, "vitals": {"FC": [[30, 40]]}},
-            {"level": "3b", "condition": "FC 40-50/min avec signes associés", "symptom": "je me sens fatigué, avec des vertiges", "objective": ["FC 40-50/min"], "proxy": "Ressentez-vous une fatigue ou des vertiges ?", "red_flag": false, "vitals": {"FC": [[40, 50]]}},
-            {"level": "4", "condition": "FC 40-50/min sans signes associés", "symptom": "j'ai remarqué que mon pouls était lent", "objective": ["FC 40-50/min"], "proxy": "Avez-vous remarqué un pouls lent ?", "red_flag": false, "vitals": {"FC": [[40, 50]]}}
+            {
+              "level": "2",
+              "condition": "FC ≤ 40/min",
+              "symptom": "je me sens faible et étourdi",
+              "objective": [
+                "FC ≤ 40/min"
+              ],
+              "proxy": "Vous sentez-vous faible ou étourdi ?",
+              "red_flag": true,
+              "vitals": {
+                "FC": [
+                  [
+                    30,
+                    40
+                  ]
+                ]
+              }
+            },
+            {
+              "level": "3b",
+              "condition": "FC 40-50/min avec signes associés",
+              "symptom": "je me sens fatigué, avec des vertiges",
+              "objective": [
+                "FC 40-50/min"
+              ],
+              "proxy": "Ressentez-vous une fatigue ou des vertiges ?",
+              "red_flag": false,
+              "vitals": {
+                "FC": [
+                  [
+                    40,
+                    50
+                  ]
+                ]
+              }
+            },
+            {
+              "level": "4",
+              "condition": "FC 40-50/min sans signes associés",
+              "symptom": "j'ai remarqué que mon pouls était lent",
+              "objective": [
+                "FC 40-50/min"
+              ],
+              "proxy": "Avez-vous remarqué un pouls lent ?",
+              "red_flag": false,
+              "vitals": {
+                "FC": [
+                  [
+                    40,
+                    50
+                  ]
+                ]
+              }
+            }
           ]
         },
         "dyspnee_insuffisance_cardiaque": {
           "label": "Dyspnée / insuffisance cardiaque",
           "rules": [
-            {"level": "2", "condition": "détresse respiratoire ou FR ≥ 40/min", "symptom": "j'ai beaucoup de mal à respirer, je ne peux pas finir mes phrases", "objective": ["FR ≥ 40/min"], "proxy": "Pouvez-vous parler sans vous arrêter pour respirer ?", "red_flag": true, "vitals": {"FR": [[40, 50]]}},
-            {"level": "3a", "condition": "dyspnée sévère", "symptom": "je suis très essoufflé au moindre effort", "objective": [], "proxy": "Êtes-vous essoufflé au moindre effort ?", "red_flag": false, "vitals": null},
-            {"level": "3b", "condition": "FR 30-40/min ou SpO2 86-90%", "symptom": "je suis essoufflé même au repos", "objective": ["FR 30-40/min", "SpO2 86-90%"], "proxy": "Êtes-vous essoufflé au repos ?", "red_flag": false, "vitals": {"FR": [[30, 40]], "SpO2": [[86, 90]]}}
+            {
+              "level": "2",
+              "condition": "détresse respiratoire ou FR ≥ 40/min",
+              "symptom": "j'ai beaucoup de mal à respirer, je ne peux pas finir mes phrases",
+              "objective": [
+                "FR ≥ 40/min"
+              ],
+              "proxy": "Pouvez-vous parler sans vous arrêter pour respirer ?",
+              "red_flag": true,
+              "vitals": {
+                "FR": [
+                  [
+                    40,
+                    50
+                  ]
+                ]
+              }
+            },
+            {
+              "level": "3a",
+              "condition": "dyspnée sévère",
+              "symptom": "je suis très essoufflé au moindre effort",
+              "objective": [],
+              "proxy": "Êtes-vous essoufflé au moindre effort ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "FR 30-40/min ou SpO2 86-90%",
+              "symptom": "je suis essoufflé même au repos",
+              "objective": [
+                "FR 30-40/min",
+                "SpO2 86-90%"
+              ],
+              "proxy": "Êtes-vous essoufflé au repos ?",
+              "red_flag": false,
+              "vitals": {
+                "FR": [
+                  [
+                    30,
+                    40
+                  ]
+                ],
+                "SpO2": [
+                  [
+                    86,
+                    90
+                  ]
+                ]
+              }
+            }
           ]
         },
         "oedeme_membres": {
           "label": "Œdème des membres inférieurs / insuffisance cardiaque",
           "rules": [
-            {"level": "3b", "condition": "œdème des membres inférieurs chronique", "symptom": "j'ai les jambes enflées depuis longtemps", "objective": ["œdème chronique"], "proxy": "Vos jambes sont-elles enflées depuis longtemps ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3b",
+              "condition": "œdème des membres inférieurs chronique",
+              "symptom": "j'ai les jambes enflées depuis longtemps",
+              "objective": [
+                "œdème chronique"
+              ],
+              "proxy": "Vos jambes sont-elles enflées depuis longtemps ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "palpitations": {
           "label": "Palpitations",
           "rules": [
-            {"level": "3a", "condition": "FC ≥ 180/min", "symptom": "mon cœur bat très vite, j'ai des palpitations fortes", "objective": ["FC ≥ 180/min"], "proxy": "Votre cœur bat-il très vite ?", "red_flag": false, "vitals": {"FC": [[180, 210]]}},
-            {"level": "4", "condition": "FC ≥ 140/min avec malaise", "symptom": "j'ai des palpitations avec une sensation de malaise", "objective": ["FC ≥ 140/min"], "proxy": "Avez-vous des palpitations avec malaise ?", "red_flag": false, "vitals": {"FC": [[140, 179]]}}
+            {
+              "level": "3a",
+              "condition": "FC ≥ 180/min",
+              "symptom": "mon cœur bat très vite, j'ai des palpitations fortes",
+              "objective": [
+                "FC ≥ 180/min"
+              ],
+              "proxy": "Votre cœur bat-il très vite ?",
+              "red_flag": false,
+              "vitals": {
+                "FC": [
+                  [
+                    180,
+                    210
+                  ]
+                ]
+              }
+            },
+            {
+              "level": "4",
+              "condition": "FC ≥ 140/min avec malaise",
+              "symptom": "j'ai des palpitations avec une sensation de malaise",
+              "objective": [
+                "FC ≥ 140/min"
+              ],
+              "proxy": "Avez-vous des palpitations avec malaise ?",
+              "red_flag": false,
+              "vitals": {
+                "FC": [
+                  [
+                    140,
+                    179
+                  ]
+                ]
+              }
+            }
           ]
         },
         "hypertension": {
           "label": "Hypertension artérielle",
           "rules": [
-            {"level": "3a", "condition": "TAS ≥ 220 mmHg ou ≥ 180 avec signes associés", "symptom": "on m'a trouvé une tension très élevée, j'ai mal à la tête", "objective": ["TAS ≥ 180 mmHg"], "proxy": "Vous a-t-on déjà mesuré la tension ?", "red_flag": false, "vitals": {"PAS": [[180, 230]]}},
-            {"level": "4", "condition": "TAS ≥ 180 mmHg isolée", "symptom": "on m'a trouvé de la tension, mais je me sens bien", "objective": ["TAS ≥ 180 mmHg"], "proxy": "Avez-vous des symptômes ?", "red_flag": false, "vitals": {"PAS": [[180, 219]]}}
+            {
+              "level": "3a",
+              "condition": "TAS ≥ 220 mmHg ou ≥ 180 avec signes associés",
+              "symptom": "on m'a trouvé une tension très élevée, j'ai mal à la tête",
+              "objective": [
+                "TAS ≥ 180 mmHg"
+              ],
+              "proxy": "Vous a-t-on déjà mesuré la tension ?",
+              "red_flag": false,
+              "vitals": {
+                "PAS": [
+                  [
+                    180,
+                    230
+                  ]
+                ]
+              }
+            },
+            {
+              "level": "4",
+              "condition": "TAS ≥ 180 mmHg isolée",
+              "symptom": "on m'a trouvé de la tension, mais je me sens bien",
+              "objective": [
+                "TAS ≥ 180 mmHg"
+              ],
+              "proxy": "Avez-vous des symptômes ?",
+              "red_flag": false,
+              "vitals": {
+                "PAS": [
+                  [
+                    180,
+                    219
+                  ]
+                ]
+              }
+            }
           ]
         },
         "phlebite": {
           "label": "Membre douloureux / chaud ou rouge / phlébite",
           "rules": [
-            {"level": "3a", "condition": "signes locaux francs ou siège proximal", "symptom": "ma jambe est rouge, chaude et gonflée", "objective": ["signes de phlébite"], "proxy": "Votre jambe est-elle rouge, chaude ou gonflée ?", "red_flag": false, "vitals": null},
-            {"level": "4", "condition": "signes locaux modérés ou siège distal", "symptom": "j'ai une petite zone rouge et chaude sur la jambe", "objective": [], "proxy": "La zone est-elle étendue ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "signes locaux francs ou siège proximal",
+              "symptom": "ma jambe est rouge, chaude et gonflée",
+              "objective": [
+                "signes de phlébite"
+              ],
+              "proxy": "Votre jambe est-elle rouge, chaude ou gonflée ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "signes locaux modérés ou siège distal",
+              "symptom": "j'ai une petite zone rouge et chaude sur la jambe",
+              "objective": [],
+              "proxy": "La zone est-elle étendue ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "aes": {
           "label": "Accident d'exposition au sang",
           "rules": [
-            {"level": "3a", "condition": "contact VIH avéré et exposition ≤ 48 h", "symptom": "je me suis piqué avec une aiguille, il y a moins de 48 h", "objective": ["exposition ≤ 48 h"], "proxy": "Depuis combien de temps ?", "red_flag": false, "vitals": null},
-            {"level": "4", "condition": "exposition ≥ 48 h", "symptom": "je me suis piqué avec une aiguille il y a plusieurs jours", "objective": ["exposition ≥ 48 h"], "proxy": "Depuis combien de temps ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "contact VIH avéré et exposition ≤ 48 h",
+              "symptom": "je me suis piqué avec une aiguille, il y a moins de 48 h",
+              "objective": [
+                "exposition ≤ 48 h"
+              ],
+              "proxy": "Depuis combien de temps ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "exposition ≥ 48 h",
+              "symptom": "je me suis piqué avec une aiguille il y a plusieurs jours",
+              "objective": [
+                "exposition ≥ 48 h"
+              ],
+              "proxy": "Depuis combien de temps ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         }
       }
@@ -119,17 +544,98 @@
         "fievre": {
           "label": "Fièvre",
           "rules": [
-            {"level": "3a", "condition": "température ≥ 40°C ou ≤ 35.2°C", "symptom": "je me sens très mal, j'ai des frissons", "objective": [], "proxy": "Avez-vous mesuré votre température ?", "red_flag": true, "vitals": {"T": [[40.0, 41.0], [34.0, 35.2]]}},
-            {"level": "3a", "condition": "confusion, céphalée intense ou purpura", "symptom": "je me sens perdu, j'ai très mal à la tête, et j'ai des taches violettes sur la peau", "objective": [], "proxy": "Vous sentez-vous perdu ? Avez-vous mal à la tête ou des taches violettes ?", "red_flag": true, "vitals": null},
-            {"level": "3b", "condition": "altération de l'état général, hypotension, shock index ≥ 1", "symptom": "je suis épuisé, j'ai des frissons, je me sens très faible", "objective": ["shock index ≥ 1"], "proxy": "Vous sentez-vous très affaibli ?", "red_flag": false, "vitals": {"PAS": [[70, 90]], "FC": [[100, 130]]}},
-            {"level": "5", "condition": "fièvre isolée sans signe associé", "symptom": "j'ai de la fièvre, sinon ça va", "objective": [], "proxy": "Avez-vous d'autres symptômes que la fièvre ?", "red_flag": false, "vitals": {"T": [[38.0, 39.5]]}}
+            {
+              "level": "3a",
+              "condition": "température ≥ 40°C ou ≤ 35.2°C",
+              "symptom": "je me sens très mal, j'ai des frissons",
+              "objective": [],
+              "proxy": "Avez-vous mesuré votre température ?",
+              "red_flag": true,
+              "vitals": {
+                "T": [
+                  [
+                    40.0,
+                    41.0
+                  ],
+                  [
+                    34.0,
+                    35.2
+                  ]
+                ]
+              }
+            },
+            {
+              "level": "3a",
+              "condition": "confusion, céphalée intense ou purpura",
+              "symptom": "je me sens perdu, j'ai très mal à la tête, et j'ai des taches violettes sur la peau",
+              "objective": [],
+              "proxy": "Vous sentez-vous perdu ? Avez-vous mal à la tête ou des taches violettes ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "altération de l'état général, hypotension, shock index ≥ 1",
+              "symptom": "je suis épuisé, j'ai des frissons, je me sens très faible",
+              "objective": [
+                "shock index ≥ 1"
+              ],
+              "proxy": "Vous sentez-vous très affaibli ?",
+              "red_flag": false,
+              "vitals": {
+                "PAS": [
+                  [
+                    70,
+                    90
+                  ]
+                ],
+                "FC": [
+                  [
+                    100,
+                    130
+                  ]
+                ]
+              }
+            },
+            {
+              "level": "5",
+              "condition": "fièvre isolée sans signe associé",
+              "symptom": "j'ai de la fièvre, sinon ça va",
+              "objective": [],
+              "proxy": "Avez-vous d'autres symptômes que la fièvre ?",
+              "red_flag": false,
+              "vitals": {
+                "T": [
+                  [
+                    38.0,
+                    39.5
+                  ]
+                ]
+              }
+            }
           ]
         },
         "exposition_maladie_contagieuse": {
           "label": "Exposition à une maladie contagieuse",
           "rules": [
-            {"level": "3a", "condition": "risque vital de contage (méningite, Ebola…)", "symptom": "j'ai côtoyé une personne qui a une méningite", "objective": [], "proxy": "Avez-vous été en contact avec un cas de méningite ?", "red_flag": true, "vitals": null},
-            {"level": "5", "condition": "sans risque vital de contage (rougeole, varicelle…)", "symptom": "j'ai été en contact avec une personne qui a la rougeole", "objective": [], "proxy": "Quelle maladie la personne avait-elle ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "risque vital de contage (méningite, Ebola…)",
+              "symptom": "j'ai côtoyé une personne qui a une méningite",
+              "objective": [],
+              "proxy": "Avez-vous été en contact avec un cas de méningite ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "5",
+              "condition": "sans risque vital de contage (rougeole, varicelle…)",
+              "symptom": "j'ai été en contact avec une personne qui a la rougeole",
+              "objective": [],
+              "proxy": "Quelle maladie la personne avait-elle ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         }
       }
@@ -140,92 +646,304 @@
         "hematemese": {
           "label": "Vomissement de sang / hématémèse",
           "rules": [
-            {"level": "2", "condition": "hématémèse abondante", "symptom": "j'ai vomi beaucoup de sang rouge", "objective": ["hématémèse abondante"], "proxy": "Avez-vous vomi du sang ? En grande quantité ?", "red_flag": true, "vitals": null},
-            {"level": "3b", "condition": "vomissements striés de sang", "symptom": "j'ai vomi avec quelques filets de sang", "objective": [], "proxy": "Y avait-il du sang dans les vomissements ?", "red_flag": false, "vitals": null}
+            {
+              "level": "2",
+              "condition": "hématémèse abondante",
+              "symptom": "j'ai vomi beaucoup de sang rouge",
+              "objective": [
+                "hématémèse abondante"
+              ],
+              "proxy": "Avez-vous vomi du sang ? En grande quantité ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "vomissements striés de sang",
+              "symptom": "j'ai vomi avec quelques filets de sang",
+              "objective": [],
+              "proxy": "Y avait-il du sang dans les vomissements ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "rectorragie": {
           "label": "Melaena / rectorragies",
           "rules": [
-            {"level": "2", "condition": "rectorragie abondante", "symptom": "j'ai perdu beaucoup de sang par l'anus", "objective": ["rectorragie abondante"], "proxy": "Avez-vous perdu du sang par l'anus ?", "red_flag": true, "vitals": null},
-            {"level": "3b", "condition": "selles souillées de sang", "symptom": "mes selles sont noires ou avec du sang", "objective": [], "proxy": "Vos selles sont-elles noires ou sanglantes ?", "red_flag": false, "vitals": null}
+            {
+              "level": "2",
+              "condition": "rectorragie abondante",
+              "symptom": "j'ai perdu beaucoup de sang par l'anus",
+              "objective": [
+                "rectorragie abondante"
+              ],
+              "proxy": "Avez-vous perdu du sang par l'anus ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "selles souillées de sang",
+              "symptom": "mes selles sont noires ou avec du sang",
+              "objective": [],
+              "proxy": "Vos selles sont-elles noires ou sanglantes ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "douleur_abdominale": {
           "label": "Douleur abdominale",
           "rules": [
-            {"level": "3a", "condition": "douleur sévère et/ou signes généraux associés", "symptom": "j'ai très mal au ventre, je suis pâle et en sueur", "objective": [], "proxy": "La douleur est-elle très forte ?", "red_flag": false, "vitals": null},
-            {"level": "3b", "condition": "douleur régressive / indolore", "symptom": "j'ai mal au ventre mais ça s'est calmé", "objective": [], "proxy": "La douleur est-elle en train de passer ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "douleur sévère et/ou signes généraux associés",
+              "symptom": "j'ai très mal au ventre, je suis pâle et en sueur",
+              "objective": [],
+              "proxy": "La douleur est-elle très forte ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "douleur régressive / indolore",
+              "symptom": "j'ai mal au ventre mais ça s'est calmé",
+              "objective": [],
+              "proxy": "La douleur est-elle en train de passer ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "ictere": {
           "label": "Ictère",
           "rules": [
-            {"level": "3a", "condition": "signes généraux associés", "symptom": "je suis tout jaune et je me sens très fatigué", "objective": [], "proxy": "Avez-vous remarqué un jaunissement ?", "red_flag": false, "vitals": null},
-            {"level": "3b", "condition": "ictère isolé", "symptom": "j'ai la peau un peu jaune", "objective": [], "proxy": "Depuis quand êtes-vous jaune ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "signes généraux associés",
+              "symptom": "je suis tout jaune et je me sens très fatigué",
+              "objective": [],
+              "proxy": "Avez-vous remarqué un jaunissement ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "ictère isolé",
+              "symptom": "j'ai la peau un peu jaune",
+              "objective": [],
+              "proxy": "Depuis quand êtes-vous jaune ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "hernie_occlusion": {
           "label": "Hernie, masse ou distension abdominale",
           "rules": [
-            {"level": "4", "condition": "douleur sévère et/ou symptômes d'occlusion", "symptom": "j'ai une boule au ventre, douloureuse, et je ne vais plus à la selle", "objective": [], "proxy": "Allez-vous à la selle normalement ?", "red_flag": false, "vitals": null},
-            {"level": "5", "condition": "hernie non compliquée", "symptom": "j'ai une petite boule au ventre, sans douleur", "objective": [], "proxy": "La boule est-elle douloureuse ?", "red_flag": false, "vitals": null}
+            {
+              "level": "4",
+              "condition": "douleur sévère et/ou symptômes d'occlusion",
+              "symptom": "j'ai une boule au ventre, douloureuse, et je ne vais plus à la selle",
+              "objective": [],
+              "proxy": "Allez-vous à la selle normalement ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "5",
+              "condition": "hernie non compliquée",
+              "symptom": "j'ai une petite boule au ventre, sans douleur",
+              "objective": [],
+              "proxy": "La boule est-elle douloureuse ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "corps_etranger_oesophage": {
           "label": "Corps étranger dans l'œsophage / estomac",
           "rules": [
-            {"level": "3a", "condition": "aphagie ou hypersialorrhée", "symptom": "j'ai avalé quelque chose, je ne peux plus avaler ma salive", "objective": [], "proxy": "Pouvez-vous encore avaler ?", "red_flag": false, "vitals": null},
-            {"level": "4", "condition": "corps étranger tranchant ou pointu", "symptom": "j'ai avalé un petit objet pointu", "objective": [], "proxy": "Qu'avez-vous avalé ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "aphagie ou hypersialorrhée",
+              "symptom": "j'ai avalé quelque chose, je ne peux plus avaler ma salive",
+              "objective": [],
+              "proxy": "Pouvez-vous encore avaler ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "corps étranger tranchant ou pointu",
+              "symptom": "j'ai avalé un petit objet pointu",
+              "objective": [],
+              "proxy": "Qu'avez-vous avalé ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "vomissements": {
           "label": "Vomissements",
           "rules": [
-            {"level": "4", "condition": "douleur abdominale ou vomissements abondants", "symptom": "je vomis beaucoup et j'ai mal au ventre", "objective": [], "proxy": "Vomissez-vous beaucoup ?", "red_flag": false, "vitals": null},
-            {"level": "5", "condition": "vomissements isolés", "symptom": "j'ai vomi une ou deux fois", "objective": [], "proxy": "Combien de fois avez-vous vomi ?", "red_flag": false, "vitals": null}
+            {
+              "level": "4",
+              "condition": "douleur abdominale ou vomissements abondants",
+              "symptom": "je vomis beaucoup et j'ai mal au ventre",
+              "objective": [],
+              "proxy": "Vomissez-vous beaucoup ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "5",
+              "condition": "vomissements isolés",
+              "symptom": "j'ai vomi une ou deux fois",
+              "objective": [],
+              "proxy": "Combien de fois avez-vous vomi ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "diarrhee": {
           "label": "Diarrhée",
           "rules": [
-            {"level": "4", "condition": "diarrhées abondantes et/ou signes généraux", "symptom": "j'ai une diarrhée très abondante et je me sens faible", "objective": [], "proxy": "La diarrhée est-elle abondante ?", "red_flag": false, "vitals": null},
-            {"level": "5", "condition": "diarrhée isolée", "symptom": "j'ai la diarrhée depuis ce matin, rien d'autre", "objective": [], "proxy": "Avez-vous d'autres symptômes ?", "red_flag": false, "vitals": null}
+            {
+              "level": "4",
+              "condition": "diarrhées abondantes et/ou signes généraux",
+              "symptom": "j'ai une diarrhée très abondante et je me sens faible",
+              "objective": [],
+              "proxy": "La diarrhée est-elle abondante ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "5",
+              "condition": "diarrhée isolée",
+              "symptom": "j'ai la diarrhée depuis ce matin, rien d'autre",
+              "objective": [],
+              "proxy": "Avez-vous d'autres symptômes ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "douleur_fosse_lombaire": {
           "label": "Douleur de la fosse lombaire / du flanc",
           "rules": [
-            {"level": "3a", "condition": "douleur intense", "symptom": "j'ai très mal dans le dos, sur le côté", "objective": [], "proxy": "La douleur est-elle très forte ?", "red_flag": false, "vitals": null},
-            {"level": "3b", "condition": "douleur régressive / indolore", "symptom": "j'ai eu mal sur le côté mais ça va mieux", "objective": [], "proxy": "La douleur est-elle en train de passer ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "douleur intense",
+              "symptom": "j'ai très mal dans le dos, sur le côté",
+              "objective": [],
+              "proxy": "La douleur est-elle très forte ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "douleur régressive / indolore",
+              "symptom": "j'ai eu mal sur le côté mais ça va mieux",
+              "objective": [],
+              "proxy": "La douleur est-elle en train de passer ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "retention_urine": {
           "label": "Rétention d'urine / anurie",
           "rules": [
-            {"level": "3b", "condition": "douleur intense / agitation", "symptom": "je n'arrive plus à uriner et j'ai très mal au ventre", "objective": [], "proxy": "Arrivez-vous à uriner ?", "red_flag": false, "vitals": null},
-            {"level": "4", "condition": "rétention sans douleur", "symptom": "je n'arrive plus à uriner depuis un moment", "objective": [], "proxy": "Depuis combien de temps ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3b",
+              "condition": "douleur intense / agitation",
+              "symptom": "je n'arrive plus à uriner et j'ai très mal au ventre",
+              "objective": [],
+              "proxy": "Arrivez-vous à uriner ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "rétention sans douleur",
+              "symptom": "je n'arrive plus à uriner depuis un moment",
+              "objective": [],
+              "proxy": "Depuis combien de temps ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "torsion_testicule": {
           "label": "Douleur de bourse / torsion testiculaire",
           "rules": [
-            {"level": "3a", "condition": "douleur intense ou suspicion de torsion", "symptom": "j'ai une douleur brutale et intense au testicule", "objective": [], "proxy": "La douleur est-elle brutale et intense ?", "red_flag": true, "vitals": null},
-            {"level": "3b", "condition": "douleur modérée", "symptom": "j'ai mal au testicule, c'est supportable", "objective": [], "proxy": "La douleur est-elle supportable ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "douleur intense ou suspicion de torsion",
+              "symptom": "j'ai une douleur brutale et intense au testicule",
+              "objective": [],
+              "proxy": "La douleur est-elle brutale et intense ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "douleur modérée",
+              "symptom": "j'ai mal au testicule, c'est supportable",
+              "objective": [],
+              "proxy": "La douleur est-elle supportable ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "hematurie": {
           "label": "Hématurie",
           "rules": [
-            {"level": "3a", "condition": "saignement abondant actif", "symptom": "j'urine du sang rouge en grande quantité", "objective": [], "proxy": "Urinez-vous du sang ?", "red_flag": false, "vitals": null},
-            {"level": "3b", "condition": "hématurie isolée", "symptom": "j'ai remarqué du sang dans mes urines", "objective": [], "proxy": "Depuis quand ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "saignement abondant actif",
+              "symptom": "j'urine du sang rouge en grande quantité",
+              "objective": [],
+              "proxy": "Urinez-vous du sang ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "hématurie isolée",
+              "symptom": "j'ai remarqué du sang dans mes urines",
+              "objective": [],
+              "proxy": "Depuis quand ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "dysurie": {
           "label": "Dysurie / brûlure mictionnelle",
           "rules": [
-            {"level": "4", "condition": "fièvre ou enfant", "symptom": "j'ai mal en urinant et j'ai de la fièvre", "objective": [], "proxy": "Avez-vous de la fièvre ?", "red_flag": false, "vitals": null},
-            {"level": "5", "condition": "brûlure mictionnelle isolée", "symptom": "j'ai des brûlures en urinant, rien d'autre", "objective": [], "proxy": "Avez-vous de la fièvre ?", "red_flag": false, "vitals": null}
+            {
+              "level": "4",
+              "condition": "fièvre ou enfant",
+              "symptom": "j'ai mal en urinant et j'ai de la fièvre",
+              "objective": [],
+              "proxy": "Avez-vous de la fièvre ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "5",
+              "condition": "brûlure mictionnelle isolée",
+              "symptom": "j'ai des brûlures en urinant, rien d'autre",
+              "objective": [],
+              "proxy": "Avez-vous de la fièvre ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         }
       }
@@ -236,15 +954,47 @@
         "dysfonction_sonde": {
           "label": "Dysfonction de sonde urinaire / JJ / stomie",
           "rules": [
-            {"level": "3a", "condition": "douleur intense, fièvre ou signes généraux", "symptom": "ma sonde me fait très mal et j'ai de la fièvre", "objective": [], "proxy": "Avez-vous de la fièvre ou une douleur intense ?", "red_flag": false, "vitals": null},
-            {"level": "3b", "condition": "avis référent", "symptom": "ma sonde ne fonctionne plus", "objective": [], "proxy": "Depuis quand la sonde pose-t-elle problème ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "douleur intense, fièvre ou signes généraux",
+              "symptom": "ma sonde me fait très mal et j'ai de la fièvre",
+              "objective": [],
+              "proxy": "Avez-vous de la fièvre ou une douleur intense ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "avis référent",
+              "symptom": "ma sonde ne fonctionne plus",
+              "objective": [],
+              "proxy": "Depuis quand la sonde pose-t-elle problème ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "ecoulement_genital": {
           "label": "Écoulement ou lésion cutanéo-muqueuse génitale",
           "rules": [
-            {"level": "4", "condition": "fièvre", "symptom": "j'ai un écoulement et de la fièvre", "objective": [], "proxy": "Avez-vous de la fièvre ?", "red_flag": false, "vitals": null},
-            {"level": "5", "condition": "écoulement isolé", "symptom": "j'ai un écoulement génital, sans fièvre", "objective": [], "proxy": "Avez-vous de la fièvre ?", "red_flag": false, "vitals": null}
+            {
+              "level": "4",
+              "condition": "fièvre",
+              "symptom": "j'ai un écoulement et de la fièvre",
+              "objective": [],
+              "proxy": "Avez-vous de la fièvre ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "5",
+              "condition": "écoulement isolé",
+              "symptom": "j'ai un écoulement génital, sans fièvre",
+              "objective": [],
+              "proxy": "Avez-vous de la fièvre ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         }
       }
@@ -255,38 +1005,96 @@
         "accouchement": {
           "label": "Accouchement imminent ou réalisé",
           "rules": [
-            {"level": "1", "condition": "accouchement imminent ou réalisé", "symptom": "le bébé arrive, je sens qu'il descend, les contractions sont très rapprochées", "objective": ["accouchement imminent"], "proxy": "Les contractions sont-elles très rapprochées ?", "red_flag": true, "vitals": null}
+            {
+              "level": "1",
+              "condition": "accouchement imminent ou réalisé",
+              "symptom": "le bébé arrive, je sens qu'il descend, les contractions sont très rapprochées",
+              "objective": [
+                "accouchement imminent"
+              ],
+              "proxy": "Les contractions sont-elles très rapprochées ?",
+              "red_flag": true,
+              "vitals": null
+            }
           ]
         },
         "grossesse_1er_2eme_trimestre": {
           "label": "Problème de grossesse 1er-2e trimestre",
           "rules": [
-            {"level": "3a", "condition": "métrorragies ou douleur", "symptom": "je suis enceinte et je saigne, avec des douleurs", "objective": [], "proxy": "Saignez-vous ? Avez-vous des douleurs ?", "red_flag": true, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "métrorragies ou douleur",
+              "symptom": "je suis enceinte et je saigne, avec des douleurs",
+              "objective": [],
+              "proxy": "Saignez-vous ? Avez-vous des douleurs ?",
+              "red_flag": true,
+              "vitals": null
+            }
           ]
         },
         "grossesse_3eme_trimestre": {
           "label": "Problème de grossesse 3e trimestre",
           "rules": [
-            {"level": "3a", "condition": "métrorragies / douleur / HTA / perte de liquide", "symptom": "je suis enceinte de 8 mois, je saigne et j'ai perdu du liquide", "objective": [], "proxy": "Saignez-vous ou avez-vous perdu du liquide ?", "red_flag": true, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "métrorragies / douleur / HTA / perte de liquide",
+              "symptom": "je suis enceinte de 8 mois, je saigne et j'ai perdu du liquide",
+              "objective": [],
+              "proxy": "Saignez-vous ou avez-vous perdu du liquide ?",
+              "red_flag": true,
+              "vitals": null
+            }
           ]
         },
         "menometrorragie": {
           "label": "Ménométrorragie",
           "rules": [
-            {"level": "3b", "condition": "grossesse connue ou saignement abondant", "symptom": "je saigne beaucoup, et je suis peut-être enceinte", "objective": [], "proxy": "Le saignement est-il abondant ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3b",
+              "condition": "grossesse connue ou saignement abondant",
+              "symptom": "je saigne beaucoup, et je suis peut-être enceinte",
+              "objective": [],
+              "proxy": "Le saignement est-il abondant ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "post_partum": {
           "label": "Problème de post-partum",
           "rules": [
-            {"level": "4", "condition": "allaitement et fièvre", "symptom": "je viens d'accoucher, j'allaite et j'ai de la fièvre", "objective": [], "proxy": "Avez-vous de la fièvre ?", "red_flag": false, "vitals": null}
+            {
+              "level": "4",
+              "condition": "allaitement et fièvre",
+              "symptom": "je viens d'accoucher, j'allaite et j'ai de la fièvre",
+              "objective": [],
+              "proxy": "Avez-vous de la fièvre ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "anomalie_sein": {
           "label": "Anomalie du sein",
           "rules": [
-            {"level": "4", "condition": "mastite ou abcès", "symptom": "j'ai un sein rouge, chaud et douloureux", "objective": [], "proxy": "Le sein est-il rouge et douloureux ?", "red_flag": false, "vitals": null},
-            {"level": "5", "condition": "anomalie bénigne", "symptom": "j'ai remarqué une petite boule au sein", "objective": [], "proxy": "Est-ce douloureux ?", "red_flag": false, "vitals": null}
+            {
+              "level": "4",
+              "condition": "mastite ou abcès",
+              "symptom": "j'ai un sein rouge, chaud et douloureux",
+              "objective": [],
+              "proxy": "Le sein est-il rouge et douloureux ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "5",
+              "condition": "anomalie bénigne",
+              "symptom": "j'ai remarqué une petite boule au sein",
+              "objective": [],
+              "proxy": "Est-ce douloureux ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         }
       }
@@ -297,35 +1105,116 @@
         "intoxication_medicamenteuse": {
           "label": "Intoxication médicamenteuse",
           "rules": [
-            {"level": "3a", "condition": "signes associés / toxiques cardiotropes", "symptom": "j'ai pris trop de médicaments et je ne me sens pas bien, j'ai des palpitations", "objective": [], "proxy": "Qu'avez-vous pris et en quelle quantité ?", "red_flag": true, "vitals": null},
-            {"level": "4", "condition": "pas de signes associés, vu tard (≥ 24 h)", "symptom": "j'ai pris trop de médicaments hier, mais je me sens bien", "objective": [], "proxy": "Depuis combien de temps ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "signes associés / toxiques cardiotropes",
+              "symptom": "j'ai pris trop de médicaments et je ne me sens pas bien, j'ai des palpitations",
+              "objective": [],
+              "proxy": "Qu'avez-vous pris et en quelle quantité ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "pas de signes associés, vu tard (≥ 24 h)",
+              "symptom": "j'ai pris trop de médicaments hier, mais je me sens bien",
+              "objective": [],
+              "proxy": "Depuis combien de temps ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "intoxication_non_medicamenteuse": {
           "label": "Intoxication non médicamenteuse",
           "rules": [
-            {"level": "3a", "condition": "signes associés / toxiques lésionnels", "symptom": "j'ai avalé un produit et je me sens mal", "objective": [], "proxy": "Qu'avez-vous avalé ?", "red_flag": true, "vitals": null},
-            {"level": "4", "condition": "pas de signes associés, vu tard", "symptom": "j'ai avalé un produit hier, je me sens bien", "objective": [], "proxy": "Depuis combien de temps ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "signes associés / toxiques lésionnels",
+              "symptom": "j'ai avalé un produit et je me sens mal",
+              "objective": [],
+              "proxy": "Qu'avez-vous avalé ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "pas de signes associés, vu tard",
+              "symptom": "j'ai avalé un produit hier, je me sens bien",
+              "objective": [],
+              "proxy": "Depuis combien de temps ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "sevrage_toxicomanie": {
           "label": "Demande de sevrage / toxicomanie",
           "rules": [
-            {"level": "3a", "condition": "agitation / violence / état de manque", "symptom": "je suis en manque, très agité", "objective": [], "proxy": "Vous sentez-vous très agité ?", "red_flag": false, "vitals": null},
-            {"level": "4", "condition": "demande d'ordonnance", "symptom": "je viens pour renouveler mon traitement de substitution", "objective": [], "proxy": "Quel traitement prenez-vous ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "agitation / violence / état de manque",
+              "symptom": "je suis en manque, très agité",
+              "objective": [],
+              "proxy": "Vous sentez-vous très agité ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "demande d'ordonnance",
+              "symptom": "je viens pour renouveler mon traitement de substitution",
+              "objective": [],
+              "proxy": "Quel traitement prenez-vous ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "ivresse": {
           "label": "Comportement ébrieux / ivresse",
           "rules": [
-            {"level": "3a", "condition": "agitation / violence ou coma", "symptom": "il est très agité, on ne le reconnaît plus", "objective": [], "proxy": "Est-il agité ou somnolent ?", "red_flag": false, "vitals": null},
-            {"level": "4", "condition": "ivresse simple", "symptom": "il a beaucoup bu mais il est calme", "objective": [], "proxy": "Est-il conscient et calme ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "agitation / violence ou coma",
+              "symptom": "Je suis très agité, on ne me reconnaît plus.",
+              "objective": [],
+              "proxy": "Est-il agité ou somnolent ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "ivresse simple",
+              "symptom": "J'ai beaucoup bu mais je suis calme.",
+              "objective": [],
+              "proxy": "Est-il conscient et calme ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "alteration_conscience": {
           "label": "Altération de la conscience / coma",
           "rules": [
-            {"level": "2", "condition": "coma / altération de la conscience", "symptom": "il ne répond plus, il est à moitié endormi", "objective": ["GCS ≤ 13"], "proxy": "Répond-il quand on lui parle ?", "red_flag": true, "vitals": {"GCS": [[3, 13]]}}
+            {
+              "level": "2",
+              "condition": "coma / altération de la conscience",
+              "symptom": "il ne répond plus, il est à moitié endormi",
+              "objective": [
+                "GCS ≤ 13"
+              ],
+              "proxy": "Répond-il quand on lui parle ?",
+              "red_flag": true,
+              "vitals": {
+                "GCS": [
+                  [
+                    3,
+                    13
+                  ]
+                ]
+              }
+            }
           ]
         }
       }
@@ -336,38 +1225,140 @@
         "avc": {
           "label": "Déficit moteur / sensitif / langage / AVC",
           "rules": [
-            {"level": "2", "condition": "délai ≤ 3 h (AVC aigu)", "symptom": "mon bras ne répond plus et je ne trouve plus mes mots, c'est arrivé il y a une heure", "objective": ["déficit neurologique ≤ 3 h"], "proxy": "Depuis quand ? Est-ce brutal ?", "red_flag": true, "vitals": null},
-            {"level": "3a", "condition": "délai ≤ 4 h 30", "symptom": "j'ai une faiblesse d'un côté depuis environ 3 heures", "objective": ["déficit neurologique"], "proxy": "Depuis combien de temps ?", "red_flag": true, "vitals": null},
-            {"level": "4", "condition": "délai ≥ 12 h", "symptom": "j'ai une faiblesse du bras depuis hier", "objective": ["déficit neurologique"], "proxy": "Depuis combien de temps ?", "red_flag": false, "vitals": null}
+            {
+              "level": "2",
+              "condition": "délai ≤ 3 h (AVC aigu)",
+              "symptom": "mon bras ne répond plus et je ne trouve plus mes mots, c'est arrivé il y a une heure",
+              "objective": [
+                "déficit neurologique ≤ 3 h"
+              ],
+              "proxy": "Depuis quand ? Est-ce brutal ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "3a",
+              "condition": "délai ≤ 4 h 30",
+              "symptom": "j'ai une faiblesse d'un côté depuis environ 3 heures",
+              "objective": [
+                "déficit neurologique"
+              ],
+              "proxy": "Depuis combien de temps ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "délai ≥ 12 h",
+              "symptom": "j'ai une faiblesse du bras depuis hier",
+              "objective": [
+                "déficit neurologique"
+              ],
+              "proxy": "Depuis combien de temps ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "convulsions": {
           "label": "Convulsions",
           "rules": [
-            {"level": "3a", "condition": "crises multiples ou en cours", "symptom": "il fait des convulsions, et ça recommence sans arrêt", "objective": [], "proxy": "Les crises se répètent-elles ?", "red_flag": true, "vitals": null},
-            {"level": "3b", "condition": "confusion, déficit ou fièvre", "symptom": "j'ai fait une crise, je suis encore confus et j'ai de la fièvre", "objective": [], "proxy": "Vous sentez-vous confus après la crise ?", "red_flag": false, "vitals": null},
-            {"level": "4", "condition": "récupération complète post-critique", "symptom": "j'ai fait une crise mais je me sens tout à fait bien maintenant", "objective": [], "proxy": "Vous sentez-vous bien maintenant ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "crises multiples ou en cours",
+              "symptom": "Je fais des convulsions, et ça recommence sans arrêt.",
+              "objective": [],
+              "proxy": "Les crises se répètent-elles ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "confusion, déficit ou fièvre",
+              "symptom": "j'ai fait une crise, je suis encore confus et j'ai de la fièvre",
+              "objective": [],
+              "proxy": "Vous sentez-vous confus après la crise ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "récupération complète post-critique",
+              "symptom": "j'ai fait une crise mais je me sens tout à fait bien maintenant",
+              "objective": [],
+              "proxy": "Vous sentez-vous bien maintenant ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "confusion": {
           "label": "Confusion / désorientation",
           "rules": [
-            {"level": "3a", "condition": "fièvre", "symptom": "il est très confus et il a de la fièvre", "objective": [], "proxy": "A-t-il de la fièvre ?", "red_flag": false, "vitals": null},
-            {"level": "3b", "condition": "confusion isolée", "symptom": "il est un peu perdu dans le temps", "objective": [], "proxy": "Est-il désorienté ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "fièvre",
+              "symptom": "Je suis très confus et j'ai de la fièvre.",
+              "objective": [],
+              "proxy": "A-t-il de la fièvre ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "confusion isolée",
+              "symptom": "Je suis un peu perdu dans le temps.",
+              "objective": [],
+              "proxy": "Est-il désorienté ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "cephalee": {
           "label": "Céphalée",
           "rules": [
-            {"level": "3a", "condition": "céphalée inhabituelle (brutale, intense, 1er épisode, fièvre)", "symptom": "j'ai un mal de tête brutal, le pire de ma vie", "objective": [], "proxy": "Le mal de tête est-il brutal et inhabituel ?", "red_flag": true, "vitals": null},
-            {"level": "3b", "condition": "céphalée habituelle / migraine", "symptom": "j'ai ma migraine habituelle", "objective": [], "proxy": "Est-ce votre migraine habituelle ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "céphalée inhabituelle (brutale, intense, 1er épisode, fièvre)",
+              "symptom": "j'ai un mal de tête brutal, le pire de ma vie",
+              "objective": [],
+              "proxy": "Le mal de tête est-il brutal et inhabituel ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "céphalée habituelle / migraine",
+              "symptom": "j'ai ma migraine habituelle",
+              "objective": [],
+              "proxy": "Est-ce votre migraine habituelle ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "vertiges": {
           "label": "Vertiges / trouble de l'équilibre",
           "rules": [
-            {"level": "3a", "condition": "signes neurologiques associés ou céphalée brutale", "symptom": "j'ai des vertiges avec un mal de tête brutal", "objective": [], "proxy": "Les vertiges sont-ils accompagnés d'un mal de tête ?", "red_flag": false, "vitals": null},
-            {"level": "4", "condition": "troubles anciens et stables", "symptom": "j'ai des vertiges depuis longtemps, c'est stable", "objective": [], "proxy": "Est-ce nouveau ou ancien ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "signes neurologiques associés ou céphalée brutale",
+              "symptom": "j'ai des vertiges avec un mal de tête brutal",
+              "objective": [],
+              "proxy": "Les vertiges sont-ils accompagnés d'un mal de tête ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "troubles anciens et stables",
+              "symptom": "j'ai des vertiges depuis longtemps, c'est stable",
+              "objective": [],
+              "proxy": "Est-ce nouveau ou ancien ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         }
       }
@@ -378,21 +1369,61 @@
         "brulure_oculaire": {
           "label": "Corps étranger / brûlure oculaire",
           "rules": [
-            {"level": "3a", "condition": "douleur intense ou brûlure chimique", "symptom": "j'ai reçu un produit dans l'œil, ça brûle énormément", "objective": [], "proxy": "Qu'avez-vous reçu dans l'œil ?", "red_flag": false, "vitals": null},
-            {"level": "3b", "condition": "corps étranger simple", "symptom": "j'ai quelque chose dans l'œil", "objective": [], "proxy": "Qu'avez-vous dans l'œil ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "douleur intense ou brûlure chimique",
+              "symptom": "j'ai reçu un produit dans l'œil, ça brûle énormément",
+              "objective": [],
+              "proxy": "Qu'avez-vous reçu dans l'œil ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "corps étranger simple",
+              "symptom": "j'ai quelque chose dans l'œil",
+              "objective": [],
+              "proxy": "Qu'avez-vous dans l'œil ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "trouble_visuel": {
           "label": "Trouble visuel / œil douloureux / cécité",
           "rules": [
-            {"level": "3a", "condition": "début brutal", "symptom": "j'ai perdu la vue d'un œil d'un coup", "objective": [], "proxy": "La perte de vision est-elle brutale ?", "red_flag": true, "vitals": null},
-            {"level": "3b", "condition": "trouble progressif", "symptom": "ma vue baisse doucement", "objective": [], "proxy": "Depuis quand ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "début brutal",
+              "symptom": "j'ai perdu la vue d'un œil d'un coup",
+              "objective": [],
+              "proxy": "La perte de vision est-elle brutale ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "trouble progressif",
+              "symptom": "ma vue baisse doucement",
+              "objective": [],
+              "proxy": "Depuis quand ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "oeil_rouge": {
           "label": "Démangeaison / œil rouge",
           "rules": [
-            {"level": "5", "condition": "œil rouge isolé", "symptom": "j'ai l'œil rouge qui gratte", "objective": [], "proxy": "Avez-vous mal ou une baisse de vision ?", "red_flag": false, "vitals": null}
+            {
+              "level": "5",
+              "condition": "œil rouge isolé",
+              "symptom": "j'ai l'œil rouge qui gratte",
+              "objective": [],
+              "proxy": "Avez-vous mal ou une baisse de vision ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         }
       }
@@ -403,48 +1434,144 @@
         "epistaxis": {
           "label": "Épistaxis",
           "rules": [
-            {"level": "3b", "condition": "saignement abondant actif", "symptom": "je saigne du nez sans arrêt depuis une heure", "objective": [], "proxy": "Le saignement est-il abondant et continu ?", "red_flag": false, "vitals": null},
-            {"level": "4", "condition": "saignement abondant résolutif", "symptom": "j'ai saigné du nez mais ça s'est arrêté", "objective": [], "proxy": "Le saignement s'est-il arrêté ?", "red_flag": false, "vitals": null},
-            {"level": "5", "condition": "saignement peu abondant résolutif", "symptom": "j'ai saigné un peu du nez", "objective": [], "proxy": "Le saignement a-t-il cessé ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3b",
+              "condition": "saignement abondant actif",
+              "symptom": "je saigne du nez sans arrêt depuis une heure",
+              "objective": [],
+              "proxy": "Le saignement est-il abondant et continu ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "saignement abondant résolutif",
+              "symptom": "j'ai saigné du nez mais ça s'est arrêté",
+              "objective": [],
+              "proxy": "Le saignement s'est-il arrêté ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "5",
+              "condition": "saignement peu abondant résolutif",
+              "symptom": "j'ai saigné un peu du nez",
+              "objective": [],
+              "proxy": "Le saignement a-t-il cessé ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "surdite_brutale": {
           "label": "Trouble de l'audition / acouphènes",
           "rules": [
-            {"level": "4", "condition": "surdité brutale", "symptom": "j'ai perdu l'audition d'une oreille d'un coup", "objective": [], "proxy": "La perte d'audition est-elle brutale ?", "red_flag": false, "vitals": null}
+            {
+              "level": "4",
+              "condition": "surdité brutale",
+              "symptom": "j'ai perdu l'audition d'une oreille d'un coup",
+              "objective": [],
+              "proxy": "La perte d'audition est-elle brutale ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "tumefaction_orl": {
           "label": "Tuméfaction ORL ou cervicale",
           "rules": [
-            {"level": "4", "condition": "fièvre ou signes locaux importants", "symptom": "j'ai une grosse boule au cou avec de la fièvre", "objective": [], "proxy": "Avez-vous de la fièvre ?", "red_flag": false, "vitals": null}
+            {
+              "level": "4",
+              "condition": "fièvre ou signes locaux importants",
+              "symptom": "j'ai une grosse boule au cou avec de la fièvre",
+              "objective": [],
+              "proxy": "Avez-vous de la fièvre ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "corps_etranger_orl": {
           "label": "Corps étranger ORL",
           "rules": [
-            {"level": "3a", "condition": "dyspnée inspiratoire", "symptom": "j'ai avalé quelque chose et j'ai du mal à respirer", "objective": [], "proxy": "Avez-vous du mal à respirer ?", "red_flag": true, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "dyspnée inspiratoire",
+              "symptom": "j'ai avalé quelque chose et j'ai du mal à respirer",
+              "objective": [],
+              "proxy": "Avez-vous du mal à respirer ?",
+              "red_flag": true,
+              "vitals": null
+            }
           ]
         },
         "angine": {
           "label": "Douleur de gorge / angine / stomatite",
           "rules": [
-            {"level": "4", "condition": "altération de l'état général ou aphagie", "symptom": "j'ai très mal à la gorge, je ne peux plus avaler", "objective": [], "proxy": "Pouvez-vous encore avaler ?", "red_flag": false, "vitals": null},
-            {"level": "5", "condition": "angine simple", "symptom": "j'ai mal à la gorge", "objective": [], "proxy": "Avez-vous de la fièvre ?", "red_flag": false, "vitals": null}
+            {
+              "level": "4",
+              "condition": "altération de l'état général ou aphagie",
+              "symptom": "j'ai très mal à la gorge, je ne peux plus avaler",
+              "objective": [],
+              "proxy": "Pouvez-vous encore avaler ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "5",
+              "condition": "angine simple",
+              "symptom": "j'ai mal à la gorge",
+              "objective": [],
+              "proxy": "Avez-vous de la fièvre ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "sinusite": {
           "label": "Obstruction nasale / rhinite / sinusite",
           "rules": [
-            {"level": "4", "condition": "sinusite fébrile", "symptom": "j'ai le nez bouché et de la fièvre depuis plusieurs jours", "objective": [], "proxy": "Avez-vous de la fièvre ?", "red_flag": false, "vitals": null},
-            {"level": "5", "condition": "rhinite simple", "symptom": "j'ai le nez bouché", "objective": [], "proxy": "Avez-vous de la fièvre ?", "red_flag": false, "vitals": null}
+            {
+              "level": "4",
+              "condition": "sinusite fébrile",
+              "symptom": "j'ai le nez bouché et de la fièvre depuis plusieurs jours",
+              "objective": [],
+              "proxy": "Avez-vous de la fièvre ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "5",
+              "condition": "rhinite simple",
+              "symptom": "j'ai le nez bouché",
+              "objective": [],
+              "proxy": "Avez-vous de la fièvre ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "dentaire": {
           "label": "Problème de dent ou de gencive",
           "rules": [
-            {"level": "4", "condition": "signes locaux importants, douleur résistante", "symptom": "j'ai une dent très douloureuse, les antalgiques ne font rien", "objective": [], "proxy": "Les antalgiques soulagent-ils ?", "red_flag": false, "vitals": null},
-            {"level": "5", "condition": "douleur dentaire simple", "symptom": "j'ai mal à une dent", "objective": [], "proxy": "La douleur est-elle supportable ?", "red_flag": false, "vitals": null}
+            {
+              "level": "4",
+              "condition": "signes locaux importants, douleur résistante",
+              "symptom": "j'ai une dent très douloureuse, les antalgiques ne font rien",
+              "objective": [],
+              "proxy": "Les antalgiques soulagent-ils ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "5",
+              "condition": "douleur dentaire simple",
+              "symptom": "j'ai mal à une dent",
+              "objective": [],
+              "proxy": "La douleur est-elle supportable ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         }
       }
@@ -455,34 +1582,98 @@
         "ecchymose": {
           "label": "Ecchymose / hématome spontané",
           "rules": [
-            {"level": "3b", "condition": "ecchymose spontanée", "symptom": "j'ai des bleus qui apparaissent tout seuls", "objective": [], "proxy": "Les bleus apparaissent-ils sans choc ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3b",
+              "condition": "ecchymose spontanée",
+              "symptom": "j'ai des bleus qui apparaissent tout seuls",
+              "objective": [],
+              "proxy": "Les bleus apparaissent-ils sans choc ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "abces_peau": {
           "label": "Abcès ou infection localisée de la peau",
           "rules": [
-            {"level": "4", "condition": "fièvre ou abcès volumineux", "symptom": "j'ai un gros abcès avec de la fièvre", "objective": [], "proxy": "Avez-vous de la fièvre ?", "red_flag": false, "vitals": null},
-            {"level": "5", "condition": "infection localisée bénigne", "symptom": "j'ai un petit bouton infecté", "objective": [], "proxy": "Est-ce douloureux ou étendu ?", "red_flag": false, "vitals": null}
+            {
+              "level": "4",
+              "condition": "fièvre ou abcès volumineux",
+              "symptom": "j'ai un gros abcès avec de la fièvre",
+              "objective": [],
+              "proxy": "Avez-vous de la fièvre ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "5",
+              "condition": "infection localisée bénigne",
+              "symptom": "j'ai un petit bouton infecté",
+              "objective": [],
+              "proxy": "Est-ce douloureux ou étendu ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "eruption": {
           "label": "Érythème étendu / éruption / œdème spontané",
           "rules": [
-            {"level": "3a", "condition": "risque d'anaphylaxie", "symptom": "j'ai des plaques partout et je sens ma gorge gonfler", "objective": [], "proxy": "Ressentez-vous un gonflement de la gorge ?", "red_flag": true, "vitals": null},
-            {"level": "4", "condition": "fièvre ou signes d'AEG", "symptom": "j'ai une éruption étendue avec de la fièvre", "objective": [], "proxy": "Avez-vous de la fièvre ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "risque d'anaphylaxie",
+              "symptom": "j'ai des plaques partout et je sens ma gorge gonfler",
+              "objective": [],
+              "proxy": "Ressentez-vous un gonflement de la gorge ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "fièvre ou signes d'AEG",
+              "symptom": "j'ai une éruption étendue avec de la fièvre",
+              "objective": [],
+              "proxy": "Avez-vous de la fièvre ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "morsure_piqure": {
           "label": "Morsure, piqûre, prurit, parasitose",
           "rules": [
-            {"level": "3a", "condition": "morsure de serpent / scorpion", "symptom": "je me suis fait mordre par un serpent", "objective": [], "proxy": "Quel animal vous a mordu ?", "red_flag": true, "vitals": null},
-            {"level": "4", "condition": "fièvre ou signes locaux importants", "symptom": "j'ai une piqûre très rouge et gonflée avec de la fièvre", "objective": [], "proxy": "Avez-vous de la fièvre ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "morsure de serpent / scorpion",
+              "symptom": "je me suis fait mordre par un serpent",
+              "objective": [],
+              "proxy": "Quel animal vous a mordu ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "fièvre ou signes locaux importants",
+              "symptom": "j'ai une piqûre très rouge et gonflée avec de la fièvre",
+              "objective": [],
+              "proxy": "Avez-vous de la fièvre ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "corps_etranger_peau": {
           "label": "Corps étranger sous la peau",
           "rules": [
-            {"level": "5", "condition": "corps étranger simple", "symptom": "j'ai une écharde sous la peau", "objective": [], "proxy": "Depuis quand ?", "red_flag": false, "vitals": null}
+            {
+              "level": "5",
+              "condition": "corps étranger simple",
+              "symptom": "j'ai une écharde sous la peau",
+              "objective": [],
+              "proxy": "Depuis quand ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         }
       }
@@ -493,49 +1684,209 @@
         "dyspnee_sifflement": {
           "label": "Dyspnée avec sifflement respiratoire",
           "rules": [
-            {"level": "2", "condition": "dyspnée avec sifflement", "symptom": "je n'arrive plus à respirer, ma respiration siffle", "objective": [], "proxy": "Votre respiration siffle-t-elle ?", "red_flag": true, "vitals": null},
-            {"level": "3b", "condition": "sifflement sans dyspnée", "symptom": "ma respiration siffle mais j'arrive à respirer", "objective": [], "proxy": "Avez-vous du mal à respirer ?", "red_flag": false, "vitals": null}
+            {
+              "level": "2",
+              "condition": "dyspnée avec sifflement",
+              "symptom": "je n'arrive plus à respirer, ma respiration siffle",
+              "objective": [],
+              "proxy": "Votre respiration siffle-t-elle ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "sifflement sans dyspnée",
+              "symptom": "ma respiration siffle mais j'arrive à respirer",
+              "objective": [],
+              "proxy": "Avez-vous du mal à respirer ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "dyspnee_respiratoire": {
           "label": "Dyspnée / insuffisance respiratoire",
           "rules": [
-            {"level": "3a", "condition": "détresse respiratoire ou FR ≥ 40/min", "symptom": "j'ai énormément de mal à respirer", "objective": ["FR ≥ 40/min"], "proxy": "Pouvez-vous parler sans vous arrêter ?", "red_flag": true, "vitals": {"FR": [[40, 50]]}},
-            {"level": "3b", "condition": "FR 30-40/min, SpO2 86-90%, dyspnée à la parole, tirage, orthopnée", "symptom": "je suis essoufflé, je dois m'asseoir pour respirer", "objective": ["FR 30-40/min", "SpO2 86-90%"], "proxy": "Êtes-vous obligé de vous asseoir pour respirer ?", "red_flag": false, "vitals": {"FR": [[30, 40]], "SpO2": [[86, 90]]}}
+            {
+              "level": "3a",
+              "condition": "détresse respiratoire ou FR ≥ 40/min",
+              "symptom": "j'ai énormément de mal à respirer",
+              "objective": [
+                "FR ≥ 40/min"
+              ],
+              "proxy": "Pouvez-vous parler sans vous arrêter ?",
+              "red_flag": true,
+              "vitals": {
+                "FR": [
+                  [
+                    40,
+                    50
+                  ]
+                ]
+              }
+            },
+            {
+              "level": "3b",
+              "condition": "FR 30-40/min, SpO2 86-90%, dyspnée à la parole, tirage, orthopnée",
+              "symptom": "je suis essoufflé, je dois m'asseoir pour respirer",
+              "objective": [
+                "FR 30-40/min",
+                "SpO2 86-90%"
+              ],
+              "proxy": "Êtes-vous obligé de vous asseoir pour respirer ?",
+              "red_flag": false,
+              "vitals": {
+                "FR": [
+                  [
+                    30,
+                    40
+                  ]
+                ],
+                "SpO2": [
+                  [
+                    86,
+                    90
+                  ]
+                ]
+              }
+            }
           ]
         },
         "asthme_bpco": {
           "label": "Asthme ou aggravation BPCO",
           "rules": [
-            {"level": "3a", "condition": "détresse respiratoire, FR ≥ 40, DEP ≤ 200, dyspnée à la parole, tirage, orthopnée", "symptom": "ma crise d'asthme ne passe pas, je ne peux plus parler", "objective": ["DEP ≤ 200"], "proxy": "Votre traitement de secours a-t-il fonctionné ?", "red_flag": true, "vitals": {"FR": [[40, 50]]}},
-            {"level": "3b", "condition": "DEP ≥ 300 et asthme", "symptom": "j'ai une crise d'asthme qui commence à se calmer", "objective": ["DEP ≥ 300"], "proxy": "La crise est-elle en train de passer ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "détresse respiratoire, FR ≥ 40, DEP ≤ 200, dyspnée à la parole, tirage, orthopnée",
+              "symptom": "ma crise d'asthme ne passe pas, je ne peux plus parler",
+              "objective": [
+                "DEP ≤ 200"
+              ],
+              "proxy": "Votre traitement de secours a-t-il fonctionné ?",
+              "red_flag": true,
+              "vitals": {
+                "FR": [
+                  [
+                    40,
+                    50
+                  ]
+                ]
+              }
+            },
+            {
+              "level": "3b",
+              "condition": "DEP ≥ 300 et asthme",
+              "symptom": "j'ai une crise d'asthme qui commence à se calmer",
+              "objective": [
+                "DEP ≥ 300"
+              ],
+              "proxy": "La crise est-elle en train de passer ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "hemoptysie": {
           "label": "Hémoptysie",
           "rules": [
-            {"level": "2", "condition": "détresse respiratoire", "symptom": "je crache du sang et je n'arrive plus à respirer", "objective": ["détresse respiratoire"], "proxy": "Avez-vous du mal à respirer ?", "red_flag": true, "vitals": null},
-            {"level": "3b", "condition": "hémoptysie répétée ou abondante", "symptom": "je crache du sang en quantité", "objective": [], "proxy": "Crachez-vous beaucoup de sang ?", "red_flag": false, "vitals": null}
+            {
+              "level": "2",
+              "condition": "détresse respiratoire",
+              "symptom": "je crache du sang et je n'arrive plus à respirer",
+              "objective": [
+                "détresse respiratoire"
+              ],
+              "proxy": "Avez-vous du mal à respirer ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "hémoptysie répétée ou abondante",
+              "symptom": "je crache du sang en quantité",
+              "objective": [],
+              "proxy": "Crachez-vous beaucoup de sang ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "embolie_pneumopathie": {
           "label": "Douleur thoracique / embolie / pneumopathie / pneumothorax",
           "rules": [
-            {"level": "3b", "condition": "FR 30-40, SpO2 86-90, dyspnée à la parole, tirage, orthopnée", "symptom": "j'ai mal à la poitrine en respirant et je suis essoufflé", "objective": ["FR 30-40/min", "SpO2 86-90%"], "proxy": "La douleur augmente-t-elle quand vous respirez ?", "red_flag": false, "vitals": {"FR": [[30, 40]], "SpO2": [[86, 90]]}}
+            {
+              "level": "3b",
+              "condition": "FR 30-40, SpO2 86-90, dyspnée à la parole, tirage, orthopnée",
+              "symptom": "j'ai mal à la poitrine en respirant et je suis essoufflé",
+              "objective": [
+                "FR 30-40/min",
+                "SpO2 86-90%"
+              ],
+              "proxy": "La douleur augmente-t-elle quand vous respirez ?",
+              "red_flag": false,
+              "vitals": {
+                "FR": [
+                  [
+                    30,
+                    40
+                  ]
+                ],
+                "SpO2": [
+                  [
+                    86,
+                    90
+                  ]
+                ]
+              }
+            }
           ]
         },
         "corps_etranger_voies_aeriennes": {
           "label": "Corps étranger des voies aériennes",
           "rules": [
-            {"level": "2", "condition": "détresse respiratoire", "symptom": "j'ai avalé de travers, je n'arrive plus à respirer", "objective": ["détresse respiratoire"], "proxy": "Arrivez-vous à respirer ?", "red_flag": true, "vitals": null},
-            {"level": "3b", "condition": "dyspnée à la parole, tirage, orthopnée", "symptom": "j'ai avalé de travers, ça me gêne pour respirer", "objective": [], "proxy": "Avez-vous du mal à respirer ?", "red_flag": false, "vitals": null}
+            {
+              "level": "2",
+              "condition": "détresse respiratoire",
+              "symptom": "j'ai avalé de travers, je n'arrive plus à respirer",
+              "objective": [
+                "détresse respiratoire"
+              ],
+              "proxy": "Arrivez-vous à respirer ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "dyspnée à la parole, tirage, orthopnée",
+              "symptom": "j'ai avalé de travers, ça me gêne pour respirer",
+              "objective": [],
+              "proxy": "Avez-vous du mal à respirer ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "toux_bronchite": {
           "label": "Toux / bronchite",
           "rules": [
-            {"level": "4", "condition": "fièvre ou signes respiratoires associés", "symptom": "je tousse beaucoup avec de la fièvre", "objective": [], "proxy": "Avez-vous de la fièvre ?", "red_flag": false, "vitals": null},
-            {"level": "5", "condition": "toux isolée", "symptom": "je tousse un peu, rien d'autre", "objective": [], "proxy": "Avez-vous de la fièvre ou du mal à respirer ?", "red_flag": false, "vitals": null}
+            {
+              "level": "4",
+              "condition": "fièvre ou signes respiratoires associés",
+              "symptom": "je tousse beaucoup avec de la fièvre",
+              "objective": [],
+              "proxy": "Avez-vous de la fièvre ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "5",
+              "condition": "toux isolée",
+              "symptom": "je tousse un peu, rien d'autre",
+              "objective": [],
+              "proxy": "Avez-vous de la fièvre ou du mal à respirer ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         }
       }
@@ -546,39 +1897,110 @@
         "fievre_nourrisson": {
           "label": "Fièvre ≤ 3 mois",
           "rules": [
-            {"level": "2", "condition": "fièvre chez nourrisson ≤ 3 mois", "symptom": "mon bébé de 2 mois a de la fièvre", "objective": [], "proxy": "Quel âge a votre bébé ? A-t-il de la fièvre ?", "red_flag": true, "vitals": {"T": [[38.0, 40.0]]}}
+            {
+              "level": "2",
+              "condition": "fièvre chez nourrisson ≤ 3 mois",
+              "symptom": "mon bébé de 2 mois a de la fièvre",
+              "objective": [],
+              "proxy": "Quel âge a votre bébé ? A-t-il de la fièvre ?",
+              "red_flag": true,
+              "vitals": {
+                "T": [
+                  [
+                    38.0,
+                    40.0
+                  ]
+                ]
+              }
+            }
           ]
         },
         "convulsion_hyperthermique": {
           "label": "Convulsion hyperthermique",
           "rules": [
-            {"level": "3b", "condition": "récidive ou durée ≥ 10 min, hypotonie", "symptom": "mon enfant a convulsé avec de la fièvre, ça a duré longtemps", "objective": [], "proxy": "Combien de temps a duré la convulsion ?", "red_flag": true, "vitals": null},
-            {"level": "4", "condition": "récupération complète", "symptom": "mon enfant a eu une convulsion de fièvre, il va bien maintenant", "objective": [], "proxy": "Votre enfant a-t-il récupéré ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3b",
+              "condition": "récidive ou durée ≥ 10 min, hypotonie",
+              "symptom": "mon enfant a convulsé avec de la fièvre, ça a duré longtemps",
+              "objective": [],
+              "proxy": "Combien de temps a duré la convulsion ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "récupération complète",
+              "symptom": "mon enfant a eu une convulsion de fièvre, il va bien maintenant",
+              "objective": [],
+              "proxy": "Votre enfant a-t-il récupéré ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "diarrhee_vomissements_nourrisson": {
           "label": "Diarrhée / vomissements du nourrisson",
           "rules": [
-            {"level": "3a", "condition": "perte de poids ≥ 10% ou hypotonie", "symptom": "mon bébé vomit tout, il est mou et il a perdu du poids", "objective": [], "proxy": "Votre bébé est-il mou, moins réactif ?", "red_flag": true, "vitals": null},
-            {"level": "3b", "condition": "nourrisson ≤ 6 mois", "symptom": "mon bébé de 4 mois a la diarrhée", "objective": [], "proxy": "Quel âge a votre bébé ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "perte de poids ≥ 10% ou hypotonie",
+              "symptom": "mon bébé vomit tout, il est mou et il a perdu du poids",
+              "objective": [],
+              "proxy": "Votre bébé est-il mou, moins réactif ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "nourrisson ≤ 6 mois",
+              "symptom": "mon bébé de 4 mois a la diarrhée",
+              "objective": [],
+              "proxy": "Quel âge a votre bébé ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "troubles_alimentaires": {
           "label": "Troubles alimentaires du nourrisson (≤ 6 mois)",
           "rules": [
-            {"level": "4", "condition": "hypotonie ou perte de poids", "symptom": "mon bébé mange moins et semble mou", "objective": [], "proxy": "Votre bébé mange-t-il moins ?", "red_flag": false, "vitals": null}
+            {
+              "level": "4",
+              "condition": "hypotonie ou perte de poids",
+              "symptom": "mon bébé mange moins et semble mou",
+              "objective": [],
+              "proxy": "Votre bébé mange-t-il moins ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "ictere_neonatal": {
           "label": "Ictère néonatal",
           "rules": [
-            {"level": "4", "condition": "perte de poids ou selles décolorées", "symptom": "mon nouveau-né est jaune et ses selles sont blanches", "objective": [], "proxy": "Ses selles sont-elles décolorées ?", "red_flag": false, "vitals": null}
+            {
+              "level": "4",
+              "condition": "perte de poids ou selles décolorées",
+              "symptom": "mon nouveau-né est jaune et ses selles sont blanches",
+              "objective": [],
+              "proxy": "Ses selles sont-elles décolorées ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "pleurs_incoercibles": {
           "label": "Pleurs incoercibles",
           "rules": [
-            {"level": "3a", "condition": "pleurs incoercibles", "symptom": "mon bébé pleure sans arrêt depuis des heures, rien ne le calme", "objective": [], "proxy": "Depuis combien de temps pleure-t-il ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "pleurs incoercibles",
+              "symptom": "mon bébé pleure sans arrêt depuis des heures, rien ne le calme",
+              "objective": [],
+              "proxy": "Depuis combien de temps pleure-t-il ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         }
       }
@@ -589,21 +2011,61 @@
         "suicidaire": {
           "label": "Idée / comportement suicidaire",
           "rules": [
-            {"level": "2", "condition": "comportement suicidaire / passage à l'acte", "symptom": "j'ai pris des médicaments pour en finir", "objective": [], "proxy": "Avez-vous fait une tentative ?", "red_flag": true, "vitals": null},
-            {"level": "3b", "condition": "idées suicidaires sans passage à l'acte", "symptom": "j'ai des idées noires, j'y pense souvent", "objective": [], "proxy": "Avez-vous des idées suicidaires ?", "red_flag": true, "vitals": null}
+            {
+              "level": "2",
+              "condition": "comportement suicidaire / passage à l'acte",
+              "symptom": "j'ai pris des médicaments pour en finir",
+              "objective": [],
+              "proxy": "Avez-vous fait une tentative ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "idées suicidaires sans passage à l'acte",
+              "symptom": "j'ai des idées noires, j'y pense souvent",
+              "objective": [],
+              "proxy": "Avez-vous des idées suicidaires ?",
+              "red_flag": true,
+              "vitals": null
+            }
           ]
         },
         "troubles_comportement": {
           "label": "Troubles du comportement",
           "rules": [
-            {"level": "3b", "condition": "agitation, violence, délire, hallucinations", "symptom": "il est très agité, il entend des voix", "objective": [], "proxy": "Est-il agité ou violent ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3b",
+              "condition": "agitation, violence, délire, hallucinations",
+              "symptom": "Je suis très agité et j'entends des voix.",
+              "objective": [],
+              "proxy": "Est-il agité ou violent ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "anxiete_depression": {
           "label": "Anxiété / dépression / consultation psychiatrique",
           "rules": [
-            {"level": "4", "condition": "anxiété majeure / attaque de panique", "symptom": "je fais une crise d'angoisse, je n'arrive plus à respirer", "objective": [], "proxy": "Faites-vous une crise d'angoisse ?", "red_flag": false, "vitals": null},
-            {"level": "5", "condition": "demande de consultation", "symptom": "je voudrais voir un psychiatre", "objective": [], "proxy": "Avez-vous un suivi ?", "red_flag": false, "vitals": null}
+            {
+              "level": "4",
+              "condition": "anxiété majeure / attaque de panique",
+              "symptom": "je fais une crise d'angoisse, je n'arrive plus à respirer",
+              "objective": [],
+              "proxy": "Faites-vous une crise d'angoisse ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "5",
+              "condition": "demande de consultation",
+              "symptom": "je voudrais voir un psychiatre",
+              "objective": [],
+              "proxy": "Avez-vous un suivi ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         }
       }
@@ -614,23 +2076,81 @@
         "douleur_rachidienne": {
           "label": "Douleur rachidienne (cervicale, dorsale, lombaire)",
           "rules": [
-            {"level": "3a", "condition": "déficit sensitif ou moteur associé", "symptom": "j'ai mal au dos et ma jambe ne répond plus", "objective": ["déficit neurologique"], "proxy": "Avez-vous une faiblesse dans un membre ?", "red_flag": true, "vitals": null},
-            {"level": "4", "condition": "fièvre ou paresthésies", "symptom": "j'ai mal au dos avec des fourmillements", "objective": [], "proxy": "Avez-vous des fourmillements ou de la fièvre ?", "red_flag": false, "vitals": null},
-            {"level": "5", "condition": "douleur simple", "symptom": "j'ai mal au dos", "objective": [], "proxy": "Avez-vous d'autres symptômes ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "déficit sensitif ou moteur associé",
+              "symptom": "j'ai mal au dos et ma jambe ne répond plus",
+              "objective": [
+                "déficit neurologique"
+              ],
+              "proxy": "Avez-vous une faiblesse dans un membre ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "fièvre ou paresthésies",
+              "symptom": "j'ai mal au dos avec des fourmillements",
+              "objective": [],
+              "proxy": "Avez-vous des fourmillements ou de la fièvre ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "5",
+              "condition": "douleur simple",
+              "symptom": "j'ai mal au dos",
+              "objective": [],
+              "proxy": "Avez-vous d'autres symptômes ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "douleur_articulaire": {
           "label": "Douleur articulaire / arthrose / arthrite",
           "rules": [
-            {"level": "3b", "condition": "fièvre ou signes locaux importants", "symptom": "mon genou est très gonflé, rouge et chaud", "objective": [], "proxy": "L'articulation est-elle rouge et chaude ?", "red_flag": false, "vitals": null},
-            {"level": "4", "condition": "arthrose simple", "symptom": "j'ai mal au genou, c'est de l'arthrose", "objective": [], "proxy": "Est-ce une douleur habituelle ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3b",
+              "condition": "fièvre ou signes locaux importants",
+              "symptom": "mon genou est très gonflé, rouge et chaud",
+              "objective": [],
+              "proxy": "L'articulation est-elle rouge et chaude ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "arthrose simple",
+              "symptom": "j'ai mal au genou, c'est de l'arthrose",
+              "objective": [],
+              "proxy": "Est-ce une douleur habituelle ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "douleur_membre": {
           "label": "Douleur de membre / sciatique",
           "rules": [
-            {"level": "4", "condition": "fièvre ou impotence du membre", "symptom": "je ne peux plus poser le pied, et j'ai de la fièvre", "objective": [], "proxy": "Pouvez-vous marcher ?", "red_flag": false, "vitals": null},
-            {"level": "5", "condition": "sciatique simple", "symptom": "j'ai une sciatique, ça tire dans la jambe", "objective": [], "proxy": "Avez-vous de la fièvre ?", "red_flag": false, "vitals": null}
+            {
+              "level": "4",
+              "condition": "fièvre ou impotence du membre",
+              "symptom": "je ne peux plus poser le pied, et j'ai de la fièvre",
+              "objective": [],
+              "proxy": "Pouvez-vous marcher ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "5",
+              "condition": "sciatique simple",
+              "symptom": "j'ai une sciatique, ça tire dans la jambe",
+              "objective": [],
+              "proxy": "Avez-vous de la fièvre ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         }
       }
@@ -641,71 +2161,297 @@
         "amputation": {
           "label": "Traumatisme avec amputation",
           "rules": [
-            {"level": "1", "condition": "amputation", "symptom": "il s'est sectionné un doigt", "objective": ["amputation"], "proxy": "Quel membre est touché ?", "red_flag": true, "vitals": null}
+            {
+              "level": "1",
+              "condition": "amputation",
+              "symptom": "Je me suis sectionné un doigt.",
+              "objective": [
+                "amputation"
+              ],
+              "proxy": "Quel membre est touché ?",
+              "red_flag": true,
+              "vitals": null
+            }
           ]
         },
         "trauma_tronc": {
           "label": "Traumatisme abdomen / thorax / cervical",
           "rules": [
-            {"level": "2", "condition": "pénétrant", "symptom": "j'ai reçu un coup de couteau au ventre", "objective": ["plaie pénétrante"], "proxy": "Comment le traumatisme est-il arrivé ?", "red_flag": true, "vitals": null},
-            {"level": "3a", "condition": "haute vélocité", "symptom": "j'ai eu un gros accident de la route", "objective": ["haute vélocité"], "proxy": "L'accident était-il violent ?", "red_flag": false, "vitals": null},
-            {"level": "3b", "condition": "faible vélocité avec signes associés", "symptom": "je suis tombé et j'ai mal au thorax", "objective": [], "proxy": "Avez-vous mal ou des difficultés ?", "red_flag": false, "vitals": null},
-            {"level": "4", "condition": "faible vélocité sans signes", "symptom": "je me suis cogné le thorax, ça va", "objective": [], "proxy": "Avez-vous mal ?", "red_flag": false, "vitals": null}
+            {
+              "level": "2",
+              "condition": "pénétrant",
+              "symptom": "j'ai reçu un coup de couteau au ventre",
+              "objective": [
+                "plaie pénétrante"
+              ],
+              "proxy": "Comment le traumatisme est-il arrivé ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "3a",
+              "condition": "haute vélocité",
+              "symptom": "j'ai eu un gros accident de la route",
+              "objective": [
+                "haute vélocité"
+              ],
+              "proxy": "L'accident était-il violent ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "faible vélocité avec signes associés",
+              "symptom": "je suis tombé et j'ai mal au thorax",
+              "objective": [],
+              "proxy": "Avez-vous mal ou des difficultés ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "faible vélocité sans signes",
+              "symptom": "je me suis cogné le thorax, ça va",
+              "objective": [],
+              "proxy": "Avez-vous mal ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "agression_sexuelle": {
           "label": "Agression sexuelle et sévices",
           "rules": [
-            {"level": "2", "condition": "agression sexuelle récente", "symptom": "j'ai été agressée", "objective": [], "proxy": "Depuis combien de temps ?", "red_flag": true, "vitals": null}
+            {
+              "level": "2",
+              "condition": "agression sexuelle récente",
+              "symptom": "j'ai été agressée",
+              "objective": [],
+              "proxy": "Depuis combien de temps ?",
+              "red_flag": true,
+              "vitals": null
+            }
           ]
         },
         "brulure": {
           "label": "Brûlure",
           "rules": [
-            {"level": "3a", "condition": "brûlure étendue ou main / visage", "symptom": "je me suis brûlé la main avec de l'huile bouillante", "objective": [], "proxy": "Où êtes-vous brûlé ?", "red_flag": false, "vitals": null},
-            {"level": "3b", "condition": "enfant ≤ 24 mois, brûlure peu étendue", "symptom": "mon bébé s'est brûlé", "objective": [], "proxy": "Quel âge a votre enfant ?", "red_flag": true, "vitals": null},
-            {"level": "4", "condition": "brûlure peu étendue", "symptom": "je me suis brûlé l'avant-bras, c'est petit", "objective": [], "proxy": "La brûlure est-elle étendue ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "brûlure étendue ou main / visage",
+              "symptom": "je me suis brûlé la main avec de l'huile bouillante",
+              "objective": [],
+              "proxy": "Où êtes-vous brûlé ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "enfant ≤ 24 mois, brûlure peu étendue",
+              "symptom": "mon bébé s'est brûlé",
+              "objective": [],
+              "proxy": "Quel âge a votre enfant ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "brûlure peu étendue",
+              "symptom": "je me suis brûlé l'avant-bras, c'est petit",
+              "objective": [],
+              "proxy": "La brûlure est-elle étendue ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "trauma_bassin": {
           "label": "Traumatisme de bassin / hanche / fémur / rachis",
           "rules": [
-            {"level": "3a", "condition": "haute vélocité", "symptom": "j'ai fait une chute violente, je ne peux plus bouger", "objective": ["haute vélocité"], "proxy": "La chute était-elle violente ?", "red_flag": false, "vitals": null},
-            {"level": "3b", "condition": "faible vélocité avec signes associés", "symptom": "je suis tombé de ma hauteur, j'ai très mal à la hanche", "objective": [], "proxy": "Pouvez-vous bouger ?", "red_flag": false, "vitals": null},
-            {"level": "4", "condition": "faible vélocité sans signes", "symptom": "je suis tombé, j'ai un peu mal mais je marche", "objective": [], "proxy": "Pouvez-vous marcher ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "haute vélocité",
+              "symptom": "j'ai fait une chute violente, je ne peux plus bouger",
+              "objective": [
+                "haute vélocité"
+              ],
+              "proxy": "La chute était-elle violente ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "faible vélocité avec signes associés",
+              "symptom": "je suis tombé de ma hauteur, j'ai très mal à la hanche",
+              "objective": [],
+              "proxy": "Pouvez-vous bouger ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "faible vélocité sans signes",
+              "symptom": "je suis tombé, j'ai un peu mal mais je marche",
+              "objective": [],
+              "proxy": "Pouvez-vous marcher ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "plaie": {
           "label": "Plaie",
           "rules": [
-            {"level": "3a", "condition": "plaie délabrante, saignement actif", "symptom": "je me suis coupé profondément, ça saigne beaucoup", "objective": ["saignement actif"], "proxy": "La plaie saigne-t-elle beaucoup ?", "red_flag": false, "vitals": null},
-            {"level": "4", "condition": "plaie large, complexe ou main", "symptom": "je me suis coupé à la main, c'est profond", "objective": [], "proxy": "La plaie est-elle profonde ?", "red_flag": false, "vitals": null},
-            {"level": "5", "condition": "plaie superficielle", "symptom": "je me suis fait une petite coupure", "objective": [], "proxy": "La coupure est-elle superficielle ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "plaie délabrante, saignement actif",
+              "symptom": "je me suis coupé profondément, ça saigne beaucoup",
+              "objective": [
+                "saignement actif"
+              ],
+              "proxy": "La plaie saigne-t-elle beaucoup ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "plaie large, complexe ou main",
+              "symptom": "je me suis coupé à la main, c'est profond",
+              "objective": [],
+              "proxy": "La plaie est-elle profonde ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "5",
+              "condition": "plaie superficielle",
+              "symptom": "je me suis fait une petite coupure",
+              "objective": [],
+              "proxy": "La coupure est-elle superficielle ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "trauma_membre": {
           "label": "Traumatisme d'épaule ou distal de membre",
           "rules": [
-            {"level": "3a", "condition": "haute vélocité, grande déformation / ischémie", "symptom": "je me suis cassé le bras, il est déformé et froid", "objective": ["déformation", "ischémie"], "proxy": "Le membre est-il déformé ou froid ?", "red_flag": false, "vitals": null},
-            {"level": "4", "condition": "impotence totale, déformation", "symptom": "je ne peux plus bouger le bras, il est déformé", "objective": ["déformation"], "proxy": "Pouvez-vous bouger le membre ?", "red_flag": false, "vitals": null},
-            {"level": "5", "condition": "impotence modérée ou petite déformation", "symptom": "j'ai mal au poignet, un peu gonflé", "objective": [], "proxy": "Pouvez-vous bouger ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "haute vélocité, grande déformation / ischémie",
+              "symptom": "je me suis cassé le bras, il est déformé et froid",
+              "objective": [
+                "déformation",
+                "ischémie"
+              ],
+              "proxy": "Le membre est-il déformé ou froid ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "impotence totale, déformation",
+              "symptom": "je ne peux plus bouger le bras, il est déformé",
+              "objective": [
+                "déformation"
+              ],
+              "proxy": "Pouvez-vous bouger le membre ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "5",
+              "condition": "impotence modérée ou petite déformation",
+              "symptom": "j'ai mal au poignet, un peu gonflé",
+              "objective": [],
+              "proxy": "Pouvez-vous bouger ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "electrisation": {
           "label": "Électrisation",
           "rules": [
-            {"level": "3a", "condition": "perte de connaissance, brûlure, foudre", "symptom": "j'ai été électrisé et j'ai perdu connaissance", "objective": [], "proxy": "Avez-vous perdu connaissance ?", "red_flag": true, "vitals": null},
-            {"level": "3b", "condition": "haute tension, contact long", "symptom": "je me suis électrisé avec du courant fort", "objective": [], "proxy": "Le courant était-il fort ?", "red_flag": false, "vitals": null},
-            {"level": "5", "condition": "courant domestique bref", "symptom": "j'ai pris une petite décharge chez moi", "objective": [], "proxy": "Vous sentez-vous bien ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "perte de connaissance, brûlure, foudre",
+              "symptom": "j'ai été électrisé et j'ai perdu connaissance",
+              "objective": [],
+              "proxy": "Avez-vous perdu connaissance ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "haute tension, contact long",
+              "symptom": "je me suis électrisé avec du courant fort",
+              "objective": [],
+              "proxy": "Le courant était-il fort ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "5",
+              "condition": "courant domestique bref",
+              "symptom": "j'ai pris une petite décharge chez moi",
+              "objective": [],
+              "proxy": "Vous sentez-vous bien ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "trauma_cranien": {
           "label": "Traumatisme crânien",
           "rules": [
-            {"level": "1", "condition": "coma (GCS ≤ 8)", "symptom": "il ne se réveille pas après le choc à la tête", "objective": ["GCS ≤ 8"], "proxy": "Répond-il ?", "red_flag": true, "vitals": {"GCS": [[3, 8]]}},
-            {"level": "2", "condition": "GCS ≤ 15 avec déficit neurologique", "symptom": "il a un déficit après un choc à la tête", "objective": ["déficit neurologique"], "proxy": "A-t-il un déficit ?", "red_flag": true, "vitals": null},
-            {"level": "4", "condition": "perte de connaissance brève", "symptom": "j'ai perdu connaissance quelques secondes après le choc", "objective": [], "proxy": "Avez-vous perdu connaissance ?", "red_flag": false, "vitals": null},
-            {"level": "5", "condition": "plaie / hématome simple", "symptom": "je me suis cogné la tête, j'ai une bosse", "objective": [], "proxy": "Avez-vous vomi ou perdu connaissance ?", "red_flag": false, "vitals": null}
+            {
+              "level": "1",
+              "condition": "coma (GCS ≤ 8)",
+              "symptom": "il ne se réveille pas après le choc à la tête",
+              "objective": [
+                "GCS ≤ 8"
+              ],
+              "proxy": "Répond-il ?",
+              "red_flag": true,
+              "vitals": {
+                "GCS": [
+                  [
+                    3,
+                    8
+                  ]
+                ]
+              }
+            },
+            {
+              "level": "2",
+              "condition": "GCS ≤ 15 avec déficit neurologique",
+              "symptom": "J'ai un déficit après un choc à la tête",
+              "objective": [
+                "déficit neurologique"
+              ],
+              "proxy": "A-t-il un déficit ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "perte de connaissance brève",
+              "symptom": "j'ai perdu connaissance quelques secondes après le choc",
+              "objective": [],
+              "proxy": "Avez-vous perdu connaissance ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "5",
+              "condition": "plaie / hématome simple",
+              "symptom": "je me suis cogné la tête, j'ai une bosse",
+              "objective": [],
+              "proxy": "Avez-vous vomi ou perdu connaissance ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         }
       }
@@ -716,69 +2462,259 @@
         "pathologie_rare_poussee": {
           "label": "Pathologie rare et grave en poussée",
           "rules": [
-            {"level": "2", "condition": "poussée de pathologie grave (drépanocytose…)", "symptom": "je fais une crise de drépanocytose, c'est très douloureux", "objective": [], "proxy": "Avez-vous une pathologie connue ?", "red_flag": true, "vitals": null}
+            {
+              "level": "2",
+              "condition": "poussée de pathologie grave (drépanocytose…)",
+              "symptom": "je fais une crise de drépanocytose, c'est très douloureux",
+              "objective": [],
+              "proxy": "Avez-vous une pathologie connue ?",
+              "red_flag": true,
+              "vitals": null
+            }
           ]
         },
         "hypothermie": {
           "label": "Hypothermie",
           "rules": [
-            {"level": "2", "condition": "T ≤ 32°C", "symptom": "il est très froid au toucher, à peine conscient", "objective": ["T ≤ 32°C"], "proxy": "Est-il conscient ?", "red_flag": true, "vitals": {"T": [[28.0, 32.0]]}},
-            {"level": "3a", "condition": "32°C ≤ T ≤ 35.2°C", "symptom": "j'ai très froid, je grelotte, je me sens ralenti", "objective": ["T ≤ 35.2°C"], "proxy": "Avez-vous pris votre température ?", "red_flag": false, "vitals": {"T": [[32.0, 35.2]]}}
+            {
+              "level": "2",
+              "condition": "T ≤ 32°C",
+              "symptom": "il est très froid au toucher, à peine conscient",
+              "objective": [
+                "T ≤ 32°C"
+              ],
+              "proxy": "Est-il conscient ?",
+              "red_flag": true,
+              "vitals": {
+                "T": [
+                  [
+                    28.0,
+                    32.0
+                  ]
+                ]
+              }
+            },
+            {
+              "level": "3a",
+              "condition": "32°C ≤ T ≤ 35.2°C",
+              "symptom": "j'ai très froid, je grelotte, je me sens ralenti",
+              "objective": [
+                "T ≤ 35.2°C"
+              ],
+              "proxy": "Avez-vous pris votre température ?",
+              "red_flag": false,
+              "vitals": {
+                "T": [
+                  [
+                    32.0,
+                    35.2
+                  ]
+                ]
+              }
+            }
           ]
         },
         "hyperglycemie": {
           "label": "Hyperglycémie",
           "rules": [
-            {"level": "3a", "condition": "cétose élevée, trouble de conscience", "symptom": "ma glycémie est très haute et je me sens confus", "objective": ["cétose élevée"], "proxy": "Avez-vous mesuré votre glycémie ?", "red_flag": true, "vitals": null},
-            {"level": "3b", "condition": "≥ 20 mmol/l ou cétose positive", "symptom": "ma glycémie est très élevée", "objective": ["glycémie ≥ 20 mmol/l"], "proxy": "Avez-vous mesuré votre glycémie ?", "red_flag": false, "vitals": null},
-            {"level": "4", "condition": "≤ 20 mmol/l et cétose négative", "symptom": "ma glycémie est un peu haute", "objective": ["glycémie ≤ 20 mmol/l"], "proxy": "Avez-vous des symptômes ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "cétose élevée, trouble de conscience",
+              "symptom": "ma glycémie est très haute et je me sens confus",
+              "objective": [
+                "cétose élevée"
+              ],
+              "proxy": "Avez-vous mesuré votre glycémie ?",
+              "red_flag": true,
+              "vitals": null
+            },
+            {
+              "level": "3b",
+              "condition": "≥ 20 mmol/l ou cétose positive",
+              "symptom": "ma glycémie est très élevée",
+              "objective": [
+                "glycémie ≥ 20 mmol/l"
+              ],
+              "proxy": "Avez-vous mesuré votre glycémie ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "≤ 20 mmol/l et cétose négative",
+              "symptom": "ma glycémie est un peu haute",
+              "objective": [
+                "glycémie ≤ 20 mmol/l"
+              ],
+              "proxy": "Avez-vous des symptômes ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "hypoglycemie": {
           "label": "Hypoglycémie",
           "rules": [
-            {"level": "2", "condition": "coma (GCS ≤ 8)", "symptom": "il est diabétique et ne se réveille pas", "objective": ["GCS ≤ 8"], "proxy": "Répond-il ?", "red_flag": true, "vitals": {"GCS": [[3, 8]]}},
-            {"level": "3b", "condition": "signes associés (sueurs, tremblements)", "symptom": "je tremble et je transpire, je me sens faible", "objective": [], "proxy": "Vous sentez-vous faible ?", "red_flag": false, "vitals": null}
+            {
+              "level": "2",
+              "condition": "coma (GCS ≤ 8)",
+              "symptom": "il est diabétique et ne se réveille pas",
+              "objective": [
+                "GCS ≤ 8"
+              ],
+              "proxy": "Répond-il ?",
+              "red_flag": true,
+              "vitals": {
+                "GCS": [
+                  [
+                    3,
+                    8
+                  ]
+                ]
+              }
+            },
+            {
+              "level": "3b",
+              "condition": "signes associés (sueurs, tremblements)",
+              "symptom": "je tremble et je transpire, je me sens faible",
+              "objective": [],
+              "proxy": "Vous sentez-vous faible ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "aeg_asthenie": {
           "label": "Altération de l'état général / asthénie",
           "rules": [
-            {"level": "3b", "condition": "signes objectifs d'AEG", "symptom": "je suis très fatigué, j'ai maigri, je ne mange plus", "objective": ["signes d'AEG"], "proxy": "Avez-vous perdu du poids ?", "red_flag": false, "vitals": null},
-            {"level": "4", "condition": "ni comorbidités ni signes objectifs", "symptom": "je me sens fatigué ces derniers temps", "objective": [], "proxy": "Avez-vous d'autres symptômes ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3b",
+              "condition": "signes objectifs d'AEG",
+              "symptom": "je suis très fatigué, j'ai maigri, je ne mange plus",
+              "objective": [
+                "signes d'AEG"
+              ],
+              "proxy": "Avez-vous perdu du poids ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "4",
+              "condition": "ni comorbidités ni signes objectifs",
+              "symptom": "je me sens fatigué ces derniers temps",
+              "objective": [],
+              "proxy": "Avez-vous d'autres symptômes ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "coup_chaleur": {
           "label": "Coup de chaleur / insolation",
           "rules": [
-            {"level": "3a", "condition": "≥ 40°C ou trouble de vigilance", "symptom": "j'ai été au soleil, je me sens très mal et confus", "objective": ["T ≥ 40°C"], "proxy": "Vous sentez-vous confus ?", "red_flag": true, "vitals": {"T": [[40.0, 41.0]]}},
-            {"level": "3b", "condition": "coup de chaleur modéré", "symptom": "j'ai pris un coup de chaud, j'ai mal à la tête", "objective": [], "proxy": "Vous sentez-vous bien ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3a",
+              "condition": "≥ 40°C ou trouble de vigilance",
+              "symptom": "j'ai été au soleil, je me sens très mal et confus",
+              "objective": [
+                "T ≥ 40°C"
+              ],
+              "proxy": "Vous sentez-vous confus ?",
+              "red_flag": true,
+              "vitals": {
+                "T": [
+                  [
+                    40.0,
+                    41.0
+                  ]
+                ]
+              }
+            },
+            {
+              "level": "3b",
+              "condition": "coup de chaleur modéré",
+              "symptom": "j'ai pris un coup de chaud, j'ai mal à la tête",
+              "objective": [],
+              "proxy": "Vous sentez-vous bien ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "gelure": {
           "label": "Gelure / lésions liées au froid",
           "rules": [
-            {"level": "3b", "condition": "signes de nécrose, déficit sensitif ou moteur", "symptom": "mes doigts sont blancs et insensibles après le froid", "objective": ["nécrose"], "proxy": "Vos doigts sont-ils insensibles ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3b",
+              "condition": "signes de nécrose, déficit sensitif ou moteur",
+              "symptom": "mes doigts sont blancs et insensibles après le froid",
+              "objective": [
+                "nécrose"
+              ],
+              "proxy": "Vos doigts sont-ils insensibles ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "renouvellement_ordonnance": {
           "label": "Renouvellement d'ordonnance",
           "rules": [
-            {"level": "4", "condition": "signes objectifs d'AEG, perte d'autonomie", "symptom": "je viens pour mon ordonnance, mais je me sens très faible", "objective": [], "proxy": "Vous sentez-vous affaibli ?", "red_flag": false, "vitals": null},
-            {"level": "5", "condition": "renouvellement simple", "symptom": "je viens renouveler mon ordonnance", "objective": [], "proxy": "Avez-vous des symptômes ?", "red_flag": false, "vitals": null}
+            {
+              "level": "4",
+              "condition": "signes objectifs d'AEG, perte d'autonomie",
+              "symptom": "je viens pour mon ordonnance, mais je me sens très faible",
+              "objective": [],
+              "proxy": "Vous sentez-vous affaibli ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "5",
+              "condition": "renouvellement simple",
+              "symptom": "je viens renouveler mon ordonnance",
+              "objective": [],
+              "proxy": "Avez-vous des symptômes ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "certificat": {
           "label": "Examen administratif / certificat / réquisition",
           "rules": [
-            {"level": "3b", "condition": "réquisition (forces de l'ordre)", "symptom": "je viens sur réquisition", "objective": [], "proxy": "Quel est le motif de la réquisition ?", "red_flag": false, "vitals": null},
-            {"level": "5", "condition": "certificat simple", "symptom": "je viens pour un certificat", "objective": [], "proxy": "Avez-vous des symptômes ?", "red_flag": false, "vitals": null}
+            {
+              "level": "3b",
+              "condition": "réquisition (forces de l'ordre)",
+              "symptom": "je viens sur réquisition",
+              "objective": [],
+              "proxy": "Quel est le motif de la réquisition ?",
+              "red_flag": false,
+              "vitals": null
+            },
+            {
+              "level": "5",
+              "condition": "certificat simple",
+              "symptom": "je viens pour un certificat",
+              "objective": [],
+              "proxy": "Avez-vous des symptômes ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         },
         "hebergement_social": {
           "label": "Demande d'hébergement social",
           "rules": [
-            {"level": "5", "condition": "demande sociale", "symptom": "je viens pour une demande d'hébergement", "objective": [], "proxy": "Avez-vous un problème de santé ?", "red_flag": false, "vitals": null}
+            {
+              "level": "5",
+              "condition": "demande sociale",
+              "symptom": "je viens pour une demande d'hébergement",
+              "objective": [],
+              "proxy": "Avez-vous un problème de santé ?",
+              "red_flag": false,
+              "vitals": null
+            }
           ]
         }
       }
