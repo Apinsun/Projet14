@@ -1,6 +1,6 @@
 # 14 — Dataset multi-tours généré par LLM 27B
 
-**Date** : 21/09/2026 · **Statut** : ✅ (dataset généré, SFT à venir)
+**Date** : 21/09/2026 · **Statut** : ✅ (dataset final généré, SFT à venir)
 
 ## Objectif
 
@@ -22,64 +22,59 @@ un patient arriver avec un **symptôme précis** — il retombait sur le pattern
   (`<think>`, questions, réponses, explication).
 - **Balisage garanti par le code** : le 27B écrit son raisonnement dans un **champ JSON
   `think` séparé** (texte libre), et le code l'enveloppe dans `<think>` + injecte la
-  `<FICHE>` programmatique. (Voir pièges ci-dessous.)
+  `<FICHE>` programmatique.
 - **Vérification + repli** : structure des tours, absence de fuite (ECG/SpO₂/PAS…),
   chiffres préservés. Échec → repli scripté (correct par construction).
+- **Symptômes à la 3e personne** (13 règles) : traités par deux voies —
+  *conscients* (8) réécrits en « je » par le 27B ; *inconscients* (5, arrêt cardiaque,
+  coma) générés en **mode tiers** (un proche parle, infos patient au « il »).
 
-## Résultats
+## Résultats finaux
 
 | Métrique | Valeur |
 |---|---|
-| Dialogues finaux | **893** (après filtrage 3e personne) |
-| Corrects (fiche + niveau + `<think>`) | **893/893 (100 %)** |
-| Générés par le 27B | **760 (85 %)** |
-| Repli scripté | 133 (15 %) |
-| Tours patient | 4-5 tours en majorité (505 à 4, 348 à 5) |
+| Dialogues | **1074** |
+| Corrects (fiche + niveau + `<think>`) | **1074/1074 (100 %)** |
+| Générés par le 27B | **917 (85 %)** |
+| Repli scripté | 157 (15 %) |
+| Mode tiers (proche parle) | 124 |
+| Tours patient | 4-5 en majorité |
+| Niveaux | **équilibrés** : `{1: 219, 2: 218, 3: 210, 4: 208, 5: 219}` |
 
-Fichier : `data/processed/triage/sft_multiturn_llm.jsonl` (source
+Fichier : `data/processed/triage/sft_multiturn_full.jsonl` (source
 `synthetic_triage_multiturn_llm`).
-
-Répartition par niveau : `{1: 95, 2: 176, 3: 200, 4: 203, 5: 219}` — **déséquilibre sur
-les niveaux 1-2** (voir limites).
 
 ## Pièges techniques (importants)
 
 1. **`<think>` est un token spécial du 27B** : lui demander d'émettre la balise le
-   faisait s'arrêter net (stop token) ou dériver (`<thought>`, `<br/>`). → Le 27B écrit
-   le raisonnement dans un **champ JSON séparé**, le code pose les balises.
+   faisait s'arrêter net (stop token) ou dériver (`<thought>`, `<br/>`). → raisonnement
+   dans un champ JSON séparé, le code pose les balises.
 2. **Modèle à raisonnement** : sans `think:false`, le 27B restait bloqué en phase de
    « thinking » (content vide). → `think:false` + retrait du stop `<think>` via
    `options.stop`.
-3. **Symptômes à la 3e personne** : 7 règles (`il ne respire plus`, `il ne se réveille
-   pas`…) décrivent un patient inconscient/tiers → incohérent en dialogue 1re personne.
-   → Exclus (filtre `is_third_person_symptom`), 196 cas retirés.
+3. **Symptômes 3e personne** : 13 règles décrivent un patient au « il ». 8 sont des
+   patients conscients (réécrits en « je » par le 27B) ; 5 sont des inconscients
+   (générés en mode « tiers », un proche parle).
 4. **Outage disque/Ollama** : le SSD des modèles a été démonté pendant le batch 2
-   (~899 replis « 404 »). → Résolu par l'utilisateur, rattrapage via
-   `scripts/regenerate_fallbacks.py` (631 régénérés).
+   (~899 replis « 404 »). → Résolu, rattrapage via `scripts/regenerate_fallbacks.py`.
 
 ## Enrichissement des fact sheets
 
-`derive_patient_observable` enrichi pour garantir des dialogues riches :
-- **durée quasi systématique**, adaptée au niveau (minutes → semaines) ;
-- **douleur détectée par le vocabulaire** (colique, torsion, brûlure…) et non le seul
-  mot « douleur » ;
-- **antécédents/traitements garantis ≥ 1** pour les adultes ;
-- **pools pédiatriques dédiés** (un bébé n'a plus « tabagisme actif » en antécédent).
+`derive_patient_observable` enrichi : durée quasi systématique (adaptée au niveau),
+douleur détectée par le vocabulaire, antécédents/traitements garantis ≥ 1 pour les
+adultes, pools pédiatriques dédiés.
 
 ## Limites connues
 
-- **Déséquilibre niveau 1-2** : le filtrage 3e personne a surtout vidé le niveau 1
-  (95 vs 219). À rééquilibrer (générer plus de niveau 1-2 en 1re personne).
 - **15 % de repli scripté** (rigide mais correct) — dû aux échecs transitoires du 27B
   (`vide` ~10 %).
 - **Contradiction « sans douleur » → douleur 6/10** : le motif « sans douleur » contient
   « douleur » → échelle générée à tort. Cas rares, à corriger (détection négative).
-- **`summary`/`recommendation` programmatiques** (pas naturalisés) — choix assumé :
-  la fiche JSON est un tool call, l'exactitude prime sur la variété.
+- **`summary`/`recommendation` programmatiques** (pas naturalisés) — choix assumé : la
+  fiche JSON est un tool call, l'exactitude prime sur la variété.
 
 ## Prochaines étapes
 
-1. Rééquilibrer les niveaux 1-2 (génération ciblée).
-2. Corriger la détection de douleur (ignorer « sans douleur »/« indolore »).
-3. **SFT** sur ce dataset (remplace/complete les 300 dialogues d'origine).
-4. Ré-évaluer le mode interactif (questionnement) + le mono-tour.
+1. Corriger la détection de douleur (ignorer « sans douleur »/« indolore »).
+2. **SFT** sur ce dataset (remplace/complete les 300 dialogues d'origine).
+3. Ré-évaluer le mode interactif (questionnement) + le mono-tour.

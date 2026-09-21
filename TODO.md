@@ -8,10 +8,9 @@ Le mode interactif est **sous-appris** (fiche prématurée, réponses halluciné
 le dataset contient autant de vignettes (fiche immédiate) que de dialogues (question →
 fiche), et le comportement « vignette » domine.
 
-- [x] **Étendre le dataset multi-tour** : 893 dialogues générés par le 27B (100 %
-      corrects, 85 % LLM, symptôme en ouverture). Rapport 14.
-- [ ] **Rééquilibrer les niveaux 1-2** (95/176 vs ~200) : le filtrage 3e personne les a
-      sous-représentés.
+- [x] **Étendre le dataset multi-tour** : 1074 dialogues générés par le 27B (100 %
+      corrects, 85 % LLM, niveaux équilibrés, symptôme en ouverture, mode tiers). Rapport 14.
+- [ ] **Corriger la détection de douleur** (ignorer « sans douleur »/« indolore »).
 - [ ] **Renforcer le prompt système dès l'entraînement** (« pose une question avant de
       conclure »), pas seulement à l'inférence.
 - [ ] **Rééquilibrer vignettes/dialogues** (ou curriculum : dialogues entraînés en dernier).

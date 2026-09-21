@@ -19,7 +19,7 @@
 | 11 | `11_vllm_troubleshooting.md` | **Dépannage vLLM** : ninja, mismatch nvcc, VRAM, concurrence → checklist semaine 4 | ✅ |
 | 12 | `12_plan_sft.md` | **Plan SFT (LoRA) Unsloth** : déroulement, dépendances, paramètres cruciaux, best practices Qwen3 + résultats du pilot | ✅ |
 | 13 | `13_resultats_sft.md` | **Résultats SFT** : parcours des runs (pilot→full→2 étapes→continuation), découvertes (zero-shot>few-shot, drift `<FICHE>`), métriques finales | ✅ |
-| 14 | `14_dataset_multitour_llm.md` | **Dataset multi-tours généré par LLM 27B** : 893 dialogues (100 % corrects, 85 % LLM), pièges (`<think>` stop token, 3e personne, outage Ollama), limites | ✅ |
+| 14 | `14_dataset_multitour_llm.md` | **Dataset multi-tours généré par LLM 27B** : 1074 dialogues (100 % corrects, 85 % LLM, niveaux équilibrés), mode tiers, pièges (`<think>` stop token, outage Ollama) | ✅ |
 
 ## Documents de travail (racine)
 
