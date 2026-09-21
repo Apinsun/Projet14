@@ -37,6 +37,16 @@ _QUESTION = {
     "traitements": "Prenez-vous des médicaments ?",
 }
 
+
+def is_third_person_symptom(symptom: str) -> bool:
+    """Vrai si le symptôme est rapporté à la 3e personne (patient inconscient / tiers).
+
+    Ces scénarios (arrêt cardiorespiratoire, coma…) ne conviennent pas à un dialogue
+    patient en première personne : on les exclut du dataset multi-tours.
+    """
+    s = (symptom or "").strip().lower()
+    return s.startswith(("il ", "elle ", "le patient ", "la patiente ", "il s'", "elle s'"))
+
 LLM_SYSTEM = (
     "Tu écris des dialogues réalistes entre un patient et un agent de triage médical aux "
     "urgences, pour entraîner un modèle de triage.\n\n"

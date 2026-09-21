@@ -17,7 +17,12 @@ import random
 from pathlib import Path
 
 from triage_agent.data.config import PROCESSED_DIR
-from triage_agent.data.dialogue_llm import MODEL, build_reveal_schedule, generate_dialogue_llm
+from triage_agent.data.dialogue_llm import (
+    MODEL,
+    build_reveal_schedule,
+    generate_dialogue_llm,
+    is_third_person_symptom,
+)
 from triage_agent.data.generate import generate_balanced_fact_sheets, load_rules
 
 
@@ -41,6 +46,8 @@ def main() -> None:
     # Sélection des fact sheets avec assez de matière questionnable (multi-tours riche).
     selected: list[tuple[dict, list[tuple[str, str]]]] = []
     for fact in facts:
+        if is_third_person_symptom(fact["rule"].get("symptom", "")):
+            continue
         cr = fact["patient_observable"]["can_report"]
         rng = random.Random(hash(fact["case_id"]) & 0xFFFFFFFF)
         schedule = build_reveal_schedule(cr, rng)
