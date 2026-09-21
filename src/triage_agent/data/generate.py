@@ -31,6 +31,15 @@ _TREATMENT_POOL = [
     "atorvastatine", "paracétamol",
 ]
 
+_PEDIATRIC_HISTORY_POOL = [
+    "asthme", "épilepsie", "eczéma", "allergie alimentaire", "RGO",
+    "prématurité", "otites à répétition", "bronchiolites à répétition",
+]
+
+_PEDIATRIC_TREATMENT_POOL = [
+    "salbutamol", "paracétamol", "valproate", "dermocorticoïdes", "budesonide",
+]
+
 # Bornes d'âge plausibles par catégorie.
 _CATEGORY_AGE = {
     "cardio": (40, 85),
@@ -52,6 +61,21 @@ _CATEGORY_AGE = {
 }
 
 _NORMAL_VITALS = {"PAS": 125, "FC": 75, "SpO2": 98, "FR": 16, "T": 37.0, "GCS": 15}
+
+# Durées plausibles par niveau de triage (sans « depuis » : préfixe ajouté au rendu).
+_DURATION_BY_LEVEL = {
+    1: ["quelques minutes", "30 minutes", "1 heure"],
+    2: ["1 heure", "quelques heures", "ce matin"],
+    3: ["ce matin", "hier", "2 jours"],
+    4: ["2 jours", "3 jours", "une semaine"],
+    5: ["une semaine", "plusieurs jours", "2 semaines"],
+}
+
+# Vocabulaire évoquant une douleur (pour décider d'ajouter une échelle de douleur).
+_PAIN_KEYWORDS = (
+    "douleur", "mal", "colique", "torsion", "céphal", "brûlur", "traumat",
+    "entorse", "fracture", "contusion", "lombal", "arthral", "dysurie",
+)
 
 
 def load_rules() -> dict:
@@ -78,8 +102,15 @@ def _build_fact_sheet(category: str, motif: str, rule: dict, rng: random.Random,
     vitals = _sample_vitals(rule, rng)
     signs_objectifs = list(rule.get("objective") or [])
 
-    history = rng.sample(_HISTORY_POOL, k=rng.randint(0, 2))
-    treatments = rng.sample(_TREATMENT_POOL, k=rng.randint(0, 2) if history else rng.randint(0, 1))
+    is_pediatric = category == "pediatrie"
+    if is_pediatric:
+        history = rng.sample(_PEDIATRIC_HISTORY_POOL, k=rng.randint(0, 1))
+        k_treat = rng.randint(0, 1) if history else 0
+        treatments = rng.sample(_PEDIATRIC_TREATMENT_POOL, k=k_treat)
+    else:
+        history = rng.sample(_HISTORY_POOL, k=rng.randint(1, 2))
+        k_treat = rng.randint(1, 2) if history else rng.randint(0, 1)
+        treatments = rng.sample(_TREATMENT_POOL, k=k_treat)
 
     lo, hi = _CATEGORY_AGE[category]
     sex = "F" if category == "gyneco_obstetrique" else rng.choice(["H", "F"])
@@ -135,10 +166,15 @@ def generate_balanced_fact_sheets(n_per_level: int, seed: int = 42) -> list[dict
 
 
 def derive_patient_observable(fact: dict, rule: dict, motif: str, rng: random.Random) -> dict:
-    """Dérive la couche patient-observable à partir du fact sheet + règle."""
+    """Dérive la couche patient-observable à partir du fact sheet + règle.
+
+    Enrichi : durée quasi systématique (adaptée au niveau), douleur détectée par le
+    vocabulaire du motif (pas seulement le mot « douleur »).
+    """
+    level = int(fact["true_level"])
     can_report: dict = {
         "symptoms": [rule["symptom"]] if rule.get("symptom") else [],
-        "duration": None,
+        "duration": rng.choice(_DURATION_BY_LEVEL[level]),
         "pain_scale": None,
         "self_measured": {},
         "history": fact["medical_history"],
@@ -153,16 +189,10 @@ def derive_patient_observable(fact: dict, rule: dict, motif: str, rng: random.Ra
         elif not any(metric in obj for obj in cannot_report):
             cannot_report.append(metric)
 
-    # Douleur : uniquement pour les motifs douloureux.
-    if "douleur" in motif:
-        can_report["pain_scale"] = (
-            rng.randint(4, 10) if int(fact["true_level"]) <= 3 else rng.randint(2, 7)
-        )
-    # Durée : pertinente pour douleur et malaise.
-    if "douleur" in motif or motif == "malaise":
-        can_report["duration"] = rng.choice(
-            ["quelques minutes", "1 heure", "depuis ce matin", "2 jours"]
-        )
+    # Douleur : vocabulaire évoquant la douleur (plus large que « douleur » seul).
+    pain_ctx = f"{motif} {rule.get('symptom', '')} {rule.get('condition', '')}".lower()
+    if any(k in pain_ctx for k in _PAIN_KEYWORDS):
+        can_report["pain_scale"] = rng.randint(4, 10) if level <= 3 else rng.randint(2, 7)
 
     return {"can_report": can_report, "cannot_report": cannot_report}
 
