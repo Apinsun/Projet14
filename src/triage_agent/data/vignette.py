@@ -25,8 +25,13 @@ def ollama_chat(
     user: str,
     temperature: float = 0.7,
     timeout: int = 180,
+    think: bool | None = None,
+    stop: list[str] | None = None,
 ) -> str:
     """Appelle l'API Ollama (/api/chat) et retourne le contenu de la réponse."""
+    options: dict = {"temperature": temperature}
+    if stop is not None:
+        options["stop"] = stop
     payload = {
         "model": model,
         "messages": [
@@ -34,8 +39,10 @@ def ollama_chat(
             {"role": "user", "content": user},
         ],
         "stream": False,
-        "options": {"temperature": temperature},
+        "options": options,
     }
+    if think is not None:
+        payload["think"] = think
     resp = requests.post(OLLAMA_URL, json=payload, timeout=timeout)
     resp.raise_for_status()
     return resp.json()["message"]["content"]

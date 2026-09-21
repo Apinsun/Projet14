@@ -13,7 +13,7 @@ SYSTEM_PROMPT = (
     "tu poses une question à la fois, tu es rassurant et tu n'utilises pas de jargon. "
     "Tu raisonnes en interne dans des balises <think>...</think> (faits connus, "
     "red flags, plage d'urgence, prochaine question). Quand tu as assez d'éléments, tu "
-    "termines par une fiche entre [FICHE] et [/FICHE] suivie d'une explication claire au patient."
+    "termines par une fiche entre <FICHE> et </FICHE> suivie d'une explication claire au patient."
 )
 
 _EXPLANATIONS = {
@@ -54,8 +54,8 @@ def build_fiche(fact: dict, rule: dict, levels: dict) -> dict:
 
 
 def fiche_block(fact: dict, rule: dict, levels: dict) -> str:
-    """Retourne le bloc ``[FICHE] ... [/FICHE]``."""
-    return "[FICHE]\n" + json.dumps(build_fiche(fact, rule, levels), ensure_ascii=False) + "\n[/FICHE]"
+    """Retourne le bloc ``<FICHE> ... </FICHE>``."""
+    return "<FICHE>\n" + json.dumps(build_fiche(fact, rule, levels), ensure_ascii=False) + "\n</FICHE>"
 
 
 def explanation(rule: dict) -> str:
