@@ -13,7 +13,7 @@ import re
 import requests
 
 API = "http://localhost:8000/v1/chat/completions"
-MODEL = "models/lora_stage3_merged"
+MODEL = "models/lora_stage2_v2_merged"
 
 # Prompt renforcé pour le mode interactif : forcer le questionnaire avant la fiche.
 SYSTEM_PROMPT = (
