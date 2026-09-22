@@ -25,6 +25,7 @@
 | 17 | `17_plan_qwen35_4b.md` | **Plan Qwen3.5-4B** : Instruct (pas Base), bf16 LoRA (pas QLoRA), transformers v5, target_modules all-linear, sampling | ✅ |
 | 18 | `18_resultats_qwen35_4b.md` | **Résultats Qwen3.5-4B** : parse 100 %, exactitude 69 %, sous-triage 3,4 % (vs 10,6 % sur 1.7B) | ✅ |
 | 19 | `19_dpo_tentative.md` | **DPO triage (tentative)** : pipeline OK mais non concluant (paires trop faciles, questionnement casse la fiche) | ⚠️ |
+| 20 | `20_dpo_qualite.md` | **DPO qualité** (politesse/fiche/prise en charge) : final-only LR 1e-6, parse 100 %, exactitude 57,5 % (étape DPO réalisée) | ✅ |
 
 ## Documents de travail (racine)
 
