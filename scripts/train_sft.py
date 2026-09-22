@@ -40,6 +40,10 @@ def main() -> None:
     ap.add_argument("--lr", type=float, default=2e-4)
     ap.add_argument("--r", type=int, default=16)
     ap.add_argument("--max-seq-length", type=int, default=2048)
+    ap.add_argument("--model", default="Qwen/Qwen3-1.7B", help="Modèle de base (ex. Qwen/Qwen3.5-4B)")
+    ap.add_argument("--bf16", action="store_true", help="LoRA bf16 (requis Qwen3.5 : pas de QLoRA 4-bit)")
+    ap.add_argument("--target-all-linear", action="store_true",
+                    help="LoRA sur toutes les couches linéaires (architecture DeltaNet Qwen3.5)")
     ap.add_argument("--merge", action="store_true", help="Fusionner le LoRA après entraînement")
     ap.add_argument("--output-dir", default="models/lora_pilot")
     args = ap.parse_args()
@@ -65,18 +69,26 @@ def main() -> None:
     print(f"{len(records)} exemples d'entraînement")
 
     # --- Modèle + LoRA ---
+    load_kwargs: dict = {"max_seq_length": args.max_seq_length}
+    if args.bf16:
+        load_kwargs["load_in_4bit"] = False
+        load_kwargs["load_in_16bit"] = True
+    else:
+        load_kwargs["load_in_4bit"] = True
     model, tokenizer = FastModel.from_pretrained(
-        model_name=args.resume_from if args.resume_from else "Qwen/Qwen3-1.7B",
-        max_seq_length=args.max_seq_length,
-        load_in_4bit=True,
+        model_name=args.resume_from if args.resume_from else args.model,
+        **load_kwargs,
     )
     if not args.resume_from:
+        target_modules = "all-linear" if args.target_all_linear else [
+            "q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj",
+        ]
         model = FastModel.get_peft_model(
             model,
             r=args.r,
             lora_alpha=args.r,
             lora_dropout=0,
-            target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
+            target_modules=target_modules,
             use_gradient_checkpointing="unsloth",
             random_state=42,
         )
