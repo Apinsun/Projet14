@@ -23,6 +23,7 @@
 | 15 | `15_plan_sft_v2_multitour.md` | **Plan SFT v2** : données (4 500 base + 1 374 triage), stratégie 2 étapes, hyperparamètres, nombre de steps, éval | ✅ |
 | 16 | `16_resultats_sft_v2.md` | **Résultats SFT v2 (multi-tour)** : parse 97,7 %, exactitude 60 %, sous-triage 10,6 % ; **mode interactif corrigé** | ✅ |
 | 17 | `17_plan_qwen35_4b.md` | **Plan Qwen3.5-4B** : Instruct (pas Base), bf16 LoRA (pas QLoRA), transformers v5, target_modules all-linear, sampling | ✅ |
+| 18 | `18_resultats_qwen35_4b.md` | **Résultats Qwen3.5-4B** : parse 100 %, exactitude 69 %, sous-triage 3,4 % (vs 10,6 % sur 1.7B) | ✅ |
 
 ## Documents de travail (racine)
 
