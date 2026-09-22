@@ -79,7 +79,11 @@ def build_undertriage_pairs(vignettes: list[dict]) -> list[dict]:
         if fiche is None:
             continue
         prio = int(fiche.get("arguments", fiche).get("priority", 3))
-        new_prio = min(prio + 2, 5)
+        # Sous-triage ciblé : les cas urgents (1-3) sont rétrogradés en « non urgent » (4-5).
+        if prio <= 3:
+            new_prio = 5 if prio <= 2 else 4
+        else:
+            new_prio = min(5, prio + 1)
         tag = _tag_of(chosen_content)
         # Explication : on garde celle du chosen (niveau correct) mais on la remplace
         # par une version "bénigne" cohérente avec le sous-triage.
@@ -122,6 +126,8 @@ def build_questioning_pairs(dialogues: list[dict]) -> list[dict]:
 def main() -> None:
     ap = argparse.ArgumentParser(description="Génère les paires DPO triage")
     ap.add_argument("--pilot", action="store_true", help="Petit jeu de validation (~100 paires)")
+    ap.add_argument("--type", choices=["both", "under", "quest"], default="both",
+                    help="Type de paires : under (sous-triage) / quest (questionnement) / both")
     ap.add_argument("--limit", type=int, default=0, help="Nombre max de paires par type (0 = tous)")
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--out", default=str(PROCESSED_DIR / "triage" / "dpo_pairs.jsonl"))
@@ -133,8 +139,8 @@ def main() -> None:
     vignettes = [json.loads(line) for line in v_path.open(encoding="utf-8")]
     dialogues = [json.loads(line) for line in d_path.open(encoding="utf-8")]
 
-    under = build_undertriage_pairs(vignettes)
-    quest = build_questioning_pairs(dialogues)
+    under = build_undertriage_pairs(vignettes) if args.type in ("both", "under") else []
+    quest = build_questioning_pairs(dialogues) if args.type in ("both", "quest") else []
 
     if args.limit:
         under = under[: args.limit]
