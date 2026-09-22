@@ -52,13 +52,13 @@ def main() -> None:
     elif args.data == "triage":
         records = load_records([
             PROCESSED_DIR / "triage" / "sft_vignettes.jsonl",
-            PROCESSED_DIR / "triage" / "sft_dialogues_dressed.jsonl",
+            PROCESSED_DIR / "triage" / "sft_multiturn_full.jsonl",
         ])
     else:  # all
         base = load_records([PROCESSED_DIR / "final" / "sft_train.jsonl"])
         triage = load_records([
             PROCESSED_DIR / "triage" / "sft_vignettes.jsonl",
-            PROCESSED_DIR / "triage" / "sft_dialogues_dressed.jsonl",
+            PROCESSED_DIR / "triage" / "sft_multiturn_full.jsonl",
         ])
         records = base + triage * 3
 
