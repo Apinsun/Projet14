@@ -20,6 +20,7 @@
 | 12 | `12_plan_sft.md` | **Plan SFT (LoRA) Unsloth** : déroulement, dépendances, paramètres cruciaux, best practices Qwen3 + résultats du pilot | ✅ |
 | 13 | `13_resultats_sft.md` | **Résultats SFT** : parcours des runs (pilot→full→2 étapes→continuation), découvertes (zero-shot>few-shot, drift `<FICHE>`), métriques finales | ✅ |
 | 14 | `14_dataset_multitour_llm.md` | **Dataset multi-tours généré par LLM 27B** : 1074 dialogues (100 % corrects, 85 % LLM, niveaux équilibrés), mode tiers, pièges (`<think>` stop token, outage Ollama) | ✅ |
+| 15 | `15_plan_sft_v2_multitour.md` | **Plan SFT v2** : données (4 500 base + 1 374 triage), stratégie 2 étapes, hyperparamètres, nombre de steps, éval | ✅ |
 
 ## Documents de travail (racine)
 
