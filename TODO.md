@@ -10,7 +10,10 @@ fiche), et le comportement « vignette » domine.
 
 - [x] **Étendre le dataset multi-tour** : 1074 dialogues générés par le 27B (100 %
       corrects, 85 % LLM, niveaux équilibrés, symptôme en ouverture, mode tiers). Rapport 14.
+- [x] **SFT v2 sur le multi-tour** : mode interactif corrigé (questionne avant de conclure),
+      mono-tour conservé (parse 97,7 %, exactitude 60 %). Rapport 16.
 - [ ] **Corriger la détection de douleur** (ignorer « sans douleur »/« indolore »).
+- [ ] **Réduire le sous-triage (10,6 %) + affiner le questionnement** via le DPO.
 - [ ] **Renforcer le prompt système dès l'entraînement** (« pose une question avant de
       conclure »), pas seulement à l'inférence.
 - [ ] **Rééquilibrer vignettes/dialogues** (ou curriculum : dialogues entraînés en dernier).
