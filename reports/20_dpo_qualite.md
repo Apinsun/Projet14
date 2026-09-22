@@ -23,15 +23,23 @@ fiche).
 
 ## Résultats des itérations (gold FR, zero-shot)
 
+### 1.7B
+
 | Run | Parse | Exactitude | Sous-triage | Verdict |
 |---|---|---|---|---|
 | **stage2_v2 (SFT)** | 97,7 % | **60 %** | **10,6 %** | référence |
 | DPO qualité (2 types, LR 5e-6) | 25 % | — | — | ❌ questionnement casse la fiche |
 | **DPO final-only (LR 1e-6)** | **100 %** | 57,5 % | 11,5 % | ⚠️ format OK, exactitude −2,5 |
 
-→ Le run « final-only, LR 1e-6 » (uniquement les paires de fiche/explication) **préserve
-le format** (parse 100 %) avec une **dégradation minime** (exactitude −2,5 pts,
-sous-triage +0,9 pt).
+### 4B
+
+| Run | Parse | Exactitude | Sous-triage | Verdict |
+|---|---|---|---|---|
+| **qwen35_stage2 (SFT)** | 100 % | **69 %** | **3,4 %** | référence |
+| **DPO final-only (LR 1e-6)** | 100 % | 62,1 % | 5,7 % | ⚠️ format OK, exactitude −6,9 |
+
+→ Même recette sur le 4B : **pas de gain, légère dégradation** (exactitude −6,9,
+sous-triage +2,3). Le DPO n'apporte rien sur les métriques gold.
 
 ## Conclusion honnête
 
@@ -44,6 +52,6 @@ sous-triage +0,9 pt).
 
 ## Artefacts
 
-- Conservé : `lora_dpo_final` (+ `_merged`) = modèle DPO « qualité », parse 100 %,
-  exactitude 57,5 %.
-- Meilleurs modèles : `lora_stage2_v2` (1.7B SFT, 60 %) et `qwen35_stage2` (4B, 69 %).
+- `lora_dpo_final` (1.7B DPO, 57,5 %) et `qwen35_dpo_final` (4B DPO, 62,1 %) = modèles DPO « qualité ».
+- Meilleurs modèles : `lora_stage2_v2` (1.7B SFT, 60 %) et `qwen35_stage2` (4B SFT, 69 %, sous-triage 3,4 %).
+- Note vLLM 4B : `--max-model-len 4096 --gpu-memory-utilization 0.8` (le 8192 par défaut OOM au warmup).
