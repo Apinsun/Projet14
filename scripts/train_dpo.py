@@ -50,6 +50,8 @@ def main() -> None:
     ap.add_argument("--beta", type=float, default=0.1)
     ap.add_argument("--r", type=int, default=16)
     ap.add_argument("--max-seq-length", type=int, default=2048)
+    ap.add_argument("--bf16", action="store_true", help="LoRA bf16 (requis Qwen3.5)")
+    ap.add_argument("--target-all-linear", action="store_true", help="LoRA all-linear (DeltaNet)")
     ap.add_argument("--output-dir", default="models/lora_dpo")
     ap.add_argument("--merge", action="store_true")
     ap.add_argument("--pilot", action="store_true", help="Sous-échantillon 20 paires (validation)")
@@ -60,18 +62,26 @@ def main() -> None:
         pairs = pairs[:20]
     print(f"{len(pairs)} paires DPO")
 
+    load_kwargs: dict = {"max_seq_length": args.max_seq_length}
+    if args.bf16:
+        load_kwargs["load_in_4bit"] = False
+        load_kwargs["load_in_16bit"] = True
+    else:
+        load_kwargs["load_in_4bit"] = True
     model, tokenizer = FastModel.from_pretrained(
         model_name=args.resume_from if args.resume_from else args.model,
-        max_seq_length=args.max_seq_length,
-        load_in_4bit=True,
+        **load_kwargs,
     )
     if not args.resume_from:
+        target_modules = "all-linear" if args.target_all_linear else [
+            "q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj",
+        ]
         model = FastModel.get_peft_model(
             model,
             r=args.r,
             lora_alpha=args.r,
             lora_dropout=0,
-            target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
+            target_modules=target_modules,
             use_gradient_checkpointing="unsloth",
             random_state=42,
         )
