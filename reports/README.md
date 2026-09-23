@@ -30,6 +30,7 @@
 | 22 | `22_format_fiche_tour.md` | **Format fiche à chaque tour + patient naturalisé** (SFT v3) : 4B parse 100 %, 1.7B hors capacité | ✅ |
 | 23 | `23_dpo_v3.md` | **DPO v3 (fiche à chaque tour)** : parse 100 %, DPO questionnement débloqué | ✅ |
 | 24 | `24_hypotheses_entrainement.md` | **Hypothèses 1.7B** : bf16 (fix QLoRA), rank r=32, pas de troncature, variance ±3 pts | ✅ |
+| 25 | `25_comparatif_techniques.md` | **Comparatif techniques** : bf16/r=32 aident le 1.7B pas le 4B, DPO neutre sur gold | ✅ |
 
 ## Documents de travail (racine)
 
