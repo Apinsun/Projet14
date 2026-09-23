@@ -35,6 +35,8 @@ def main() -> None:
     ap.add_argument("--pilot", action="store_true", help="Petit run de validation")
     ap.add_argument("--data", choices=["all", "base", "triage"], default="all",
                     help="Données : all (base+triage×3) / base / triage")
+    ap.add_argument("--data-file", nargs="*", default=[],
+                    help="Fichiers JSONL à charger (prioritaire sur --data/--pilot)")
     ap.add_argument("--resume-from", default="", help="Reprendre depuis un adaptateur LoRA")
     ap.add_argument("--epochs", type=int, default=1)
     ap.add_argument("--lr", type=float, default=2e-4)
@@ -49,7 +51,9 @@ def main() -> None:
     args = ap.parse_args()
 
     # --- Données ---
-    if args.pilot:
+    if args.data_file:
+        records = load_records([Path(f) for f in args.data_file])
+    elif args.pilot:
         records = load_records([PROCESSED_DIR / "triage" / "sft_vignettes.jsonl"])[:200]
     elif args.data == "base":
         records = load_records([PROCESSED_DIR / "final" / "sft_train.jsonl"])

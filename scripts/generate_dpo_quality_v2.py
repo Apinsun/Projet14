@@ -99,15 +99,19 @@ def build_pairs(dialogues: list[dict], model: str, n: int) -> tuple[list[dict], 
             })
 
         # --- paire QUESTIONNEMENT : premier tour (symptôme partiel) ---
-        if len(msgs) >= 4 and "<FICHE>" not in msgs[2]["content"] and len(quest) < n:
+        if len(msgs) >= 5 and len(quest) < n:
+            qfiche = _fiche_block(msgs[2]["content"])
+            if not qfiche:
+                continue
             try:
                 rude = _rude(model, RUDE_QUEST_SYSTEM,
                              f"Patient : {msgs[1]['content']}\n\nPhrase brusque :")
             except Exception:
                 continue
-            rejected = _clean(rude)
-            if _ESCALADE_RE.search(rejected):  # ne JAMAIS faire d'escalade correcte
+            rude = _clean(rude)
+            if _ESCALADE_RE.search(rude):  # ne JAMAIS faire d'escalade correcte
                 continue
+            rejected = rude + "\n\n" + qfiche  # brusque + MÊME fiche incomplète
             quest.append({
                 "prompt": msgs[:2],
                 "chosen": [{"role": "assistant", "content": msgs[2]["content"]}],
@@ -125,22 +129,25 @@ def main() -> None:
     ap.add_argument("--n", type=int, default=150, help="Nb de paires PAR type")
     ap.add_argument("--model", default=MODEL)
     ap.add_argument("--seed", type=int, default=42)
-    ap.add_argument("--out", default=str(PROCESSED_DIR / "triage" / "dpo_quality_v2.jsonl"))
+    ap.add_argument("--out", default=str(PROCESSED_DIR / "triage" / "dpo_quality_v3.jsonl"))
     args = ap.parse_args()
 
     rng = random.Random(args.seed)
     dialogues = [json.loads(line) for line in
-                 (PROCESSED_DIR / "triage" / "sft_multiturn_full.jsonl").open(encoding="utf-8")]
+                 (PROCESSED_DIR / "triage" / "sft_multiturn_fiche_nat.jsonl").open(encoding="utf-8")]
     rng.shuffle(dialogues)
 
     n = 15 if args.pilot else args.n
     final, quest = build_pairs(dialogues, args.model, n)
 
-    # vérification : fiche identique chosen/rejected sur les paires finales
-    ok = sum(1 for p in final
-             if _fiche_block(p["chosen"][0]["content"]) == _fiche_block(p["rejected"][0]["content"]))
+    # vérification : fiche identique chosen/rejected (les deux types)
+    ok_f = sum(1 for p in final
+               if _fiche_block(p["chosen"][0]["content"]) == _fiche_block(p["rejected"][0]["content"]))
+    ok_q = sum(1 for p in quest
+               if _fiche_block(p["chosen"][0]["content"]) == _fiche_block(p["rejected"][0]["content"]))
     print(f"finales : {len(final)} | questionnement : {len(quest)}")
-    print(f"fiche identique chosen/rejected (finales) : {ok}/{len(final) or 1}")
+    print(f"fiche identique chosen/rejected : finales {ok_f}/{len(final) or 1} "
+          f"| questionnement {ok_q}/{len(quest) or 1}")
 
     pairs = final + quest
     rng.shuffle(pairs)
