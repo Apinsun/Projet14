@@ -26,6 +26,7 @@
 | 18 | `18_resultats_qwen35_4b.md` | **Résultats Qwen3.5-4B** : parse 100 %, exactitude 69 %, sous-triage 3,4 % (vs 10,6 % sur 1.7B) | ✅ |
 | 19 | `19_dpo_tentative.md` | **DPO triage (tentative)** : pipeline OK mais non concluant (paires trop faciles, questionnement casse la fiche) | ⚠️ |
 | 20 | `20_dpo_qualite.md` | **DPO qualité** (politesse/fiche/prise en charge) : final-only LR 1e-6, parse 100 %, exactitude 57,5 % (étape DPO réalisée) | ✅ |
+| 21 | `21_gold_urgent.md` | **Gold urgent enrichi** (48 cas IyàwóBench REFER_NOW) : IC binaire sécurité ±15 → ±5,5 pts, SFT ≈ DPO confirmé | ✅ |
 
 ## Documents de travail (racine)
 
