@@ -27,6 +27,7 @@
 | 19 | `19_dpo_tentative.md` | **DPO triage (tentative)** : pipeline OK mais non concluant (paires trop faciles, questionnement casse la fiche) | ⚠️ |
 | 20 | `20_dpo_qualite.md` | **DPO qualité** (politesse/fiche/prise en charge) : final-only LR 1e-6, parse 100 %, exactitude 57,5 % (étape DPO réalisée) | ✅ |
 | 21 | `21_gold_urgent.md` | **Gold urgent enrichi** (48 cas IyàwóBench REFER_NOW) : IC binaire sécurité ±15 → ±5,5 pts, SFT ≈ DPO confirmé | ✅ |
+| 22 | `22_format_fiche_tour.md` | **Format fiche à chaque tour + patient naturalisé** (SFT v3) : 4B parse 100 %, 1.7B hors capacité | ✅ |
 
 ## Documents de travail (racine)
 
