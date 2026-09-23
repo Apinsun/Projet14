@@ -50,6 +50,21 @@ sous-triage +2,3). Le DPO n'apporte rien sur les métriques gold.
 4. Pour le POC, l'étape DPO est **réalisée** avec un artefact propre
    (`models/lora_dpo_final_merged`), sans casser le modèle.
 
+## Analyse du gold (pourquoi l'écart DPO n'est pas concluant)
+
+Le gold (87 cas) est **trop petit et déséquilibré** pour résoudre l'effet du DPO :
+
+- **IC95 exactitude 4B** : SFT 69 % [58,6–77,7] vs DPO 62,1 % [51,6–71,5] → chevauchent,
+  **pas significatif**.
+- **Sous-triage** : 3,4 % vs 5,7 % (2 cas d'écart) → pas significatif.
+- **Binaire sécurité** : 18 cas urgents, 2 vs 3 ratés → IC ±30 pts (1 cas = 5,6 pts).
+- **Distribution gold** : 63 % bénins/non-urgents (niveau 4–5), 21 % urgents — alors que
+  l'entraînement (SFT **et** DPO) est équilibré ~20 %/niveau.
+- **Flips SFT↔DPO (16 cas)** : presque tous à ±1 niveau sur des cas niveau 4/5 ; seul
+  F9 (asthme) est un vrai sous-triage urgent, mais cliniquement ambigu.
+
+→ La dégradation apparente du DPO est **du bruit d'échantillonnage**, pas un effet réel.
+
 ## Artefacts
 
 - `lora_dpo_final` (1.7B DPO, 57,5 %) et `qwen35_dpo_final` (4B DPO, 62,1 %) = modèles DPO « qualité ».
