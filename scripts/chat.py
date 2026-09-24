@@ -13,23 +13,24 @@ import re
 import requests
 
 API = "http://localhost:8000/v1/chat/completions"
-MODEL = "models/lora_stage2_v2_merged"
+DEFAULT_MODEL = "models/lora_dpo_v3_merged"
 
-# Prompt renforcé pour le mode interactif : forcer le questionnaire avant la fiche.
+# Prompt interactif : fiche à chaque tour (incomplète tant qu'on questionne).
 SYSTEM_PROMPT = (
     "Tu es un agent de triage médical pour les urgences. Tu vouvouies le patient, tu es "
-    "rassurant et tu n'utilises pas de jargon. IMPORTANT : tu poses UNE question à la fois "
-    "pour préciser le motif, la durée, l'intensité, les antécédents et les traitements. "
-    "Tu ne donnes JAMAIS la fiche [FICHE] avant d'avoir posé plusieurs questions. "
+    "rassurant et tu n'utilises pas de jargon. Tu poses UNE question à la fois pour préciser "
+    "le motif, la durée, l'intensité, les antécédents et les traitements. À CHAQUE tour, tu "
+    "émets une fiche entre <FICHE> et </FICHE> : incomplète (plage large et infos manquantes) "
+    "tant que tu poses des questions, complète (niveau final) quand tu as tous les éléments. "
     "Raisonne en interne dans des balises <think>...</think>."
 )
 
 
-def chat(messages: list[dict]) -> str:
+def chat(messages: list[dict], model: str) -> str:
     r = requests.post(
         API,
         json={
-            "model": MODEL,
+            "model": model,
             "messages": messages,
             "temperature": 0.6,
             "top_p": 0.95,
@@ -43,9 +44,15 @@ def chat(messages: list[dict]) -> str:
 
 
 def main() -> None:
+    import argparse
+
+    ap = argparse.ArgumentParser(description="Chat interactif avec l'agent de triage")
+    ap.add_argument("--model", default=DEFAULT_MODEL, help="Modèle servi par vLLM")
+    args = ap.parse_args()
+
     messages = [{"role": "system", "content": SYSTEM_PROMPT}]
     print("=" * 60)
-    print("  Agent de triage médical — Qwen3-1.7B fine-tuné")
+    print(f"  Agent de triage médical — {args.model}")
     print("  Commandes : /new (nouveau chat) · /quit (quitter)")
     print("=" * 60)
     print()
@@ -67,7 +74,7 @@ def main() -> None:
             break
         messages.append({"role": "user", "content": user})
         try:
-            resp = chat(messages)
+            resp = chat(messages, args.model)
         except Exception as exc:  # réseau / vLLM arrêté
             print(f"[erreur] Impossible de joindre vLLM : {exc}")
             print("Vérifiez que le serveur tourne : ./scripts/serve.sh")
