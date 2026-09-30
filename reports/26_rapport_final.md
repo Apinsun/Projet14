@@ -54,7 +54,7 @@ flowchart LR
 Le projet suit les 4 semaines du brief : **données** (semaine 1) → **SFT** (semaine 2) →
 **DPO** (semaine 3) → **déploiement + CI/CD** (semaine 4).
 
-> **Périmètre (à clarifier)** : on parle d'« agent de triage », mais le côté **agentique** est
+> **Périmètre (à clarifier)** : je parle d'« agent de triage », mais le côté **agentique** est
 > volontairement limité. Le LLM ne décide pas d'appeler des outils : il produit une **fiche
 > structurée** (`<FICHE>`) pensée pour être **parsée et intégrée au SI** — le « tool call » est
 > ici un simple format de sortie (du texte), pas un vrai appel d'outil déclenché par le modèle.
@@ -158,7 +158,7 @@ d² paramètres entraînables                    A (d×r), B (r×d), avec r ≪ 
   (deux matrices de rang faible A et B). C'est rapide, économe en VRAM, et le modèle de
   base reste intact. L'adaptateur peut ensuite être **fusionné** dans les poids
   (`W + A·B`) pour que le modèle final ait la même taille que le modèle de base.
-  → **C'est ce qu'impose le brief**, et c'est ce qu'on a fait.
+  → **C'est ce qu'impose le brief**, et c'est ce que j'ai fait.
 
 **QLoRA (Quantized LoRA)** est une variante qui **quantifie le modèle de base en 4 bits**
 (NF4) pour le faire tenir dans encore moins de VRAM :
@@ -170,7 +170,7 @@ W (d×d)  en 4 bits (NF4)   ← base quantifiée, déquantifiée à la volée
   +  ΔW = A · B  (bf16)     ← adaptateur LoRA en pleine précision
 ```
 
-Économie de VRAM importante, mais perte de précision. **Notre constat** (découverte clé du
+Économie de VRAM importante, mais perte de précision. **Mon constat** (découverte clé du
 projet) : sur le 1.7B, le QLoRA 4-bit a produit du **JSON malformé** (parse 81 %) ; en
 passant au **bf16** (LoRA classique), le parse est remonté à **100 %**. Le QLoRA n'est donc
 pas adapté à une tâche qui exige une sortie strictement structurée.
@@ -186,13 +186,13 @@ r = 16  →  2·d·16 paramètres par matrice
 r = 32  →  2·d·32 paramètres par matrice
 ```
 
-Nous avons testé les deux : **r=32 a apporté +6 points d'exactitude au 1.7B** (63 % → 68,9 %),
+J'ai testé les deux : **r=32 a apporté +6 points d'exactitude au 1.7B** (63 % → 68,9 %),
 mais **aucun gain au 4B** (76,3 % → 74,1 %, dans le bruit) — le petit modèle avait besoin
 de plus de capacité, pas le gros.
 
 **Learning rate (LR)** : le **pas** de mise à jour des poids (de combien on avance dans la
 direction du gradient à chaque step). Trop grand → l'entraînement diverge ; trop petit →
-convergence lente. Nous avons utilisé **2e-4 pour le SFT** et **1e-6 pour le DPO** (le DPO
+convergence lente. J'ai utilisé **2e-4 pour le SFT** et **1e-6 pour le DPO** (le DPO
 est bien plus sensible).
 
 **Epoch** : un **passage complet** sur tout le jeu d'entraînement.
@@ -234,7 +234,7 @@ flowchart LR
 
 Aucun dataset public ne correspond directement au triage des urgences. Ce qui existe :
 
-| Corpus | Nature | Limite pour notre usage |
+| Corpus | Nature | Limite pour mon usage |
 |---|---|---|
 | FrenchMedMCQA, MedQuAD, MediQA | QCM / Q&A médical | apporte des **connaissances**, pas le *comportement* de triage |
 | UltraMedical-Preference | paires de dialogues avec réponse préférée | idéal pour la DPO **générique**, mais format EN sans fiche |
@@ -244,7 +244,7 @@ Aucun dataset public ne correspond directement au triage des urgences. Ce qui ex
 mais **ne lui apprend pas à trier**. Il faut donc **construire le dataset**.
 
 Ce qui rend la construction possible : le côté très **« programmable »** de l'échelle
-d'urgence (le niveau se déduit d'une règle), qu'on exploite pour générer des données
+d'urgence (le niveau se déduit d'une règle), que j'exploite pour générer des données
 **correctes par construction**.
 
 *(Les corpus de base ont par ailleurs été nettoyés et **anonymisés** (Presidio) en
@@ -270,7 +270,7 @@ Trois décisions fondatrices ont guidé tout le projet. La première est que le 
 toujours **calculé** par la règle FRENCH, jamais **deviné** par le LLM : pendant la génération
 des données, le niveau de vérité vient de la règle, et le LLM n'apprend que l'« habillage »
 (les questions, l'explication, la fiche). La deuxième concerne l'incertitude : face à une
-plage d'urgence `[borne_urgente, borne_bénigne]`, on retient systématiquement la **borne
+plage d'urgence `[borne_urgente, borne_bénigne]`, je retiens systématiquement la **borne
 prudente**, et un red flag non écarté est traité comme présent. La troisième est que l'agent
 ne s'appuie que sur du **patient-observable** — ce que le patient peut dire (symptômes,
 intensité, durée, antécédents) — et jamais sur des constantes mesurées (PAS, SpO₂, ECG).
@@ -292,8 +292,8 @@ flowchart TD
     G -.->|"variante brusque<br>(même fiche)"| DP["Paires DPO : 300"]
 ```
 
-On part d'une **fiche clinique déterministe** (niveau *correct par construction*), on en
-déduit ce que le patient peut fournir et les questions à poser → un **squelette de
+Je pars d'une **fiche clinique déterministe** (niveau *correct par construction*), j'en
+déduis ce que le patient peut fournir et les questions à poser → un **squelette de
 dialogue**. Un LLM local 27B transforme ce squelette en **dialogue réaliste**, en
 produisant aussi la réflexion (`<think>`) et la fiche (`<FICHE>`).
 
@@ -340,7 +340,7 @@ médicale ni d'escalade).
 | IyàwóBench | 48 | urgences immédiates (REFER_NOW) |
 | **Total** | **135** | dont **66 urgents** |
 
-Ces jeux sont **externes** (pas générés par nous) : ils valident que le modèle n'a pas
+Ces jeux sont **externes** (pas générés par moi) : ils valident que le modèle n'a pas
 seulement appris à recopier le générateur.
 
 ---
@@ -668,7 +668,7 @@ poetry run python scripts/benchmark_latency.py     # benchmark de latence
 
 ---
 
-## 15. Limites et points de vigilance (à dire franchement)
+## 15. Limites et points de vigilance
 
 1. **Circularité synthétique** : le dataset de triage est généré par un LLM (27B) à partir
    de règles déterministes → risque « l'élève copie le maître ». Mitigé par le niveau
@@ -713,7 +713,7 @@ l'inférence (retrieval-augmented generation) : le modèle consulte la grille av
 la fiche. Ça réduit les erreurs de niveau sans abandonner la flexibilité du langage naturel,
 et ancre le raisonnement dans la grille officielle.
 
-**3. Des données réelles, relues par des cliniciens.** Notre dataset est synthétique
+**3. Des données réelles, relues par des cliniciens.** Mon dataset est synthétique
 (généré par un 27B) : il souffre du « garbage in, garbage out ». Disposer de **vrais
 dialogues de triage**, relus et validés par des experts, donnerait un meilleur dataset
 d'entraînement **et** un meilleur jeu d'évaluation. C'est la piste qui apporterait le plus
