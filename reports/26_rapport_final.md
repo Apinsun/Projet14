@@ -95,10 +95,11 @@ suite. Voici la chronologie réelle, avec les impasses et les découvertes.
 | Qwen3.5-4B (Instruct, bf16, all-linear) | parse 100 %, exactitude 69 %, sous-triage 3,4 % |
 | Format « fiche à chaque tour » + patient naturalisé | 4B → 76,3 % ; 1.7B bloqué (parse 81 %) |
 
-> **Rôle du 4B (diagnostic)** : quand le 1.7B plafonnait (parse 81 %), le 4B a été entraîné
-> avec **exactement la même méthode** et a atteint parse 100 % / 76,3 %. Cela a prouvé que
-> la **méthode était bonne** — le problème venait du 1.7B (QLoRA 4-bit), pas de l'approche.
-> Le **modèle final retenu reste le 1.7B** (celui du brief), récupéré ensuite via bf16 + r=32.
+> **Rôle du 4B (diagnostic)** : quand le 1.7B plafonnait (parse 81 %, fiches malformées),
+> le 4B a été entraîné avec **exactement la même méthode** et a atteint **100 % de parse**
+> (ainsi que 76,3 % d'exactitude). Le format n'était donc pas en cause : la méthode était
+> bonne, et c'est le 1.7B en QLoRA 4-bit qui produisait du JSON malformé. Le **modèle final
+> retenu reste le 1.7B** (celui du brief), récupéré ensuite via bf16 + r=32.
 
 ### Découvertes décisives
 
@@ -265,14 +266,14 @@ Le triage repose sur la grille **FRENCH** (SFMU, mars 2018) : **5 niveaux** d'ur
 | 4 | Atteinte fonctionnelle/lésionnelle stable, acte limité | < 120 min |
 | 5 | Pas d'atteinte évidente | < 240 min |
 
-Décisions fondatrices :
-1. **Le niveau est toujours *calculé* par la règle, jamais *deviné* par le LLM.** Le LLM
-   n'apprend que l'« habillage » (questions, explication, fiche) — le niveau de vérité
-   vient de la règle FRENCH pendant la génération des données.
-2. **Incertitude** : on retient la **borne prudente** d'une plage d'urgence
-   `[borne_urgente, borne_bénigne]` ; un **red flag non écarté = présent**.
-3. **Patient-observable uniquement** : le patient ne fournit que ce qu'il peut dire
-   (symptômes, intensité, durée, antécédents) — jamais PAS / SpO₂ / ECG mesurés.
+Trois décisions fondatrices ont guidé tout le projet. La première est que le niveau est
+toujours **calculé** par la règle FRENCH, jamais **deviné** par le LLM : pendant la génération
+des données, le niveau de vérité vient de la règle, et le LLM n'apprend que l'« habillage »
+(les questions, l'explication, la fiche). La deuxième concerne l'incertitude : face à une
+plage d'urgence `[borne_urgente, borne_bénigne]`, on retient systématiquement la **borne
+prudente**, et un red flag non écarté est traité comme présent. La troisième est que l'agent
+ne s'appuie que sur du **patient-observable** — ce que le patient peut dire (symptômes,
+intensité, durée, antécédents) — et jamais sur des constantes mesurées (PAS, SpO₂, ECG).
 
 ---
 
@@ -356,10 +357,17 @@ flowchart LR
 
 ### 8.1 SFT en 2 étapes
 
-1. **Étape 1** : ~4 500 paires Q&A de base → connaissance médicale + suivi d'instructions.
-2. **Étape 2** : dataset de triage (300 + 1 074) → le **comportement** de triage.
+Le SFT s'est déroulé en deux temps. Une première étape sur ~4 500 paires de Q&A médicales
+(MedQuAD, FrenchMedMCQA, MediQA) a apporté au modèle des connaissances médicales et une
+capacité générale à suivre des instructions. Une seconde étape sur le dataset de triage
+(300 vignettes + 1 074 dialogues) lui a ensuite appris le **comportement** de triage
+proprement dit : le format de fiche, le questionnement et la prudence.
 
-Outil : **Unsloth** (LoRA), le LoRA final est **fusionné** dans les poids pour le serving vLLM.
+L'entraînement a été réalisé avec **Unsloth**, une bibliothèque qui accélère le fine-tuning
+LoRA (environ 2× plus rapide et 50–70 % de VRAM en moins grâce à des noyaux optimisés, en
+s'appuyant sur TRL/PEFT). Une fois le LoRA entraîné, l'adaptateur est **fusionné** dans les
+poids du modèle de base, de sorte que le modèle final servi par vLLM ait exactement la même
+taille que le modèle d'origine.
 
 Paramètres retenus :
 
@@ -406,13 +414,13 @@ flowchart LR
     C -->|"trop urgent (coûteux mais sûr)"| O["sur-triage ⚠️"]
 ```
 
-- **Parse** : % de sorties avec une fiche JSON valide ;
-- **Exactitude** : % de niveaux prédits dans la plage gold ;
-- **Sous-triage** : niveau prédit trop bénin (dangereux), **pondéré par la distance** ;
-- **Sur-triage** : niveau prédit trop urgent (coûteux mais sûr) ;
-- **Binaire sécurité** : taux de sous-triage sur les cas **urgents** (niveau ≤ 3).
-
-La métrique principale pénalise le **sous-triage** bien plus que le sur-triage.
+Le **parse** mesure la part de sorties dont la fiche est un JSON valide — le prérequis à toute
+exploitation. L'**exactitude** mesure la part de niveaux prédits qui tombent dans la plage
+attendue. Le **sous-triage** compte les cas où le niveau prédit est trop bénin (l'erreur
+dangereuse), pondéré par la distance à la plage, et le **sur-triage** les cas où il est trop
+urgent (coûteux mais sans danger). Enfin, la **sécurité binaire** isole le sous-triage sur les
+seuls cas urgents (niveau ≤ 3). La métrique principale pénalise le sous-triage bien plus
+lourdement que le sur-triage, car rater une urgence est plus grave que surcharger le service.
 
 ### 9.2 Résultats finaux (gold 135 cas, seed 42)
 
@@ -480,11 +488,12 @@ Lignes = vérité gold (urgent ≤ 3 / non-urgent > 3) ; colonnes = prédiction.
 
 Le **modèle final retenu est le 1.7B** (bf16 r=32 + DPO) : c'est celui du brief, et celui
 sur lequel l'effort a été concentré. Le **4B** n'était pas une fin en soi : il a servi de
-**diagnostic** — quand le 1.7B plafonnait (parse 81 %), était-ce la méthode ou le modèle ?
-Le 4B atteignant 76,3 % avec la même méthode a tranché : **la méthode est bonne**, le 1.7B
-était simplement sous-capacité (QLoRA 4-bit). Une fois corrigé (bf16 + r=32), le 1.7B est
-devenu viable (68,9 %). Le 4B resterait plus abouti avec plus de temps, mais n'est pas le
-livrable.
+**diagnostic**. Quand le 1.7B plafonnait à 81 % de fiches bien formées, la question était de
+savoir si le problème venait de la méthode ou du modèle ; le 4B, entraîné avec exactement la
+même méthode, a atteint **100 % de parse** (et 76,3 % d'exactitude), ce qui a prouvé que la
+méthode était bonne et que le 1.7B était simplement sous-capacité en QLoRA 4-bit. Une fois
+corrigé (bf16 + r=32), le 1.7B est devenu viable (68,9 % d'exactitude). Le 4B resterait plus
+abouti avec davantage de temps, mais il n'est pas le livrable.
 
 ---
 
@@ -530,13 +539,13 @@ flowchart LR
     T --> F --> E
 ```
 
-- Le `<think>` (raisonnement) est **destiné à être masqué au patient** (conservé pour
-  l'audit) ; dans le POC actuel, il est affiché dans l'UI sous forme de bloc « thinking »
-  pour faciliter le débug — l'architecture le garde séparé, prêt à être masqué en production ;
-- La `<FICHE>` est la sortie structurée (JSON) destinée au SI ;
-- L'explication est le seul texte montré au patient.
-
-L'API renvoie ces trois éléments séparément, plus un flag `parse_ok` (fiche bien formée ou non).
+Ces trois blocs jouent des rôles distincts. Le `<think>` contient le raisonnement interne :
+il est **destiné à être masqué au patient** et conservé pour l'audit — dans le POC actuel,
+l'interface l'affiche sous la forme d'un bloc « thinking » pour faciliter le débug, mais
+l'architecture le maintient séparé, prêt à être masqué en production. La `<FICHE>` est la
+sortie structurée (JSON) que le SI est censé parser et intégrer. L'explication, enfin, est le
+seul texte réellement montré au patient. L'API renvoie ces trois éléments séparément, plus un
+flag `parse_ok` indiquant si la fiche est bien formée.
 
 ### 10.3 Docker
 
