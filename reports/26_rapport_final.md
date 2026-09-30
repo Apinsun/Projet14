@@ -72,7 +72,7 @@ suite. Voici la chronologie réelle, avec les impasses et les découvertes.
 
 | Étape | Résultat / leçon |
 |---|---|
-| Baseline Qwen3-1.7B sur vLLM | **0/87 zero-shot** → le modèle de base ne trie pas du tout |
+| Baseline Qwen3-1.7B sur vLLM (zero-shot + **few-shot**) | **0/87** zero-shot (aucune fiche) ; **few-shot** : format appris mais valeurs fausses (repli sur le niveau 3, urgences sous-triées en 5) → le fine-tune est indispensable |
 | SFT v1 (Q&A base + vignettes) | parse 95 %, exactitude 58 % — mais le **multi-tour interactif** est défaillant (fiche prématurée, boucles) |
 | Dataset multi-tours (1 074 dialogues, 27B) + SFT v2 | parse 97,7 %, exactitude 60 %, **interactif corrigé** |
 
@@ -84,6 +84,11 @@ suite. Voici la chronologie réelle, avec les impasses et les découvertes.
 | Pivot : DPO « qualité de service » (même fiche, forme dégradée) | parse 100 % |
 | Qwen3.5-4B (Instruct, bf16, all-linear) | parse 100 %, exactitude 69 %, sous-triage 3,4 % |
 | Format « fiche à chaque tour » + patient naturalisé | 4B → 76,3 % ; 1.7B bloqué (parse 81 %) |
+
+> **Rôle du 4B (diagnostic)** : quand le 1.7B plafonnait (parse 81 %), le 4B a été entraîné
+> avec **exactement la même méthode** et a atteint parse 100 % / 76,3 %. Cela a prouvé que
+> la **méthode était bonne** — le problème venait du 1.7B (QLoRA 4-bit), pas de l'approche.
+> Le **modèle final retenu reste le 1.7B** (celui du brief), récupéré ensuite via bf16 + r=32.
 
 ### Découvertes décisives
 
@@ -457,6 +462,16 @@ Lignes = vérité gold (urgent ≤ 3 / non-urgent > 3) ; colonnes = prédiction.
 - Le **DPO** n'apporte rien de mesurable sur le gold : son apport est qualitatif
   (ton plus poli/soigné), à évaluer par une revue humaine d'échantillons.
 
+### 9.6 Choix du modèle final
+
+Le **modèle final retenu est le 1.7B** (bf16 r=32 + DPO) : c'est celui du brief, et celui
+sur lequel l'effort a été concentré. Le **4B** n'était pas une fin en soi : il a servi de
+**diagnostic** — quand le 1.7B plafonnait (parse 81 %), était-ce la méthode ou le modèle ?
+Le 4B atteignant 76,3 % avec la même méthode a tranché : **la méthode est bonne**, le 1.7B
+était simplement sous-capacité (QLoRA 4-bit). Une fois corrigé (bf16 + r=32), le 1.7B est
+devenu viable (68,9 %). Le 4B resterait plus abouti avec plus de temps, mais n'est pas le
+livrable.
+
 ---
 
 ## 10. Déploiement
@@ -647,10 +662,11 @@ poetry run python scripts/benchmark_latency.py     # benchmark de latence
 
 ## 16. Conclusion et perspectives
 
-Le POC démontre qu'un **Qwen3-1.7B fine-tuné** (SFT LoRA bf16 r=32 + DPO) produit un agent
-de triage **exploitable** : format structuré 100 % fiable, 68,9 % d'exactitude, 4,5 % de
-sous-triage sur les cas urgents (100 % sur le jeu d'urgences IyàwóBench). Le **4B** reste
-plus exact (76,3 %) au prix d'un peu plus de sous-triage urgent.
+Le POC démontre qu'un **Qwen3-1.7B fine-tuné** (SFT LoRA bf16 r=32 + DPO) — **le modèle
+final retenu** — produit un agent de triage **exploitable** : format structuré 100 % fiable,
+68,9 % d'exactitude, 4,5 % de sous-triage sur les cas urgents (100 % sur le jeu d'urgences
+IyàwóBench). Le **4B**, utilisé comme diagnostic de la méthode, reste plus exact (76,3 %)
+au prix d'un peu plus de sous-triage urgent.
 
 Perspectives : évaluer la qualité de forme du DPO par revue humaine, re-calibrer le
 format sur les cas urgents, **renforcer le questionnement multi-tours** (point faible
