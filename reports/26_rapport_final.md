@@ -698,23 +698,29 @@ intensité, durée…), et le **niveau serait calculé programmatiquement** à p
 FRENCH. Plus aucun risque d'erreur de niveau — le LLM ne serait que l'interface de collecte
 d'information. C'est la décision « le niveau est calculé, jamais deviné » poussée jusqu'au bout.
 
-**2. Des données réelles, relues par des cliniciens.** Notre dataset est synthétique
+**2. À mi-chemin : donner la règle au LLM (RAG).** Entre « le LLM décide seul » et « le LLM
+ne décide rien », on peut **injecter au LLM la règle FRENCH pertinente** en contexte à
+l'inférence (retrieval-augmented generation) : le modèle consulte la grille avant de remplir
+la fiche. Ça réduit les erreurs de niveau sans abandonner la flexibilité du langage naturel,
+et ancre le raisonnement dans la grille officielle.
+
+**3. Des données réelles, relues par des cliniciens.** Notre dataset est synthétique
 (généré par un 27B) : il souffre du « garbage in, garbage out ». Disposer de **vrais
 dialogues de triage**, relus et validés par des experts, donnerait un meilleur dataset
 d'entraînement **et** un meilleur jeu d'évaluation. C'est la piste qui apporterait le plus
 de valeur clinique.
 
-**3. Guider le raisonnement `<think>`.** Le contenu du `<think>` (faits, red flags, plage)
+**4. Guider le raisonnement `<think>`.** Le contenu du `<think>` (faits, red flags, plage)
 pourrait être contraint plus explicitement — par exemple en y imposant une liste de red
 flags à écarter — pour **inciter le modèle à ne pas sous-trier** et rendre son raisonnement
 plus auditable.
 
-**4. Réduire le non-déterminisme.** Le gold étant petit, la variance de l'échantillonnage
+**5. Réduire le non-déterminisme.** Le gold étant petit, la variance de l'échantillonnage
 est coûteuse. Un **vote majoritaire** (générer plusieurs réponses, retenir la plus
 fréquente) ou un **ensemble** de modèles réduirait cette variance et stabiliserait les
 métriques.
 
-**5. Apprentissage par récompense (GRPO).** Le DPO a montré ses limites (neutre sur les
+**6. Apprentissage par récompense (GRPO).** Le DPO a montré ses limites (neutre sur les
 métriques). Un **GRPO avec récompense de sécurité** — récompenser `priority == niveau_vrai`,
 pénaliser fortement `priority > niveau_vrai` (sous-triage) — serait plus adapté pour
 renforcer la prudence qu'un DPO sur paires figées.
