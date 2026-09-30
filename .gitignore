@@ -227,3 +227,6 @@ Docs
 # Modèles entraînés + artefacts lourds (à publier sur HuggingFace, pas GitHub)
 /models/
 /unsloth_compiled_cache/
+
+# Logs d'audit du serving
+/logs/

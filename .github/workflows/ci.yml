@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Installer Poetry
+        run: pipx install poetry
+      - name: Installer les dépendances
+        run: poetry install --no-interaction
+      - name: Ruff
+        run: poetry run ruff check src scripts tests
+
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Installer Poetry
+        run: pipx install poetry
+      - name: Installer les dépendances
+        run: poetry install --no-interaction
+      - name: Pytest
+        run: poetry run pytest -q
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Construire l'image
+        run: docker build -t triage-agent:ci .
+      - name: Smoke test (boot + /health)
+        run: |
+          docker run -d --name triage-ci -p 8080:8080 triage-agent:ci
+          for i in $(seq 1 15); do curl -fsS http://localhost:8080/health && break; sleep 1; done
+          docker stop triage-ci

@@ -1,0 +1,27 @@
+# Environnements & secrets
+.venv-*/
+.env
+
+# Artefacts lourds (jamais dans l'image)
+/models/
+/data/
+/unsloth_compiled_cache/
+/logs/
+/reports/
+
+# Code non nécessaire au serving
+/scripts/
+/tests/
+/Docs/
+
+# Git & cache
+.git/
+.gitignore
+.ruff_cache/
+**/__pycache__/
+*.py[cod]
+
+# Divers
+README.md
+AGENTS.md
+TODO.md

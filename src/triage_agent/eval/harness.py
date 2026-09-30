@@ -12,45 +12,17 @@ Métriques :
 
 from __future__ import annotations
 
-import json
-import re
 from collections.abc import Callable
 
 import requests
+
+from triage_agent.parsing import extract_priority, parse_fiche
 
 logger = __import__("logging").getLogger("triage_agent.eval.harness")
 
 OLLAMA_URL = "http://localhost:11434/api/chat"
 VLLM_URL = "http://localhost:8000/v1"
 DEFAULT_MODEL = "Leila_fast:latest"
-
-_FICHE_RE = re.compile(r"(?:\[FICHE\]|<FICHE>)\s*(.*?)\s*(?:\[/FICHE\]|</FICHE>)", re.S)
-
-
-def parse_fiche(text: str) -> dict | None:
-    """Extrait et parse le JSON entre ``[FICHE]`` et ``[/FICHE]``. ``None`` si absent/invalide."""
-    m = _FICHE_RE.search(text or "")
-    if not m:
-        return None
-    raw = re.sub(r"^```[a-zA-Z]*\s*|\s*```$", "", m.group(1)).strip()
-    try:
-        return json.loads(raw)
-    except json.JSONDecodeError:
-        return None
-
-
-def extract_priority(fiche: dict) -> int | None:
-    """Lit la priorité de la fiche (``arguments.priority``, sinon borne prudente de la plage)."""
-    try:
-        args = fiche.get("arguments", fiche)
-        prio = args.get("priority")
-        if prio is None:
-            rng = args.get("priority_range")
-            if rng:
-                prio = min(int(x) for x in rng)  # borne prudente = la plus urgente
-        return int(prio) if prio is not None else None
-    except (TypeError, ValueError, AttributeError):
-        return None
 
 
 def correct(priority: int, gold_range: list[int]) -> dict:

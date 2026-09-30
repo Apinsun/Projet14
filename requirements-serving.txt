@@ -1,0 +1,6 @@
+# Dépendances légères du serving (l'image Docker n'embarque PAS les deps
+# d'entraînement : spacy, presidio, datasets, pandas…). Versions alignées sur poetry.lock.
+fastapi==0.142.1
+uvicorn[standard]==0.54.0
+httpx==0.28.1
+pydantic-settings==2.15.0
