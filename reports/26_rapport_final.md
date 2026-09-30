@@ -303,7 +303,70 @@ flowchart LR
 
 ---
 
-## 10. Limites et points de vigilance (à dire franchement)
+## 10. Performance, robustesse et traçabilité
+
+Mesures réalisées en conditions réalistes (vLLM, température 0,6, max_tokens 1 024), sur
+**NVIDIA RTX 3090 (24 Go)**.
+
+### 10.1 Latence
+
+| Métrique | Valeur mesurée |
+|---|---|
+| TTFT (temps au 1er token) | ~0,01–0,02 s |
+| Débit de génération | ~150–165 tok/s |
+| Latence bout-en-bout (1 tour, fiche ~180 tokens) | ~0,85 s |
+| Latence bout-en-bout (réponse courte) | ~0,11 s |
+
+La latence est **pilotée par la longueur générée** (~163 tok/s), pas par la longueur de
+l'historique : une réponse complète (~300-500 tokens) ≈ 2-3 s.
+
+### 10.2 Concurrence
+
+| Requêtes simultanées | Latence moyenne | p95 | Débit |
+|---|---|---|---|
+| 1 | 0,7 s | 0,7 s | 1,4 req/s |
+| 2 | 0,84 s | 0,89 s | 2,2 req/s |
+| 4 | 0,94 s | 1,15 s | 3,4 req/s |
+| 8 | 2,7 s | 3,9 s | 1,8 req/s |
+
+→ tient **jusqu'à ~4 patients simultanés** sans dégradation notable ; au-delà, le débit
+partagé du GPU sature (latence moyenne ×3 à 8).
+
+### 10.3 Robustesse
+
+Tests dédiés (`tests/test_robustness.py`) : caractères unicode/spéciaux, message très
+long (~40k chars), historique vide, **vLLM indisponible → 502 propre**, 20 requêtes
+simultanées. Tous passent (28 tests au total).
+
+### 10.4 Audit de traçabilité
+
+Journal JSONL append-only (`scripts/audit_summary.py`). Exemple de résumé après un lot
+de benchmark : **31 échanges, 17 conversations, 0 enregistrement incomplet** — chaque
+échange est tracé (horodatage, `conversation_id`, messages, sortie brute, think, fiche,
+`parse_ok`).
+
+## 11. Roadmap de déploiement et checklist « go / no-go »
+
+### Roadmap
+
+1. **Environnement pilote (actuel)** : `docker compose` + `start.sh`, modèle local en volume.
+2. **Pré-production** : publication HF (modèle + dataset), vLLM tire le modèle depuis HF,
+   app publiée sur GHCR.
+3. **Production conditionnelle** : GPU serveur (A100/L4), reverse-proxy/load balancer,
+   monitoring (latence, file d'attente), sauvegarde de l'audit, scaling vLLM.
+
+### Checklist « go / no-go » (avant mise en production)
+
+| Critère | Seuil | Statut actuel |
+|---|---|---|
+| Parse (fiches bien formées) | ≥ 95 % | ✅ 100 % (gold) |
+| Sous-triage binaire (urgents) | < 10 % | ✅ 4,5 % (1.7B) / ⚠️ 10,6 % (4B) |
+| Latence p95 à charge cible | < 5 s | ✅ ~1–4 s (jusqu'à 4 simultanés) |
+| Revue d'un clinicien (échantillon) | signée | ⏳ à faire |
+| Conformité (audit + RGPD) | validée | ⏳ à faire |
+| Calibration sur cas urgents | revue | ⏳ à faire |
+
+## 12. Limites et points de vigilance (à dire franchement)
 
 1. **Circularité synthétique** : le dataset de triage est généré par un LLM (27B) à partir
    de règles déterministes → risque « l'élève copie le maître ». Mitigé par le niveau
@@ -318,7 +381,7 @@ flowchart LR
 
 ---
 
-## 11. Conclusion et perspectives
+## 13. Conclusion et perspectives
 
 Le POC démontre qu'un **Qwen3-1.7B fine-tuné** (SFT LoRA bf16 r=32 + DPO) produit un agent
 de triage **exploitable** : format structuré 100 % fiable, 68,9 % d'exactitude, 4,5 % de
