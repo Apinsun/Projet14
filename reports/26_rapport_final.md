@@ -1,26 +1,56 @@
 # 26 — Rapport final : agent IA de triage médical (POC CHSA)
 
-**Date** : 2026-10 · **Statut** : 🖊️ brouillon v1 (à relire)
+**Date** : 2026-10 · **Statut** : 🖊️ brouillon v2 (à relire)
+**Auteur** : Arnaud Pinsun · **Projet** : Projet 14 — POC d'agent de triage médical
 
 ---
 
-## 1. Résumé exécutif
+## Résumé
 
-POC d'un agent conversationnel de **triage médical** pour les urgences du CHSA, construit
-en **fine-tunant Qwen3-1.7B** (SFT LoRA puis DPO), servi par **vLLM** derrière une API
-**FastAPI** conteneurisée (Docker), avec un pipeline **CI/CD GitHub Actions**.
+POC d'un agent conversationnel de **triage médical** pour les urgences du CHSA, basé sur
+**Qwen3-1.7B** affiné par **SFT (LoRA)** puis aligné par **DPO**. Faute de dataset de
+triage public, le corpus d'entraînement a été **construit** à partir de la grille
+**FRENCH** (SFMU, 5 niveaux) puis généré en langage naturel par un LLM 27B. Le modèle
+final produit des fiches structurées **100 % bien formées**, atteint **68,9 % d'exactitude**
+et **4,5 % de sous-triage** sur les cas urgents, et est déployé derrière
+**vLLM + FastAPI + Docker** avec un pipeline **CI/CD**.
 
-Le résultat clé : le modèle **1.7B** (exigé par le brief) est récupéré après un fix décisif
-(passage du QLoRA 4-bit au **bf16**), et atteint sur le jeu d'évaluation externe :
+---
 
-| Modèle | Parse | Exactitude | Sous-triage | Binaire sécurité |
-|---|---|---|---|---|
-| **Qwen3-1.7B** (bf16, r=32) | **100 %** | 68,9 % | 4,4 % | **4,5 %** |
-| Qwen3.5-4B (bf16, r=16) | 100 % | **76,3 %** | 5,9 % | 10,6 % |
+## Sommaire
 
-Le 1.7B **sur-trie** davantage (sûr mais moins précis) ; le 4B est **plus exact** mais
-sous-trie un peu plus sur les cas urgents. Le choix final dépend du critère retenu :
-**sécurité** (1.7B) ou **exactitude** (4B).
+1. Vue d'ensemble
+2. Objectif et cahier des charges
+3. Concepts fondamentaux (LoRA, QLoRA, rank, LR, epoch, steps, SFT, DPO)
+4. La problématique des données
+5. Le protocole FRENCH
+6. Construction du dataset de triage
+7. Entraînement
+8. Évaluation
+9. Déploiement
+10. CI/CD
+11. Performance, robustesse et traçabilité
+12. Roadmap de déploiement et checklist « go / no-go »
+13. Reproductibilité
+14. Limites et points de vigilance
+15. Conclusion et perspectives
+16. Références (rapports détaillés)
+
+---
+
+## 1. Vue d'ensemble
+
+```mermaid
+flowchart LR
+    D["Données<br>grille FRENCH → LLM 27B → dataset"] --> T["Entraînement<br>SFT LoRA + DPO"]
+    T --> E["Évaluation<br>gold 135 cas"]
+    E --> M["Modèle final<br>(LoRA fusionné)"]
+    M --> S["Déploiement<br>vLLM + FastAPI + Docker"]
+    S --> P["👤 Patient / SI"]
+```
+
+Le projet suit les 4 semaines du brief : **données** (semaine 1) → **SFT** (semaine 2) →
+**DPO** (semaine 3) → **déploiement + CI/CD** (semaine 4).
 
 ---
 
@@ -34,11 +64,110 @@ Contraintes du brief :
 - **LoRA** (pas de full fine-tuning) ;
 - **vLLM** pour l'inférence (pas Ollama) ;
 - **dataset de triage à construire soi-même** (aucun dataset annoté n'est fourni) ;
-- déploiement **FastAPI + Docker** et pipeline **CI/CD**.
+- déploiement **FastAPI + Docker** et pipeline **CI/CD** ;
+- tests de **latence**, de **robustesse** et **audits de traçabilité**.
 
 ---
 
-## 3. La problématique des données
+## 3. Concepts fondamentaux
+
+> Cette section rend le rapport autonome pour un lecteur non spécialiste du fine-tuning.
+
+### 3.1 Fine-tuning, LoRA et QLoRA
+
+**Le fine-tuning** consiste à reprendre un modèle pré-entraîné et à le ré-entraîner sur une
+tâche cible. Deux façons de le faire :
+
+```
+Full fine-tuning (checkpoint complet)        LoRA (Low-Rank Adaptation)
+────────────────────────────────────         ──────────────────────────────
+W (d×d)  ──mise à jour──►  W' (d×d)          W (d×d)  GELÉ (jamais modifié)
+tous les poids sont ré-entraînés             +  ΔW = A · B
+d² paramètres entraînables                    A (d×r), B (r×d), avec r ≪ d
+                                              2·d·r paramètres entraînables
+```
+
+- **Full fine-tuning** : on met à jour **tous** les poids (des milliards de paramètres).
+  Il faut rétro-propager sur tout le réseau, beaucoup de VRAM, et on risque l'**oubli
+  catastrophique** (perdre les connaissances de base). Chaque run produit un checkpoint
+  complet (aussi gros que le modèle de base).
+- **LoRA** : on **gèle** le modèle de base et on n'entraîne qu'un petit **adaptateur**
+  (deux matrices de rang faible A et B). C'est rapide, économe en VRAM, et le modèle de
+  base reste intact. L'adaptateur peut ensuite être **fusionné** dans les poids
+  (`W + A·B`) pour que le modèle final ait la même taille que le modèle de base.
+  → **C'est ce qu'impose le brief**, et c'est ce qu'on a fait.
+
+**QLoRA (Quantized LoRA)** est une variante qui **quantifie le modèle de base en 4 bits**
+(NF4) pour le faire tenir dans encore moins de VRAM :
+
+```
+QLoRA
+─────
+W (d×d)  en 4 bits (NF4)   ← base quantifiée, déquantifiée à la volée
+  +  ΔW = A · B  (bf16)     ← adaptateur LoRA en pleine précision
+```
+
+Économie de VRAM importante, mais perte de précision. **Notre constat** (découverte clé du
+projet) : sur le 1.7B, le QLoRA 4-bit a produit du **JSON malformé** (parse 81 %) ; en
+passant au **bf16** (LoRA classique), le parse est remonté à **100 %**. Le QLoRA n'est donc
+pas adapté à une tâche qui exige une sortie strictement structurée.
+
+### 3.2 Rank, learning rate, epoch, step
+
+**Rank `r`** : la dimension des matrices A (d×r) et B (r×d) de l'adaptateur LoRA.
+`r` petit = adaptateur peu expressif (mais léger) ; `r` grand = plus de capacité (mais plus
+de paramètres et risque de sur-apprentissage).
+
+```
+r = 16  →  2·d·16 paramètres par matrice
+r = 32  →  2·d·32 paramètres par matrice
+```
+
+Nous avons testé les deux : **r=32 a apporté +6 points d'exactitude au 1.7B** (63 % → 68,9 %),
+mais **aucun gain au 4B** (76,3 % → 74,1 %, dans le bruit) — le petit modèle avait besoin
+de plus de capacité, pas le gros.
+
+**Learning rate (LR)** : le **pas** de mise à jour des poids (de combien on avance dans la
+direction du gradient à chaque step). Trop grand → l'entraînement diverge ; trop petit →
+convergence lente. Nous avons utilisé **2e-4 pour le SFT** et **1e-6 pour le DPO** (le DPO
+est bien plus sensible).
+
+**Epoch** : un **passage complet** sur tout le jeu d'entraînement.
+
+**Step** : une **mise à jour** des poids (un batch passé en avant puis en arrière).
+
+```
+steps = (n_exemples / batch_size) × epochs
+exemple : 1 374 exemples de triage, batch 2, 4 epochs → ~2 748 steps
+```
+
+### 3.3 SFT et DPO
+
+```mermaid
+flowchart LR
+    subgraph SFT["SFT : imitation supervisée"]
+    S1["entrée"] --> S2["sortie attendue"]
+    S2 --> S3["le modèle apprend à la reproduire"]
+    end
+    subgraph DPO["DPO : apprentissage par préférence"]
+    D1["entrée"] --> D2["réponse choisie ✓"]
+    D1 --> D3["réponse rejetée ✗"]
+    D2 & D3 --> D4["le modèle apprend à préférer ✓"]
+    end
+```
+
+- **SFT (Supervised Fine-Tuning)** : on fournit des paires `(entrée → sortie attendue)`,
+  le modèle apprend à les **imiter** (perte = prédiction du token suivant sur la sortie).
+  C'est ce qui lui apprend le **comportement** de triage.
+- **DPO (Direct Preference Optimization)** : on fournit des paires `(réponse choisie,
+  réponse rejetée)`, le modèle apprend à **préférer** la première — directement, sans
+  modèle de récompense séparé (contrairement au RLHF). La perte est :
+  `−log σ(β · (log π_θ(chosen|x) − log π_θ(rejected|x)))`.
+  C'est ce qui affine la **qualité de forme** (ton, politesse, explication).
+
+---
+
+## 4. La problématique des données
 
 Aucun dataset public ne correspond directement au triage des urgences. Ce qui existe :
 
@@ -55,13 +184,24 @@ Ce qui rend la construction possible : le côté très **« programmable »** de
 d'urgence (le niveau se déduit d'une règle), qu'on exploite pour générer des données
 **correctes par construction**.
 
+*(Les corpus de base ont par ailleurs été nettoyés et **anonymisés** (Presidio) en
+semaine 1 — 0 donnée personnelle réelle, cf. rapports 02/03.)*
+
 ---
 
-## 4. Le protocole de triage : FRENCH (SFMU)
+## 5. Le protocole FRENCH (SFMU)
 
-- **5 niveaux** d'urgence, de 1 (détresse vitale majeure) à 5 (non urgent) ;
-- **16 catégories** cliniques, **196 règles** encodées (`french_rules.json`) ;
-- délais médecin associés : immédiat / < 20 min / < 60 min / < 90 min / < 120 min / < 240 min.
+Le triage repose sur la grille **FRENCH** (SFMU, mars 2018) : **5 niveaux** d'urgence,
+**16 catégories** cliniques, **196 règles** encodées dans `french_rules.json`.
+
+| Niveau | Situation | Délai médecin |
+|---|---|---|
+| 1 | Détresse vitale majeure | immédiat |
+| 2 | Atteinte patente d'un organe / lésion sévère | < 20 min |
+| 3a | Atteinte potentielle d'un organe / comorbidités lourdes | < 60 min |
+| 3b | Atteinte fonctionnelle ou lésionnelle stable | < 90 min |
+| 4 | Atteinte fonctionnelle/lésionnelle stable, acte limité | < 120 min |
+| 5 | Pas d'atteinte évidente | < 240 min |
 
 Décisions fondatrices :
 1. **Le niveau est toujours *calculé* par la règle, jamais *deviné* par le LLM.** Le LLM
@@ -74,9 +214,9 @@ Décisions fondatrices :
 
 ---
 
-## 5. Construction du dataset de triage
+## 6. Construction du dataset de triage
 
-### 5.1 Principe : du déterminisme au naturel
+### 6.1 Principe : du déterminisme au naturel
 
 ```mermaid
 flowchart TD
@@ -89,17 +229,17 @@ flowchart TD
     G -.->|"variante brusque<br>(même fiche)"| DP["Paires DPO : 300"]
 ```
 
-On part d'une **fiche clinique déterministe** (le niveau est *correct par construction*),
-on en déduit ce que le patient peut fournir comme info et les questions à poser, ce qui
-donne un **squelette de dialogue**. Un LLM local (27B) transforme ce squelette en
-**dialogue réaliste**, en produisant aussi la réflexion (`<think>`) et la fiche (`<FICHE>`).
+On part d'une **fiche clinique déterministe** (niveau *correct par construction*), on en
+déduit ce que le patient peut fournir et les questions à poser → un **squelette de
+dialogue**. Un LLM local 27B transforme ce squelette en **dialogue réaliste**, en
+produisant aussi la réflexion (`<think>`) et la fiche (`<FICHE>`).
 
-### 5.2 Vignettes (mono-tour) — 300
+### 6.2 Vignettes (mono-tour) — 300
 
 Un cas complet → une évaluation immédiate. Elles apprennent le **format de sortie** :
 raisonnement + fiche + explication au patient.
 
-### 5.3 Dialogues multi-tours — 1074
+### 6.3 Dialogues multi-tours — 1074
 
 Générés par le 27B à partir des squelettes (100 % corrects, ~85 % rédigés par le LLM,
 ~15 % de repli programmatique). Le patient ouvre par un **symptôme**, l'agent questionne
@@ -109,7 +249,7 @@ Décision importante : la fiche est produite **à chaque tour** (incomplète pen
 questionnement, complète à la fin). C'est ce qui a rendu le comportement « questionner
 puis conclure » apprenable, et qui a débloqué le DPO de questionnement.
 
-### 5.4 Paires DPO « qualité de service » — 300
+### 6.4 Paires DPO « qualité de service » — 300
 
 ```mermaid
 flowchart LR
@@ -128,7 +268,7 @@ explication) — **jamais sur le niveau**. La fiche est **identique** entre les 
 est rédigé par le 27B en mode « agent malpoli », avec garde-fous (pas de directive
 médicale ni d'escalade).
 
-### 5.5 Jeux d'évaluation (gold) — 135 cas externes
+### 6.5 Jeux d'évaluation (gold) — 135 cas externes
 
 | Source | Cas | Type |
 |---|---|---|
@@ -137,19 +277,25 @@ médicale ni d'escalade).
 | IyàwóBench | 48 | urgences immédiates (REFER_NOW) |
 | **Total** | **135** | dont **66 urgents** |
 
-Ces jeux sont **externes** (pas générés par nous) : ils servent à valider que le modèle
-n'a pas seulement appris à recopier le générateur.
+Ces jeux sont **externes** (pas générés par nous) : ils valident que le modèle n'a pas
+seulement appris à recopier le générateur.
 
 ---
 
-## 6. Entraînement
+## 7. Entraînement
 
-### 6.1 SFT en 2 étapes
+```mermaid
+flowchart LR
+    B["Étape 1 : Q&A de base<br>~4 500 paires<br>MedQuAD + FrenchMedMCQA + MediQA"] --> T["Étape 2 : triage<br>300 vignettes + 1 074 dialogues"]
+    T --> SFT["SFT (LoRA Unsloth)"]
+    SFT --> DPO["DPO (300 paires qualité)"]
+    DPO --> F["Fusion du LoRA<br>dans les poids"]
+```
 
-1. **Étape 1** : ~4 500 paires Q&A de base (MedQuAD + FrenchMedMCQA + MediQA) → connaissance
-   médicale + suivi d'instructions.
-2. **Étape 2** : dataset de triage (300 vignettes + 1 074 dialogues) → le **comportement**
-   de triage.
+### 7.1 SFT en 2 étapes
+
+1. **Étape 1** : ~4 500 paires Q&A de base → connaissance médicale + suivi d'instructions.
+2. **Étape 2** : dataset de triage (300 + 1 074) → le **comportement** de triage.
 
 Outil : **Unsloth** (LoRA), le LoRA final est **fusionné** dans les poids pour le serving vLLM.
 
@@ -167,14 +313,14 @@ Paramètres retenus :
 | `max_seq_length` | 2048 | 2048 |
 | Scheduler | cosine | cosine |
 
-### 6.2 DPO
+### 7.2 DPO
 
 - Paires « qualité de service » (300), `beta 0.1`, LR 1e-6, LoRA r=16/32.
 - **Première tentative abandonnée** : des paires « sous-triage » (fiche correcte vs fiche
   rétrogradée) et « question vs fiche » cassaient le format (parse 0 %) — le DPO ne peut
   pas enseigner un comportement nouveau, et UltraMedical (EN, sans fiche) diluait le format FR.
 
-### 6.3 Hypothèses testées et découvertes clés
+### 7.3 Hypothèses testées et découvertes clés
 
 | Découverte | Détail |
 |---|---|
@@ -186,9 +332,17 @@ Paramètres retenus :
 
 ---
 
-## 7. Évaluation
+## 8. Évaluation
 
-### 7.1 Métriques
+### 8.1 Métriques
+
+```mermaid
+flowchart LR
+    P["niveau prédit"] --> C{"dans la plage gold ?"}
+    C -->|oui| OK["correct"]
+    C -->|"trop bénin (dangereux)"| U["sous-triage ✗"]
+    C -->|"trop urgent (coûteux mais sûr)"| O["sur-triage ⚠️"]
+```
 
 - **Parse** : % de sorties avec une fiche JSON valide ;
 - **Exactitude** : % de niveaux prédits dans la plage gold ;
@@ -198,7 +352,7 @@ Paramètres retenus :
 
 La métrique principale pénalise le **sous-triage** bien plus que le sur-triage.
 
-### 7.2 Résultats finaux (gold 135 cas, seed 42)
+### 8.2 Résultats finaux (gold 135 cas, seed 42)
 
 **1.7B :**
 
@@ -217,7 +371,7 @@ La métrique principale pénalise le **sous-triage** bien plus que le sur-triage
 | bf16 r=16 DPO | 100 % | 76,3 % | 5,9 % | 10,6 % |
 | bf16 r=32 | 100 % | 74,1 % | 6,7 % | 9,1 % |
 
-### 7.3 Analyse
+### 8.3 Analyse
 
 - Le **1.7B** (exigé par le brief) est **viable et sûr** (binaire 4,5 %, meilleur que le 4B
   sur ce critère), mais il **sur-trie** davantage (exactitude 68,9 %).
@@ -228,9 +382,9 @@ La métrique principale pénalise le **sous-triage** bien plus que le sur-triage
 
 ---
 
-## 8. Déploiement
+## 9. Déploiement
 
-### 8.1 Architecture
+### 9.1 Architecture
 
 ```mermaid
 flowchart LR
@@ -258,7 +412,7 @@ L'API est **stateless** : le client renvoie l'historique complet à chaque tour 
 conversation = un patient), et le serveur ne garde aucun état — seulement un **journal
 d'audit** JSONL (traçabilité).
 
-### 8.2 Format de sortie de l'agent
+### 9.2 Format de sortie de l'agent
 
 ```mermaid
 flowchart LR
@@ -276,7 +430,7 @@ flowchart LR
 
 L'API renvoie ces trois éléments séparément, plus un flag `parse_ok` (fiche bien formée ou non).
 
-### 8.3 Docker
+### 9.3 Docker
 
 - `Dockerfile` : image FastAPI **légère** (uniquement les dépendances de serving, pas les
   deps d'entraînement : spacy/presidio/datasets…) ;
@@ -285,7 +439,7 @@ L'API renvoie ces trois éléments séparément, plus un flag `parse_ok` (fiche 
 
 ---
 
-## 9. CI/CD (GitHub Actions)
+## 10. CI/CD (GitHub Actions)
 
 Le pipeline ne teste que ce qui est **faisable sans GPU** (pas de re-training en CI) :
 
@@ -296,19 +450,19 @@ flowchart LR
     B --> P["CD : push GHCR (sur tag v*)"]
 ```
 
-- **Tests** : 23 (parsing, fiche, audit, harness, **API avec vLLM mocké**). Le client vLLM
-  est injecté via une dépendance FastAPI → l'app est testable sans GPU ;
+- **Tests** : 28 (parsing, fiche, audit, harness, robustesse, **API avec vLLM mocké**). Le
+  client vLLM est injecté via une dépendance FastAPI → l'app est testable sans GPU ;
 - **Smoke test** : l'image est construite et démarrée, `/health` répond ;
 - **CD** : publication de l'image sur GHCR au push d'un tag `v*`.
 
 ---
 
-## 10. Performance, robustesse et traçabilité
+## 11. Performance, robustesse et traçabilité
 
 Mesures réalisées en conditions réalistes (vLLM, température 0,6, max_tokens 1 024), sur
 **NVIDIA RTX 3090 (24 Go)**.
 
-### 10.1 Latence
+### 11.1 Latence
 
 | Métrique | Valeur mesurée |
 |---|---|
@@ -320,7 +474,7 @@ Mesures réalisées en conditions réalistes (vLLM, température 0,6, max_tokens
 La latence est **pilotée par la longueur générée** (~163 tok/s), pas par la longueur de
 l'historique : une réponse complète (~300-500 tokens) ≈ 2-3 s.
 
-### 10.2 Concurrence
+### 11.2 Concurrence
 
 | Requêtes simultanées | Latence moyenne | p95 | Débit |
 |---|---|---|---|
@@ -332,20 +486,22 @@ l'historique : une réponse complète (~300-500 tokens) ≈ 2-3 s.
 → tient **jusqu'à ~4 patients simultanés** sans dégradation notable ; au-delà, le débit
 partagé du GPU sature (latence moyenne ×3 à 8).
 
-### 10.3 Robustesse
+### 11.3 Robustesse
 
 Tests dédiés (`tests/test_robustness.py`) : caractères unicode/spéciaux, message très
 long (~40k chars), historique vide, **vLLM indisponible → 502 propre**, 20 requêtes
 simultanées. Tous passent (28 tests au total).
 
-### 10.4 Audit de traçabilité
+### 11.4 Audit de traçabilité
 
 Journal JSONL append-only (`scripts/audit_summary.py`). Exemple de résumé après un lot
 de benchmark : **31 échanges, 17 conversations, 0 enregistrement incomplet** — chaque
 échange est tracé (horodatage, `conversation_id`, messages, sortie brute, think, fiche,
 `parse_ok`).
 
-## 11. Roadmap de déploiement et checklist « go / no-go »
+---
+
+## 12. Roadmap de déploiement et checklist « go / no-go »
 
 ### Roadmap
 
@@ -366,7 +522,36 @@ de benchmark : **31 échanges, 17 conversations, 0 enregistrement incomplet** �
 | Conformité (audit + RGPD) | validée | ⏳ à faire |
 | Calibration sur cas urgents | revue | ⏳ à faire |
 
-## 12. Limites et points de vigilance (à dire franchement)
+---
+
+## 13. Reproductibilité
+
+**Environnement :**
+
+| Élément | Valeur |
+|---|---|
+| Python | 3.12 (via `uv`) |
+| Dépendances | poetry (`pyproject.toml`) |
+| Entraînement | Unsloth, venvs `.venv-train` (1.7B) et `.venv-train-4b` (4B) |
+| Inférence | vLLM 0.29.0, venv `.venv-vllm` |
+| GPU | NVIDIA RTX 3090 (24 Go) |
+| Génération de données | LLM 27B (Ollama, GGUF Q4_K_M) |
+
+**Commandes clés :**
+
+```bash
+poetry run python scripts/validate_dataset.py     # conformité du dataset avant re-train
+./scripts/train.sh                                 # SFT 1.7B
+./scripts/train-4b.sh                              # SFT 4B
+./scripts/train-dpo.sh / train-dpo-4b.sh           # DPO
+poetry run python scripts/run_gold_eval.py         # évaluation sur le gold
+./start.sh / ./stop.sh                             # déploiement Docker
+poetry run python scripts/benchmark_latency.py     # benchmark de latence
+```
+
+---
+
+## 14. Limites et points de vigilance (à dire franchement)
 
 1. **Circularité synthétique** : le dataset de triage est généré par un LLM (27B) à partir
    de règles déterministes → risque « l'élève copie le maître ». Mitigé par le niveau
@@ -381,7 +566,7 @@ de benchmark : **31 échanges, 17 conversations, 0 enregistrement incomplet** �
 
 ---
 
-## 13. Conclusion et perspectives
+## 15. Conclusion et perspectives
 
 Le POC démontre qu'un **Qwen3-1.7B fine-tuné** (SFT LoRA bf16 r=32 + DPO) produit un agent
 de triage **exploitable** : format structuré 100 % fiable, 68,9 % d'exactitude, 4,5 % de
@@ -392,3 +577,24 @@ Perspectives : évaluer la qualité de forme du DPO par revue humaine, re-calibr
 format sur les cas urgents, intégrer la remontée de constantes objectives (si un dispositif
 médical les fournit), et passer à une évaluation sur des données cliniques réelles
 (avec l'accord d'un établissement et un clinicien dans la boucle).
+
+---
+
+## 16. Références (rapports détaillés)
+
+L'ensemble des étapes est documenté dans `reports/` (index : `reports/README.md`) :
+
+| Rapport | Sujet |
+|---|---|
+| 01–03 | EDA, préparation, anonymisation des corpus |
+| 04 | Protocole FRENCH (grille complète) |
+| 05 | Plan d'attaque (stratégie globale) |
+| 06–07 | Spec + construction du dataset de triage |
+| 08 | Jeux gold + plan d'évaluation |
+| 09–11 | vLLM : présentation, baseline, dépannage |
+| 12–13 | Plan + résultats SFT (v1) |
+| 14–16 | Dataset multi-tours 27B + SFT v2 |
+| 17–18 | Plan + résultats Qwen3.5-4B |
+| 19–21 | DPO (tentatives + qualité) + gold urgent |
+| 22–23 | Format « fiche à chaque tour » + DPO v3 |
+| 24–25 | Hypothèses (bf16/rank) + comparatif final |
