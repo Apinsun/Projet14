@@ -76,6 +76,10 @@ suite. Voici la chronologie réelle, avec les impasses et les découvertes.
 | SFT v1 (Q&A base + vignettes) | parse 95 %, exactitude 58 % — mais le **multi-tour interactif** est défaillant (fiche prématurée, boucles) |
 | Dataset multi-tours (1 074 dialogues, 27B) + SFT v2 | parse 97,7 %, exactitude 60 %, **interactif corrigé** |
 
+> *Note : les chiffres d'exactitude 58 % / 60 % sont mesurés sur le gold de l'époque
+> (87 cas : Levine + Ramaswamy). La référence finale est le gold enrichi à 135 cas
+> (+ 48 urgents IyàwóBench), sur lequel le modèle final atteint 68,9 % (section 9).*
+
 ### Semaine 3 — DPO et itérations
 
 | Étape | Résultat / leçon |
@@ -516,7 +520,9 @@ flowchart LR
     T --> F --> E
 ```
 
-- Le `<think>` (raisonnement) est **masqué au patient**, conservé pour l'audit ;
+- Le `<think>` (raisonnement) est **destiné à être masqué au patient** (conservé pour
+  l'audit) ; dans le POC actuel, il est affiché dans l'UI sous forme de bloc « thinking »
+  pour faciliter le débug — l'architecture le garde séparé, prêt à être masqué en production ;
 - La `<FICHE>` est la sortie structurée (JSON) destinée au SI ;
 - L'explication est le seul texte montré au patient.
 
