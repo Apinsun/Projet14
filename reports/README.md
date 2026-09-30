@@ -31,6 +31,7 @@
 | 23 | `23_dpo_v3.md` | **DPO v3 (fiche à chaque tour)** : parse 100 %, DPO questionnement débloqué | ✅ |
 | 24 | `24_hypotheses_entrainement.md` | **Hypothèses 1.7B** : bf16 (fix QLoRA), rank r=32, pas de troncature, variance ±3 pts | ✅ |
 | 25 | `25_comparatif_techniques.md` | **Comparatif techniques** : bf16/r=32 aident le 1.7B pas le 4B, DPO neutre sur gold | ✅ |
+| 26 | `26_rapport_final.md` | **Rapport final** (synthèse : données, entraînement, évaluation, déploiement, CI/CD, limites) | 🖊️ brouillon |
 
 ## Documents de travail (racine)
 
