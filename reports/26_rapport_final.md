@@ -1,6 +1,6 @@
 # 26 — Rapport final : agent IA de triage médical (POC CHSA)
 
-**Date** : 2026-10 · **Statut** : 🖊️ brouillon v3 (à relire)
+**Date** : 2026-10 · **Statut** : 🖊️ brouillon v4 (à relire)
 **Auteur** : Arnaud Pinsun · **Projet** : Projet 14 — POC d'agent de triage médical
 
 ---
@@ -34,8 +34,9 @@ et **4,5 % de sous-triage** sur les cas urgents, et est déployé derrière
 13. Roadmap de déploiement et checklist « go / no-go »
 14. Reproductibilité
 15. Limites et points de vigilance
-16. Conclusion et perspectives
-17. Références (rapports détaillés)
+16. Conclusion
+17. Ouverture : autres approches et améliorations
+18. Références (rapports détaillés)
 
 ---
 
@@ -52,6 +53,11 @@ flowchart LR
 
 Le projet suit les 4 semaines du brief : **données** (semaine 1) → **SFT** (semaine 2) →
 **DPO** (semaine 3) → **déploiement + CI/CD** (semaine 4).
+
+> **Périmètre (à clarifier)** : on parle d'« agent de triage », mais le côté **agentique** est
+> volontairement limité. Le LLM ne décide pas d'appeler des outils : il produit une **fiche
+> structurée** (`<FICHE>`) pensée pour être **parsée et intégrée au SI** — le « tool call » est
+> ici un simple format de sortie (du texte), pas un vrai appel d'outil déclenché par le modèle.
 
 ---
 
@@ -96,12 +102,10 @@ suite. Voici la chronologie réelle, avec les impasses et les découvertes.
 
 ### Découvertes décisives
 
-| Découverte | Impact |
-|---|---|
-| **QLoRA 4-bit = cause du JSON malformé** | → bf16 → parse 100 % (le 1.7B est récupéré) |
-| **`r=32` aide le petit modèle** | 1.7B : 63 % → 68,9 % (+6 pts) ; 4B : aucun gain |
-| **DPO neutre sur les métriques gold** | l'effet est qualitatif (forme), non mesuré |
-| **Non-déterminisme ±2-3 pts** | les écarts < 3 pts ne sont pas significatifs |
+Deux découvertes ont structuré la fin du projet (détail chiffré en section 8.3) :
+le **QLoRA 4-bit** causait le JSON malformé (→ passage au bf16), et **`r=32`** aide le
+petit modèle mais pas le gros. Par ailleurs, le **DPO** est neutre sur les métriques, et le
+**non-déterminisme** est de ±2-3 pts.
 
 ### Semaine 4 — Déploiement
 
@@ -427,7 +431,13 @@ La métrique principale pénalise le **sous-triage** bien plus que le sur-triage
 |---|---|---|---|---|
 | bf16 r=16 SFT | 100 % | **76,3 %** | 5,9 % | 10,6 % |
 | bf16 r=16 DPO | 100 % | 76,3 % | 5,9 % | 10,6 % |
-| bf16 r=32 | 100 % | 74,1 % | 6,7 % | 9,1 % |
+| bf16 r=32 SFT | 100 % | 74,1 % | 6,7 % | 9,1 % |
+| bf16 r=32 DPO | 100 % | 75,6 % | 5,9 % | 9,1 % |
+
+> **Précision statistique** : le gold est restreint (135 cas, 66 urgents) et le modèle est
+> non-déterministe (temp 0,6). Les métriques peuvent donc varier de **quelques points entre
+> runs** (IC binaire ~±5,5 pts ; non-déterminisme ±2-3 pts). Un écart < 3 pts n'est pas
+> significatif.
 
 ### 9.3 Matrice de confusion (binaire)
 
@@ -666,7 +676,7 @@ poetry run python scripts/benchmark_latency.py     # benchmark de latence
 
 ---
 
-## 16. Conclusion et perspectives
+## 16. Conclusion
 
 Le POC démontre qu'un **Qwen3-1.7B fine-tuné** (SFT LoRA bf16 r=32 + DPO) — **le modèle
 final retenu** — produit un agent de triage **exploitable** : format structuré 100 % fiable,
@@ -674,15 +684,49 @@ final retenu** — produit un agent de triage **exploitable** : format structur�
 IyàwóBench). Le **4B**, utilisé comme diagnostic de la méthode, reste plus exact (76,3 %)
 au prix d'un peu plus de sous-triage urgent.
 
-Perspectives : évaluer la qualité de forme du DPO par revue humaine, re-calibrer le
-format sur les cas urgents, **renforcer le questionnement multi-tours** (point faible
-Levine), intégrer la remontée de constantes objectives (si un dispositif médical les
-fournit), et passer à une évaluation sur des données cliniques réelles (avec l'accord d'un
-établissement et un clinicien dans la boucle).
+---
+
+## 17. Ouverture : autres approches et améliorations
+
+Ce POC est une première itération. Plusieurs pistes permettraient de mieux répondre au
+problème ; voici les plus structurantes.
+
+**1. Sortir le calcul du niveau du LLM (le plus sûr).** Aujourd'hui le LLM produit lui-même
+le niveau dans la fiche (appris par SFT). Une alternative plus robuste : le LLM ne ferait
+que **conduire la discussion et remplir les champs factuels** de la fiche (motif, red flags,
+intensité, durée…), et le **niveau serait calculé programmatiquement** à partir de la grille
+FRENCH. Plus aucun risque d'erreur de niveau — le LLM ne serait que l'interface de collecte
+d'information. C'est la décision « le niveau est calculé, jamais deviné » poussée jusqu'au bout.
+
+**2. Des données réelles, relues par des cliniciens.** Notre dataset est synthétique
+(généré par un 27B) : il souffre du « garbage in, garbage out ». Disposer de **vrais
+dialogues de triage**, relus et validés par des experts, donnerait un meilleur dataset
+d'entraînement **et** un meilleur jeu d'évaluation. C'est la piste qui apporterait le plus
+de valeur clinique.
+
+**3. Guider le raisonnement `<think>`.** Le contenu du `<think>` (faits, red flags, plage)
+pourrait être contraint plus explicitement — par exemple en y imposant une liste de red
+flags à écarter — pour **inciter le modèle à ne pas sous-trier** et rendre son raisonnement
+plus auditable.
+
+**4. Réduire le non-déterminisme.** Le gold étant petit, la variance de l'échantillonnage
+est coûteuse. Un **vote majoritaire** (générer plusieurs réponses, retenir la plus
+fréquente) ou un **ensemble** de modèles réduirait cette variance et stabiliserait les
+métriques.
+
+**5. Apprentissage par récompense (GRPO).** Le DPO a montré ses limites (neutre sur les
+métriques). Un **GRPO avec récompense de sécurité** — récompenser `priority == niveau_vrai`,
+pénaliser fortement `priority > niveau_vrai` (sous-triage) — serait plus adapté pour
+renforcer la prudence qu'un DPO sur paires figées.
+
+Perspectives immédiates : évaluer la qualité de forme du DPO par revue humaine, re-calibrer
+le format sur les cas urgents, **renforcer le questionnement multi-tours** (point faible
+Levine), intégrer la remontée de constantes objectives, et passer à une évaluation sur des
+données cliniques réelles (avec un clinicien dans la boucle).
 
 ---
 
-## 17. Références (rapports détaillés)
+## 18. Références (rapports détaillés)
 
 L'ensemble des étapes est documenté dans `reports/` (index : `reports/README.md`) :
 
