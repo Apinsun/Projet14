@@ -27,7 +27,10 @@ services:
               capabilities: [gpu]
 
   app:
-    build: .
+    # Image construite et publiée par le CI/CD (GHCR) — cf. .github/workflows/cd.yml.
+    # Développement local sans passer par GHCR :
+    #   docker build -t ghcr.io/apinsun/projet14:latest . && docker compose up -d
+    image: ghcr.io/apinsun/projet14:latest
     ports:
       - "8080:8080"
     environment:
