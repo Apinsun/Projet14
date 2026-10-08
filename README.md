@@ -1,67 +1,87 @@
-# Projet 14 — POC d'un agent IA de triage médical (CHSA)
+# Agent IA de triage médical — POC (CHSA)
 
-Proof of Concept d'un agent conversationnel de triage médical pour le service des
-urgences du Centre Hospitalier Saint-Aurélien (CHSA), basé sur le modèle
-**Qwen3-1.7B-Base** affiné par **SFT (LoRA)** puis aligné par **DPO**, déployé
-derrière une API **FastAPI** avec **vLLM** et un pipeline **CI/CD (GitHub Actions)**.
+Proof of concept d'un agent conversationnel de **triage médical** pour les urgences,
+basé sur **Qwen3-1.7B** affiné par **SFT (LoRA)** puis aligné par **DPO**, déployé derrière
+**FastAPI + vLLM + Docker** avec un pipeline **CI/CD (GitHub Actions)**.
 
-## Objectif
+Le protocole de triage est **FRENCH** (SFMU, 5 niveaux d'urgence) : le niveau est **calculé**
+par la règle, jamais deviné — le LLM conduit la discussion et produit une **fiche
+structurée** (`<FICHE>`) pensée pour être parsée et intégrée au SI, un raisonnement interne
+(`<think>`) conservé pour l'audit, et une explication en langage naturel pour le patient.
 
-L'agent doit :
+## Résultats clés
 
-- collecter les symptômes du patient via un questionnaire adaptatif ;
-- évaluer le niveau de priorité (urgence maximale / modérée / différée) ;
-- fournir des explications claires sur l'évaluation et les recommandations ;
-- garantir la traçabilité de chaque interaction.
-
-## Plan de la mission (4 semaines)
-
-1. **Semaine 1** — Préparation et structuration des données (corpus bilingue
-   FR/EN, ~5 000 paires SFT, jeu DPO, anonymisation RGPD via Presidio).
-2. **Semaine 2** — Fine-tuning supervisé (SFT) de Qwen3-1.7B avec LoRA.
-3. **Semaine 3** — Alignement par préférences (DPO).
-4. **Semaine 4** — Déploiement (vLLM + FastAPI + Docker) et validation.
-
-## Sources de données
-
-| Corpus | Hub HF | Langue | Usage |
+| Modèle | Fiches bien formées | Exactitude | Sous-triage (cas urgents) |
 |---|---|---|---|
-| FrenchMedMCQA | `qanastek/frenchmedmcqa` | FR | SFT |
-| MedQuAD | `lavita/MedQuAD` | EN | SFT |
-| MediQA | `medalpaca/medical_meadow_mediqa` | EN | SFT |
-| UltraMedical-Preference | `TsinghuaC3I/UltraMedical-Preference` | EN | DPO |
+| **Qwen3-1.7B** (SFT LoRA bf16 r=32 + DPO) | **100 %** | **68,9 %** | **4,5 %** |
+
+*(Évaluation sur un jeu gold externe de 135 cas : Levine + Ramaswamy + IyàwóBench.)*
+
+## Dataset
+
+Le dataset de triage est **synthétique** (généré depuis la grille FRENCH par un LLM 27B,
+niveau correct par construction) et publié sur HuggingFace :
+
+👉 **https://huggingface.co/datasets/apinsun/triage-french**
+
+## Architecture
+
+```
+Patient ──► FastAPI (conteneur, port 8080) ──► vLLM (port 8000) ──► Qwen3-1.7B
+                │                                   │
+                └── journal d'audit (logs/audit.jsonl)
+```
+
+- **FastAPI** : conteneurisée (image publiée sur GHCR), API **stateless**, parsing
+  `<think>`/`<FICHE>`, journal d'audit JSONL (traçabilité) ;
+- **vLLM** : moteur d'inférence optimisé, modèle LoRA fusionné.
+
+## Démarrage rapide
+
+```bash
+./start.sh     # lance vLLM (hôte) + l'app conteneurisée → http://localhost:8080
+./stop.sh      # arrête tout
+```
+
+Interface web : **http://localhost:8080** · Documentation API : **http://localhost:8080/docs**
 
 ## Structure du projet
 
 ```
-.
-├── Docs/                  # Énoncé du projet et notes
-├── data/                  # Données locales (ignorées par Git)
-│   ├── raw/               #   Datasets bruts (Parquet)
-│   └── processed/         #   Données standardisées / anonymisées
-├── scripts/               # Scripts exécutables (téléchargement, EDA, pipeline)
-├── src/triage_agent/      # Package Python (logique métier)
-│   └── data/              #   Modules de préparation des données
-├── reports/               # Rapports d'analyse (Markdown)
-└── tests/                 # Tests unitaires
+├── src/triage_agent/
+│   ├── data/          # grille FRENCH, fiche, génération du dataset
+│   ├── eval/          # harness d'évaluation sur le gold
+│   ├── serving/       # API FastAPI (main, agent, vllm_client, audit)
+│   └── parsing.py     # extraction <think>/<FICHE> (partagée eval + serving)
+├── scripts/           # entraînement, évaluation, benchmark, publication HF
+├── tests/             # 28 tests (unitaires + intégration, vLLM mocké)
+├── Dockerfile         # image de l'app (deps de serving uniquement)
+├── docker-compose.yml # option B : vLLM + app en conteneurs
+├── .github/workflows/ # CI (lint/tests/build) + CD (push GHCR)
+└── start.sh / stop.sh
 ```
 
-## Installation
+## Entraînement & évaluation
 
 ```bash
-# Python 3.12 requis (voir pyproject.toml)
+poetry run python scripts/validate_dataset.py     # conformité du dataset avant re-train
+./scripts/train.sh                                 # SFT 1.7B
+./scripts/train-dpo.sh                             # DPO
+poetry run python scripts/run_gold_eval.py         # évaluation sur le gold
+poetry run python scripts/benchmark_latency.py     # benchmark de latence
+```
+
+## CI/CD
+
+- **CI** (à chaque push) : lint (ruff) → 28 tests → build Docker + smoke test ;
+- **CD** (sur tag `v*`) : build + publication de l'image sur **GHCR**, tirée au déploiement.
+
+## Installation (développement)
+
+Python 3.12, dépendances via poetry :
+
+```bash
 poetry install
 ```
 
-Le token Hugging Face est lu depuis le fichier `.env` (`HF_TOKEN=...`), ignoré
-par Git.
-
-## Usage
-
-```bash
-# Télécharger les datasets bruts
-poetry run python scripts/download_datasets.py
-
-# Analyse exploratoire
-poetry run python scripts/run_eda.py
-```
+Le token Hugging Face est lu depuis `.env` (non versionné).
