@@ -230,3 +230,7 @@ Docs
 
 # Logs d'audit du serving
 /logs/
+
+# Documentation de travail (conservée en local, hors du dépôt transmis)
+/reports/
+/TODO.md
