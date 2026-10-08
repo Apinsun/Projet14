@@ -7,7 +7,7 @@ Publie sous `apinsun/triage-french` :
   - data/dpo_quality_v3.jsonl            (DPO, 300 paires)
   - README.md (datacard = scripts/hf_dataset_card.md)
 
-Le token est lu depuis `.env` (HF_TOKEN) via python-dotenv.
+Le token est lu depuis `.env` (HF_TOKEN_WRITE, sinon HF_TOKEN) via python-dotenv.
 
 Usage :
     poetry run python scripts/publish_hf.py [--repo apinsun/triage-french] [--private]
@@ -42,8 +42,9 @@ def main() -> int:
     ap.add_argument("--private", action="store_true", help="créer le dataset en privé")
     args = ap.parse_args()
 
-    if not os.getenv("HF_TOKEN"):
-        print("❌ HF_TOKEN absent (voir .env).", file=sys.stderr)
+    token = os.getenv("HF_TOKEN_WRITE") or os.getenv("HF_TOKEN")
+    if not token:
+        print("❌ HF_TOKEN_WRITE (ou HF_TOKEN) absent — voir .env.", file=sys.stderr)
         return 1
 
     for _, local in FILES:
@@ -51,7 +52,7 @@ def main() -> int:
             print(f"❌ fichier manquant : {local}", file=sys.stderr)
             return 1
 
-    api = HfApi()
+    api = HfApi(token=token)
     try:
         api.create_repo(args.repo, repo_type="dataset", private=args.private, exist_ok=True)
     except Exception as exc:
